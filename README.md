@@ -19,6 +19,12 @@ Backend projects:
 
 Source code is stored in `src/`.
 
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Setup](docs/SETUP.md)
+
 ## Local API Check
 
 Run `EventManagement.API` from Visual Studio or use:
