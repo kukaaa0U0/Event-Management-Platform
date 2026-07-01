@@ -41,6 +41,9 @@ GET http://localhost:5000/api/health
 GET http://localhost:5000/api/events
 ```
 
+`GET /api/events` reads data from PostgreSQL. Without a running database, Swagger and
+`GET /api/health` still work, but event queries require PostgreSQL.
+
 ## Build
 
 ```bash
@@ -60,6 +63,9 @@ Docker Compose starts PostgreSQL and the API:
 ```bash
 docker compose up --build
 ```
+
+Docker Desktop on Windows requires hardware virtualization enabled in BIOS/UEFI.
+In Docker Compose, migrations and seed data are applied automatically on API startup.
 
 ## EF Core Migrations
 

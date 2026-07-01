@@ -1,6 +1,8 @@
+using EventManagement.Application.Interfaces;
 using EventManagement.Domain.Interfaces;
 using EventManagement.Infrastructure.Persistence;
 using EventManagement.Infrastructure.Persistence.Repositories;
+using EventManagement.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,6 +24,7 @@ public static class DependencyInjection
         services.AddScoped<IEventRepository, EventRepository>();
         services.AddScoped<IRegistrationRepository, RegistrationRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IEventReadService, EventReadService>();
 
         return services;
     }

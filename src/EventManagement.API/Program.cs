@@ -1,4 +1,5 @@
 using EventManagement.Infrastructure;
+using EventManagement.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+
+if (builder.Configuration.GetValue<bool>("Database:MigrateOnStartup"))
+{
+    await app.Services.MigrateAndSeedDatabaseAsync();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();

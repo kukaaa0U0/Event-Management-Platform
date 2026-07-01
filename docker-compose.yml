@@ -24,6 +24,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:8080
+      Database__MigrateOnStartup: "true"
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=event_management;Username=postgres;Password=postgres
     ports:
       - "5000:8080"

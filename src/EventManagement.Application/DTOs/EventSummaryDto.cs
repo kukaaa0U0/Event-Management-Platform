@@ -1,6 +1,6 @@
-namespace EventManagement.API.Models;
+namespace EventManagement.Application.DTOs;
 
-public sealed record EventSummaryResponse(
+public sealed record EventSummaryDto(
     Guid Id,
     string Title,
     string Description,
