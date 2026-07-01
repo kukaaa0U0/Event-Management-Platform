@@ -1,26 +1,76 @@
 # Event Management Platform
 
-Учебная web-платформа для создания и управления событиями.
+Educational web platform for creating and managing events.
 
-## Как открыть проект
+## Project Structure
 
-Открывайте в Visual Studio файл:
+Open this file in Visual Studio:
 
 ```text
 EventManagement.sln
 ```
 
-В решении сейчас 4 backend-проекта:
+Backend projects:
 
-- `EventManagement.Domain` - доменные сущности, value objects, enum'ы и интерфейсы.
-- `EventManagement.Application` - будущие commands, queries, DTO и сервисные интерфейсы.
-- `EventManagement.Infrastructure` - будущая работа с EF Core, PostgreSQL и внешними сервисами.
-- `EventManagement.API` - ASP.NET Core Web API с контроллерами.
+- `EventManagement.Domain` - entities, value objects, enums, repository contracts.
+- `EventManagement.Application` - future commands, queries, DTOs, validators, service contracts.
+- `EventManagement.Infrastructure` - EF Core, PostgreSQL, repositories, external service implementations.
+- `EventManagement.API` - ASP.NET Core Web API with controllers and Swagger.
 
-Исходный код лежит в папке `src/`.
+Source code is stored in `src/`.
 
-## Проверка сборки
+## Local API Check
+
+Run `EventManagement.API` from Visual Studio or use:
 
 ```bash
 dotnet build EventManagement.sln
+dotnet run --project src/EventManagement.API/EventManagement.API.csproj --no-build --urls http://localhost:5000
+```
+
+Open:
+
+```text
+http://localhost:5000
+```
+
+Useful endpoints:
+
+```text
+GET http://localhost:5000/api/health
+GET http://localhost:5000/api/events
+```
+
+## Build
+
+```bash
+dotnet build EventManagement.sln
+```
+
+## Database
+
+Local PostgreSQL connection string:
+
+```text
+Host=localhost;Port=5432;Database=event_management;Username=postgres;Password=postgres
+```
+
+Docker Compose starts PostgreSQL and the API:
+
+```bash
+docker compose up --build
+```
+
+## EF Core Migrations
+
+Create a migration:
+
+```bash
+dotnet ef migrations add MigrationName --no-build --project src/EventManagement.Infrastructure/EventManagement.Infrastructure.csproj --startup-project src/EventManagement.API/EventManagement.API.csproj --output-dir Persistence/Migrations
+```
+
+Apply migrations:
+
+```bash
+dotnet ef database update --project src/EventManagement.Infrastructure/EventManagement.Infrastructure.csproj --startup-project src/EventManagement.API/EventManagement.API.csproj
 ```

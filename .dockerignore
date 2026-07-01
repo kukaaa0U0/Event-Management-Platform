@@ -1,0 +1,13 @@
+.git
+.vs
+**/bin
+**/obj
+node_modules
+dist
+build
+.data
+data
+*.user
+*.suo
+*.log
+docker-compose.override.yml
