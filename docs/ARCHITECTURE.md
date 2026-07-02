@@ -200,7 +200,7 @@ Host ports:
 
 - frontend: `http://localhost:5173`;
 - API: `http://localhost:5000`;
-- PostgreSQL: `localhost:5432`.
+- PostgreSQL from Windows tools: `localhost:5433`.
 
 In Docker, the API receives:
 

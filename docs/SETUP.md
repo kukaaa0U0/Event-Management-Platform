@@ -70,7 +70,7 @@ GET http://localhost:5000/api/health
 Current local connection string:
 
 ```text
-Host=localhost;Port=5432;Database=event_management;Username=postgres;Password=postgres
+Host=localhost;Port=5433;Database=event_management;Username=postgres;Password=postgres
 ```
 
 The database needed for this project:
@@ -136,7 +136,7 @@ docker compose up --build
 
 Expected services:
 
-- PostgreSQL on host port `5432`;
+- PostgreSQL on host port `5433`;
 - API on host port `5000`.
 - frontend on host port `5173`.
 
@@ -192,6 +192,12 @@ If API starts but `/api/events` fails:
 - database `event_management` may not exist;
 - migrations may not be applied;
 - connection string password may differ from local PostgreSQL password.
+
+If SQL Shell or pgAdmin says database `event_management` does not exist:
+
+- make sure Docker Compose is running;
+- connect to host `127.0.0.1`, port `5433`;
+- port `5432` may belong to a separate PostgreSQL installed directly on Windows.
 
 If Docker fails on Windows:
 

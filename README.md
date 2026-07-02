@@ -65,7 +65,7 @@ dotnet build EventManagement.sln
 Local PostgreSQL connection string:
 
 ```text
-Host=localhost;Port=5432;Database=event_management;Username=postgres;Password=postgres
+Host=localhost;Port=5433;Database=event_management;Username=postgres;Password=postgres
 ```
 
 Docker Compose starts PostgreSQL and the API:
