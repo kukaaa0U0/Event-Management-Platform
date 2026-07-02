@@ -18,6 +18,21 @@ public sealed class RegistrationsController : ControllerBase
         _registrationService = registrationService;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<IReadOnlyCollection<RegistrationDto>>> GetEventRegistrations(
+        Guid eventId,
+        CancellationToken cancellationToken)
+    {
+        var registrations = await _registrationService.GetEventRegistrationsAsync(eventId, cancellationToken);
+
+        if (registrations is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(registrations);
+    }
+
     [HttpPost]
     public async Task<ActionResult<RegistrationDto>> RegisterForEvent(
         Guid eventId,

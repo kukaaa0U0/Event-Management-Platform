@@ -21,6 +21,7 @@ Completed:
 - `POST /api/events/{id}/publish`.
 - `POST /api/events/{id}/cancel`.
 - `POST /api/events/{eventId}/registrations` creates participant registrations.
+- `GET /api/events/{eventId}/registrations` lists participants for an event.
 - `POST /api/check-in` marks participants as checked in by check-in code.
 - Seed data for initial events, categories, organizer, and tickets.
 - Docker Compose runtime verified with PostgreSQL, migrations, seed data, Swagger, and API endpoints.
@@ -30,20 +31,21 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Registration Management
+## Next Milestone: Frontend MVP Foundation
 
 Goal:
 
 ```text
-Organizer can view event registrations
+User can open a React web app and browse events from the API
 ```
 
 Tasks:
 
-- add `GET /api/events/{eventId}/registrations`;
-- return participant name, email, ticket, status, and check-in code;
-- add basic filters later if needed;
-- test empty, populated, and missing event cases.
+- create Vite React TypeScript app;
+- add Docker setup for frontend;
+- add API client for `GET /api/events`;
+- add event list and event details pages;
+- keep UI simple and useful before adding authentication.
 
 ## Backend MVP
 
@@ -73,7 +75,7 @@ Tasks:
 - `POST /api/events/{eventId}/registrations`
 - prevent duplicate registration by event/user;
 - create check-in code;
-- list registrations for an event.
+- `GET /api/events/{eventId}/registrations`.
 
 ### Check-In
 

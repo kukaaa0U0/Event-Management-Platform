@@ -5,6 +5,10 @@ namespace EventManagement.Application.Interfaces;
 
 public interface IRegistrationService
 {
+    Task<IReadOnlyCollection<RegistrationDto>?> GetEventRegistrationsAsync(
+        Guid eventId,
+        CancellationToken cancellationToken = default);
+
     Task<RegistrationDto?> RegisterForEventAsync(
         RegisterForEventCommand command,
         CancellationToken cancellationToken = default);

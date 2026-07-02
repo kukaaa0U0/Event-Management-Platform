@@ -18,6 +18,36 @@ public sealed class RegistrationService : IRegistrationService
         _dbContext = dbContext;
     }
 
+    public async Task<IReadOnlyCollection<RegistrationDto>?> GetEventRegistrationsAsync(
+        Guid eventId,
+        CancellationToken cancellationToken = default)
+    {
+        var typedEventId = new EventId(eventId);
+
+        var eventExists = await _dbContext.Events
+            .AnyAsync(eventItem => eventItem.Id == typedEventId, cancellationToken);
+
+        if (!eventExists)
+        {
+            return null;
+        }
+
+        var rows = await _dbContext.Registrations
+            .AsNoTracking()
+            .Where(registration => registration.EventId == typedEventId)
+            .Join(
+                _dbContext.Users.AsNoTracking(),
+                registration => registration.UserId,
+                user => user.Id,
+                (registration, user) => new { Registration = registration, User = user })
+            .OrderBy(row => row.User.FullName)
+            .ToListAsync(cancellationToken);
+
+        return rows
+            .Select(row => ToDto(row.Registration, row.User))
+            .ToList();
+    }
+
     public async Task<RegistrationDto?> RegisterForEventAsync(
         RegisterForEventCommand command,
         CancellationToken cancellationToken = default)
