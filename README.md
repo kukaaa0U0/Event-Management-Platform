@@ -17,7 +17,11 @@ Backend projects:
 - `EventManagement.Infrastructure` - EF Core, PostgreSQL, repositories, external service implementations.
 - `EventManagement.API` - ASP.NET Core Web API with controllers and Swagger.
 
-Source code is stored in `src/`.
+Frontend:
+
+- `frontend` - React, TypeScript, Vite, and nginx Docker runtime.
+
+Backend source code is stored in `src/`.
 
 ## Documentation
 
@@ -68,6 +72,18 @@ Docker Compose starts PostgreSQL and the API:
 
 ```bash
 docker compose up --build
+```
+
+Open the web app:
+
+```text
+http://localhost:5173
+```
+
+Swagger remains available at:
+
+```text
+http://localhost:5000/swagger
 ```
 
 Docker Desktop on Windows requires hardware virtualization enabled in BIOS/UEFI.

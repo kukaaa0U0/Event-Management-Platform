@@ -150,22 +150,35 @@ Postman/browser
 
 ## Frontend
 
-React frontend is planned but not created yet.
-
-Expected future project:
+Project:
 
 ```text
 frontend/
 ```
 
-Expected responsibilities:
+Purpose:
 
-- event list page;
-- event details page;
-- create event page;
-- registration page;
-- organizer dashboard;
-- API client and React Query hooks.
+- hosts the React user interface;
+- calls API endpoints through a small TypeScript API client;
+- shows event list and event details from PostgreSQL-backed API data;
+- is served by nginx in Docker.
+
+Current frontend stack:
+
+- React;
+- TypeScript;
+- Vite;
+- nginx for container runtime.
+
+Current frontend flow:
+
+```text
+Browser
+    -> frontend nginx on http://localhost:5173
+    -> /api proxy
+    -> EventManagement.API
+    -> PostgreSQL
+```
 
 ## Docker
 
@@ -181,6 +194,13 @@ Docker Compose is intended to run:
 
 - PostgreSQL;
 - ASP.NET Core API.
+- React frontend served by nginx.
+
+Host ports:
+
+- frontend: `http://localhost:5173`;
+- API: `http://localhost:5000`;
+- PostgreSQL: `localhost:5432`.
 
 In Docker, the API receives:
 

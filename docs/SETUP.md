@@ -7,7 +7,8 @@ This document describes how to run the project locally.
 - .NET 8 SDK or newer.
 - PostgreSQL 17 or compatible.
 - Optional: Docker Desktop.
-- Optional later: Node.js for React frontend.
+- Node.js for local React frontend development.
+- Optional: Docker Desktop.
 
 ## Open Project
 
@@ -33,6 +34,12 @@ Swagger:
 
 ```text
 http://localhost:5000/swagger
+```
+
+Frontend URL when Docker Compose is running:
+
+```text
+http://localhost:5173
 ```
 
 ## Build
@@ -131,6 +138,36 @@ Expected services:
 
 - PostgreSQL on host port `5432`;
 - API on host port `5000`.
+- frontend on host port `5173`.
+
+Open:
+
+```text
+http://localhost:5173
+```
+
+The frontend container proxies `/api/*` requests to the API container.
+
+## Run Frontend Locally
+
+From the `frontend` folder:
+
+```bash
+npm install
+npm run dev
+```
+
+The Vite dev server uses:
+
+```text
+http://localhost:5173
+```
+
+During local frontend development, Vite proxies `/api/*` requests to:
+
+```text
+http://localhost:5000
+```
 
 ## Useful Endpoints
 
