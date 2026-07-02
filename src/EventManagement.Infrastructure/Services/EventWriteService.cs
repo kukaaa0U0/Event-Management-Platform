@@ -59,6 +59,44 @@ public sealed class EventWriteService : IEventWriteService
         return await _eventReadService.GetEventDetailsAsync(eventItem.Id.Value, cancellationToken);
     }
 
+    public async Task<EventDetailsDto?> PublishEventAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var eventItem = await GetTrackedEventAsync(id, cancellationToken);
+
+        if (eventItem is null)
+        {
+            return null;
+        }
+
+        eventItem.Publish();
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return await _eventReadService.GetEventDetailsAsync(id, cancellationToken);
+    }
+
+    public async Task<EventDetailsDto?> CancelEventAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var eventItem = await GetTrackedEventAsync(id, cancellationToken);
+
+        if (eventItem is null)
+        {
+            return null;
+        }
+
+        eventItem.Cancel();
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return await _eventReadService.GetEventDetailsAsync(id, cancellationToken);
+    }
+
+    private async Task<Event?> GetTrackedEventAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var eventId = new EventId(id);
+
+        return await _dbContext.Events
+            .FirstOrDefaultAsync(eventItem => eventItem.Id == eventId, cancellationToken);
+    }
+
     private static DateTime EnsureUtc(DateTime value)
     {
         return value.Kind switch

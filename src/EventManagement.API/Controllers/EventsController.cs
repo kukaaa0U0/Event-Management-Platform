@@ -77,6 +77,46 @@ public sealed class EventsController : ControllerBase
         }
     }
 
+    [HttpPost("{id:guid}/publish")]
+    public async Task<ActionResult<EventDetailsDto>> PublishEvent(Guid id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var eventDetails = await _eventWriteService.PublishEventAsync(id, cancellationToken);
+
+            if (eventDetails is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(eventDetails);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return BadRequest(new { message = exception.Message });
+        }
+    }
+
+    [HttpPost("{id:guid}/cancel")]
+    public async Task<ActionResult<EventDetailsDto>> CancelEvent(Guid id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var eventDetails = await _eventWriteService.CancelEventAsync(id, cancellationToken);
+
+            if (eventDetails is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(eventDetails);
+        }
+        catch (InvalidOperationException exception)
+        {
+            return BadRequest(new { message = exception.Message });
+        }
+    }
+
     private static string? ValidateCreateEventRequest(CreateEventRequest request)
     {
         if (request.CategoryId == Guid.Empty)

@@ -130,6 +130,8 @@ GET /api/categories
 GET /api/events
 GET /api/events/{id}
 POST /api/events
+POST /api/events/{id}/publish
+POST /api/events/{id}/cancel
 ```
 
 `GET /api/events` flow:
