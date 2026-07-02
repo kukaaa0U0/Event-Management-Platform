@@ -69,6 +69,45 @@ public sealed class RegistrationService : IRegistrationService
         await _dbContext.Registrations.AddAsync(registration, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
+        return ToDto(registration, user);
+    }
+
+    public async Task<RegistrationDto?> CheckInAsync(
+        CheckInCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var checkInCode = command.CheckInCode.Trim().ToUpperInvariant();
+
+        var registration = await _dbContext.Registrations
+            .FirstOrDefaultAsync(item => item.CheckInCode == checkInCode, cancellationToken);
+
+        if (registration is null)
+        {
+            return null;
+        }
+
+        if (registration.Status == RegistrationStatus.CheckedIn)
+        {
+            throw new InvalidOperationException("Participant is already checked in.");
+        }
+
+        registration.CheckIn(DateTime.UtcNow);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        var user = await _dbContext.Users
+            .AsNoTracking()
+            .FirstAsync(item => item.Id == registration.UserId, cancellationToken);
+
+        return ToDto(registration, user);
+    }
+
+    private static string GenerateCheckInCode()
+    {
+        return $"CHK-{Guid.NewGuid():N}"[..16].ToUpperInvariant();
+    }
+
+    private static RegistrationDto ToDto(Registration registration, User user)
+    {
         return new RegistrationDto(
             registration.Id.Value,
             registration.EventId.Value,
@@ -78,11 +117,7 @@ public sealed class RegistrationService : IRegistrationService
             user.Email.Value,
             registration.Status.ToString(),
             registration.CheckInCode,
-            registration.CreatedAtUtc);
-    }
-
-    private static string GenerateCheckInCode()
-    {
-        return $"CHK-{Guid.NewGuid():N}"[..16].ToUpperInvariant();
+            registration.CreatedAtUtc,
+            registration.CheckedInAtUtc);
     }
 }

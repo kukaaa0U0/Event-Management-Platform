@@ -8,4 +8,8 @@ public interface IRegistrationService
     Task<RegistrationDto?> RegisterForEventAsync(
         RegisterForEventCommand command,
         CancellationToken cancellationToken = default);
+
+    Task<RegistrationDto?> CheckInAsync(
+        CheckInCommand command,
+        CancellationToken cancellationToken = default);
 }

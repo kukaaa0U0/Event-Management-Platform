@@ -21,6 +21,7 @@ Completed:
 - `POST /api/events/{id}/publish`.
 - `POST /api/events/{id}/cancel`.
 - `POST /api/events/{eventId}/registrations` creates participant registrations.
+- `POST /api/check-in` marks participants as checked in by check-in code.
 - Seed data for initial events, categories, organizer, and tickets.
 - Docker Compose runtime verified with PostgreSQL, migrations, seed data, Swagger, and API endpoints.
 
@@ -29,21 +30,20 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Check-In
+## Next Milestone: Registration Management
 
 Goal:
 
 ```text
-Organizer can check in a participant by check-in code
+Organizer can view event registrations
 ```
 
 Tasks:
 
-- add `POST /api/check-in`;
-- find registration by check-in code;
-- call domain method `Registration.CheckIn(...)`;
-- return updated registration details;
-- test valid check-in, missing code, duplicate check-in, and cancelled registration cases.
+- add `GET /api/events/{eventId}/registrations`;
+- return participant name, email, ticket, status, and check-in code;
+- add basic filters later if needed;
+- test empty, populated, and missing event cases.
 
 ## Backend MVP
 

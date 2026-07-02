@@ -9,4 +9,5 @@ public sealed record RegistrationDto(
     string ParticipantEmail,
     string Status,
     string CheckInCode,
-    DateTime CreatedAtUtc);
+    DateTime CreatedAtUtc,
+    DateTime? CheckedInAtUtc);
