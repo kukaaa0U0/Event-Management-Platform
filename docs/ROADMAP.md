@@ -16,6 +16,8 @@ Completed:
 - `GET /api/health`.
 - `GET /api/events` wired to database read service.
 - `GET /api/events/{id}` wired to database read service with ticket details.
+- `GET /api/categories`.
+- `POST /api/events` creates draft events in PostgreSQL.
 - Seed data for initial events, categories, organizer, and tickets.
 - Docker Compose runtime verified with PostgreSQL, migrations, seed data, Swagger, and API endpoints.
 
@@ -24,22 +26,21 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Create Events
+## Next Milestone: Publish and Cancel Events
 
 Goal:
 
 ```text
-POST /api/events creates a draft event in PostgreSQL
+Organizer can publish or cancel draft events
 ```
 
 Tasks:
 
-- add request DTO for creating an event;
-- add FluentValidation package and validator;
-- add Application command/service contract;
-- implement creation through EF Core;
-- return created event details or location header;
-- test from Swagger/Postman.
+- add `POST /api/events/{id}/publish`;
+- add `POST /api/events/{id}/cancel`;
+- enforce domain rules from `Event.Publish()` and `Event.Cancel()`;
+- return updated event details;
+- test valid, missing, and invalid status cases from Swagger/Postman.
 
 ## Backend MVP
 

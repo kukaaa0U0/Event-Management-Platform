@@ -136,7 +136,10 @@ Expected services:
 
 ```text
 GET http://localhost:5000/api/health
+GET http://localhost:5000/api/categories
 GET http://localhost:5000/api/events
+GET http://localhost:5000/api/events/{id}
+POST http://localhost:5000/api/events
 ```
 
 ## Troubleshooting

@@ -126,7 +126,10 @@ Current endpoints:
 
 ```text
 GET /api/health
+GET /api/categories
 GET /api/events
+GET /api/events/{id}
+POST /api/events
 ```
 
 `GET /api/events` flow:
