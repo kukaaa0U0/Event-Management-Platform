@@ -27,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<ICategoryReadService, CategoryReadService>();
         services.AddScoped<IEventReadService, EventReadService>();
         services.AddScoped<IEventWriteService, EventWriteService>();
+        services.AddScoped<IRegistrationService, RegistrationService>();
 
         return services;
     }

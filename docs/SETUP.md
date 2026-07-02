@@ -142,6 +142,7 @@ GET http://localhost:5000/api/events/{id}
 POST http://localhost:5000/api/events
 POST http://localhost:5000/api/events/{id}/publish
 POST http://localhost:5000/api/events/{id}/cancel
+POST http://localhost:5000/api/events/{eventId}/registrations
 ```
 
 ## Troubleshooting

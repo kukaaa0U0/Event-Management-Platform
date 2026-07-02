@@ -132,6 +132,7 @@ GET /api/events/{id}
 POST /api/events
 POST /api/events/{id}/publish
 POST /api/events/{id}/cancel
+POST /api/events/{eventId}/registrations
 ```
 
 `GET /api/events` flow:

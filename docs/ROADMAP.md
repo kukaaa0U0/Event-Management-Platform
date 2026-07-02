@@ -20,6 +20,7 @@ Completed:
 - `POST /api/events` creates draft events in PostgreSQL.
 - `POST /api/events/{id}/publish`.
 - `POST /api/events/{id}/cancel`.
+- `POST /api/events/{eventId}/registrations` creates participant registrations.
 - Seed data for initial events, categories, organizer, and tickets.
 - Docker Compose runtime verified with PostgreSQL, migrations, seed data, Swagger, and API endpoints.
 
@@ -28,22 +29,21 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Register Participants
+## Next Milestone: Check-In
 
 Goal:
 
 ```text
-Participant can register for an event and receive a check-in code
+Organizer can check in a participant by check-in code
 ```
 
 Tasks:
 
-- add registration request DTO;
-- create or reuse a participant user;
-- validate event and ticket availability;
-- create `Registration` with a check-in code;
-- return registration details;
-- test duplicate registration and missing event/ticket cases.
+- add `POST /api/check-in`;
+- find registration by check-in code;
+- call domain method `Registration.CheckIn(...)`;
+- return updated registration details;
+- test valid check-in, missing code, duplicate check-in, and cancelled registration cases.
 
 ## Backend MVP
 
