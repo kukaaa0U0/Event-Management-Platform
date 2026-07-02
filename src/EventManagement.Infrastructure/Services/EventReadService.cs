@@ -1,5 +1,6 @@
 using EventManagement.Application.DTOs;
 using EventManagement.Application.Interfaces;
+using EventManagement.Domain.ValueObjects;
 using EventManagement.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,5 +33,44 @@ public sealed class EventReadService : IEventReadService
                 eventItem.EndsAtUtc,
                 eventItem.Status.ToString()))
             .ToList();
+    }
+
+    public async Task<EventDetailsDto?> GetEventDetailsAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var eventId = new EventId(id);
+
+        var eventItem = await _dbContext.Events
+            .AsNoTracking()
+            .Include(item => item.Tickets)
+            .FirstOrDefaultAsync(item => item.Id == eventId, cancellationToken);
+
+        if (eventItem is null)
+        {
+            return null;
+        }
+
+        var tickets = eventItem.Tickets
+            .OrderBy(ticket => ticket.Type)
+            .ThenBy(ticket => ticket.Name)
+            .Select(ticket => new TicketDto(
+                ticket.Id.Value,
+                ticket.Name,
+                ticket.Type.ToString(),
+                ticket.Price.Amount,
+                ticket.Price.Currency,
+                ticket.Capacity))
+            .ToList();
+
+        return new EventDetailsDto(
+            eventItem.Id.Value,
+            eventItem.Title,
+            eventItem.Description.Value,
+            eventItem.Location.City,
+            eventItem.Location.Address,
+            eventItem.Location.VenueName,
+            eventItem.StartsAtUtc,
+            eventItem.EndsAtUtc,
+            eventItem.Status.ToString(),
+            tickets);
     }
 }
