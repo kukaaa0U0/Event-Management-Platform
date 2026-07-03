@@ -42,6 +42,8 @@ Current domain model:
 - `User` - participant, organizer, or admin.
 - `EventCategory` - category for event grouping.
 
+`Event.OrganizerId` links an event to the user who owns and manages it.
+
 Important value objects:
 
 - `Email`
@@ -147,6 +149,9 @@ Postman/browser
     -> ApplicationDbContext
     -> PostgreSQL
 ```
+
+Authorization is planned but not fully implemented yet. The intended role and
+ownership rules are documented in [Authorization And Access Rules](AUTHORIZATION.md).
 
 ## Frontend
 

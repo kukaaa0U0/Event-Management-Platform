@@ -52,6 +52,11 @@ Tasks:
 - update participant status to `CheckedIn` in the UI;
 - show clear errors for missing or already used check-in codes.
 
+Important product rule:
+
+- the first check-in mode should be `OrganizerOnly`;
+- self check-in should wait until authentication and event ownership checks exist.
+
 ## Backend MVP
 
 ### Events
@@ -90,11 +95,16 @@ Tasks:
 
 ### Users/Auth
 
-Start simple:
+Planned order:
 
-- temporary users or seeded users;
-- then add registration/login;
-- then add JWT authentication and roles.
+- email/password registration and login;
+- password hashing;
+- JWT authentication;
+- roles: `Participant`, `Organizer`, `Admin`;
+- event ownership checks through `Event.OrganizerId`;
+- external login later, for example Yandex ID.
+
+Access rules are tracked in [Authorization And Access Rules](AUTHORIZATION.md).
 
 ## Frontend MVP
 
@@ -121,6 +131,8 @@ Frontend stack:
 ## Later Features
 
 - QR code image generation;
+- registration/check-in modes: `OrganizerOnly`, `SelfCheckIn`, `EventCode`;
+- Yandex ID or another external OAuth provider;
 - email notification abstraction;
 - fake payment service before real Stripe;
 - organizer dashboard statistics;

@@ -28,6 +28,7 @@ Backend source code is stored in `src/`.
 - [Architecture](docs/ARCHITECTURE.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Setup](docs/SETUP.md)
+- [Authorization And Access Rules](docs/AUTHORIZATION.md)
 
 ## Local API Check
 
