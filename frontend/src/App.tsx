@@ -1,7 +1,26 @@
-import { useEffect, useMemo, useState } from "react";
-import { EventDetails, EventSummary, getEventDetails, getEvents } from "./api/events";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import {
+  EventDetails,
+  EventSummary,
+  Registration,
+  getEventDetails,
+  getEvents,
+  registerForEvent
+} from "./api/events";
 
 type LoadState = "idle" | "loading" | "success" | "error";
+
+type RegistrationFormState = {
+  fullName: string;
+  email: string;
+  ticketId: string;
+};
+
+const emptyRegistrationForm: RegistrationFormState = {
+  fullName: "",
+  email: "",
+  ticketId: ""
+};
 
 const dateFormatter = new Intl.DateTimeFormat("ru-RU", {
   day: "2-digit",
@@ -28,7 +47,11 @@ export default function App() {
   const [selectedEvent, setSelectedEvent] = useState<EventDetails | null>(null);
   const [eventsState, setEventsState] = useState<LoadState>("idle");
   const [detailsState, setDetailsState] = useState<LoadState>("idle");
+  const [registrationState, setRegistrationState] = useState<LoadState>("idle");
+  const [registrationForm, setRegistrationForm] = useState<RegistrationFormState>(emptyRegistrationForm);
+  const [registrationResult, setRegistrationResult] = useState<Registration | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [registrationError, setRegistrationError] = useState<string | null>(null);
 
   useEffect(() => {
     let isActive = true;
@@ -67,6 +90,8 @@ export default function App() {
     let isActive = true;
 
     setDetailsState("loading");
+    setRegistrationResult(null);
+    setRegistrationError(null);
     getEventDetails(selectedEventId)
       .then((item) => {
         if (!isActive) {
@@ -74,6 +99,10 @@ export default function App() {
         }
 
         setSelectedEvent(item);
+        setRegistrationForm({
+          ...emptyRegistrationForm,
+          ticketId: item.tickets[0]?.id ?? ""
+        });
         setDetailsState("success");
       })
       .catch((error: unknown) => {
@@ -94,6 +123,55 @@ export default function App() {
     () => events.find((eventItem) => eventItem.id === selectedEventId) ?? null,
     [events, selectedEventId]
   );
+
+  function updateRegistrationForm(field: keyof RegistrationFormState, value: string) {
+    setRegistrationForm((current) => ({
+      ...current,
+      [field]: value
+    }));
+    setRegistrationError(null);
+  }
+
+  async function handleRegistrationSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!selectedEvent) {
+      return;
+    }
+
+    if (!registrationForm.ticketId) {
+      setRegistrationError("Выбери билет.");
+      return;
+    }
+
+    if (!registrationForm.fullName.trim()) {
+      setRegistrationError("Укажи имя участника.");
+      return;
+    }
+
+    if (!registrationForm.email.trim()) {
+      setRegistrationError("Укажи email участника.");
+      return;
+    }
+
+    setRegistrationState("loading");
+    setRegistrationError(null);
+    setRegistrationResult(null);
+
+    try {
+      const registration = await registerForEvent(selectedEvent.id, {
+        ticketId: registrationForm.ticketId,
+        fullName: registrationForm.fullName.trim(),
+        email: registrationForm.email.trim()
+      });
+
+      setRegistrationResult(registration);
+      setRegistrationState("success");
+    } catch (error: unknown) {
+      setRegistrationError(error instanceof Error ? error.message : "Не удалось зарегистрироваться");
+      setRegistrationState("error");
+    }
+  }
 
   return (
     <main className="app-shell">
@@ -181,27 +259,91 @@ export default function App() {
               </div>
             </div>
 
-            <section className="tickets-section">
-              <div className="section-heading">
-                <h3>Билеты</h3>
-                <span>{selectedEvent.tickets.length}</span>
-              </div>
+            <div className="event-action-grid">
+              <section className="tickets-section">
+                <div className="section-heading">
+                  <h3>Билеты</h3>
+                  <span>{selectedEvent.tickets.length}</span>
+                </div>
 
-              <div className="ticket-list">
-                {selectedEvent.tickets.map((ticket) => (
-                  <div className="ticket-row" key={ticket.id}>
-                    <div>
-                      <strong>{ticket.name}</strong>
-                      <span>{ticket.type}</span>
+                <div className="ticket-list">
+                  {selectedEvent.tickets.map((ticket) => (
+                    <div className="ticket-row" key={ticket.id}>
+                      <div>
+                        <strong>{ticket.name}</strong>
+                        <span>{ticket.type}</span>
+                      </div>
+                      <div className="ticket-meta">
+                        <strong>{formatPrice(ticket.priceAmount, ticket.priceCurrency)}</strong>
+                        <span>мест: {ticket.capacity}</span>
+                      </div>
                     </div>
-                    <div className="ticket-meta">
-                      <strong>{formatPrice(ticket.priceAmount, ticket.priceCurrency)}</strong>
-                      <span>мест: {ticket.capacity}</span>
-                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section className="registration-section">
+                <div className="section-heading">
+                  <h3>Регистрация</h3>
+                </div>
+
+                <form className="registration-form" onSubmit={handleRegistrationSubmit}>
+                  <label>
+                    <span>Билет</span>
+                    <select
+                      value={registrationForm.ticketId}
+                      onChange={(event) => updateRegistrationForm("ticketId", event.target.value)}
+                      disabled={selectedEvent.tickets.length === 0 || registrationState === "loading"}
+                    >
+                      {selectedEvent.tickets.map((ticket) => (
+                        <option key={ticket.id} value={ticket.id}>
+                          {ticket.name} · {formatPrice(ticket.priceAmount, ticket.priceCurrency)}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label>
+                    <span>Имя участника</span>
+                    <input
+                      value={registrationForm.fullName}
+                      onChange={(event) => updateRegistrationForm("fullName", event.target.value)}
+                      placeholder="Например, Иван Петров"
+                      disabled={registrationState === "loading"}
+                    />
+                  </label>
+
+                  <label>
+                    <span>Email</span>
+                    <input
+                      type="email"
+                      value={registrationForm.email}
+                      onChange={(event) => updateRegistrationForm("email", event.target.value)}
+                      placeholder="ivan@example.com"
+                      disabled={registrationState === "loading"}
+                    />
+                  </label>
+
+                  {registrationError && <div className="form-alert error">{registrationError}</div>}
+
+                  <button
+                    className="primary-button"
+                    type="submit"
+                    disabled={selectedEvent.tickets.length === 0 || registrationState === "loading"}
+                  >
+                    {registrationState === "loading" ? "Регистрируем..." : "Зарегистрироваться"}
+                  </button>
+                </form>
+
+                {registrationResult && (
+                  <div className="registration-result">
+                    <span>Код для входа</span>
+                    <strong>{registrationResult.checkInCode}</strong>
+                    <p>{registrationResult.participantName} зарегистрирован на событие.</p>
                   </div>
-                ))}
-              </div>
-            </section>
+                )}
+              </section>
+            </div>
           </article>
         )}
       </section>

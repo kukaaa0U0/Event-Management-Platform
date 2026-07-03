@@ -26,6 +26,8 @@ Completed:
 - Seed data for initial events, categories, organizer, and tickets.
 - React/Vite frontend foundation.
 - Frontend event list and event details screen connected to API.
+- Frontend registration form connected to `POST /api/events/{eventId}/registrations`.
+- Frontend shows generated check-in code after successful registration.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:
@@ -33,20 +35,20 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Frontend Registration Flow
+## Next Milestone: Organizer Dashboard Foundation
 
 Goal:
 
 ```text
-User can register for an event from the React web app
+Organizer can view registrations from the React web app
 ```
 
 Tasks:
 
-- add registration form to selected event details;
-- call `POST /api/events/{eventId}/registrations`;
-- show generated check-in code after successful registration;
-- show validation and API errors in the UI.
+- add a registrations panel for the selected event;
+- call `GET /api/events/{eventId}/registrations`;
+- show participant name, email, status, and check-in code;
+- refresh the list after a new registration.
 
 ## Backend MVP
 
@@ -99,6 +101,7 @@ Create React app after the first backend workflows are stable.
 Pages:
 
 - event list and event details are currently implemented in `App.tsx`;
+- event registration form is currently implemented in `App.tsx`;
 - `CreateEventPage`
 - `RegistrationPage`
 - `DashboardPage`

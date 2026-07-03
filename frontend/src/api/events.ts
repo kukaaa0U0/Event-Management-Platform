@@ -23,16 +23,48 @@ export type EventDetails = EventSummary & {
   tickets: Ticket[];
 };
 
+export type Registration = {
+  id: string;
+  eventId: string;
+  ticketId: string;
+  userId: string;
+  participantName: string;
+  participantEmail: string;
+  status: string;
+  checkInCode: string;
+  createdAtUtc: string;
+  checkedInAtUtc: string | null;
+};
+
+export type RegisterForEventRequest = {
+  ticketId: string;
+  fullName: string;
+  email: string;
+};
+
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "/api").replace(/\/$/, "");
 
-async function request<T>(path: string): Promise<T> {
-  const response = await fetch(`${apiBaseUrl}${path}`);
+async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const response = await fetch(`${apiBaseUrl}${path}`, {
+    headers: {
+      "Content-Type": "application/json",
+      ...options?.headers
+    },
+    ...options
+  });
+  const responseText = await response.text();
+  const responseBody = responseText ? JSON.parse(responseText) : null;
 
   if (!response.ok) {
-    throw new Error(`API request failed with status ${response.status}`);
+    const message =
+      responseBody && typeof responseBody === "object" && "message" in responseBody
+        ? String(responseBody.message)
+        : `API request failed with status ${response.status}`;
+
+    throw new Error(message);
   }
 
-  return response.json() as Promise<T>;
+  return responseBody as T;
 }
 
 export function getEvents(): Promise<EventSummary[]> {
@@ -41,4 +73,14 @@ export function getEvents(): Promise<EventSummary[]> {
 
 export function getEventDetails(eventId: string): Promise<EventDetails> {
   return request<EventDetails>(`/events/${eventId}`);
+}
+
+export function registerForEvent(
+  eventId: string,
+  payload: RegisterForEventRequest
+): Promise<Registration> {
+  return request<Registration>(`/events/${eventId}/registrations`, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
 }

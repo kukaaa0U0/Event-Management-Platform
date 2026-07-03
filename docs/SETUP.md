@@ -8,7 +8,6 @@ This document describes how to run the project locally.
 - PostgreSQL 17 or compatible.
 - Optional: Docker Desktop.
 - Node.js for local React frontend development.
-- Optional: Docker Desktop.
 
 ## Open Project
 
@@ -82,8 +81,8 @@ event_management
 If using pgAdmin:
 
 1. Open pgAdmin.
-2. Connect to the local PostgreSQL server.
-3. Create a database named `event_management` if it does not exist.
+2. Connect to host `127.0.0.1`, port `5433`.
+3. Use database `event_management`, username `postgres`, password `postgres`.
 
 ## Apply Migrations
 
@@ -137,7 +136,7 @@ docker compose up --build
 Expected services:
 
 - PostgreSQL on host port `5433`;
-- API on host port `5000`.
+- API on host port `5000`;
 - frontend on host port `5173`.
 
 Open:
