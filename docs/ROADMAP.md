@@ -30,6 +30,8 @@ Completed:
 - Frontend shows generated check-in code after successful registration.
 - Frontend organizer panel shows registrations for the selected event.
 - Frontend refreshes registrations after a new participant is registered.
+- Frontend check-in form connected to `POST /api/check-in`.
+- Frontend can mark participants as `CheckedIn` and refresh the registrations list.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:
@@ -37,20 +39,21 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Frontend Check-In Flow
+## Next Milestone: Authentication Foundation
 
 Goal:
 
 ```text
-Organizer can check in a participant from the React web app
+Users can register, log in, and receive a JWT token
 ```
 
 Tasks:
 
-- add a check-in form or action near the registrations panel;
-- call `POST /api/check-in`;
-- update participant status to `CheckedIn` in the UI;
-- show clear errors for missing or already used check-in codes.
+- add password hash field to users;
+- add `POST /api/auth/register`;
+- add `POST /api/auth/login`;
+- issue JWT access tokens;
+- keep role and event ownership enforcement for the next slice.
 
 Important product rule:
 
@@ -115,6 +118,7 @@ Pages:
 - event list and event details are currently implemented in `App.tsx`;
 - event registration form is currently implemented in `App.tsx`;
 - organizer registrations panel is currently implemented in `App.tsx`;
+- organizer check-in form is currently implemented in `App.tsx`;
 - `CreateEventPage`
 - `RegistrationPage`
 - `DashboardPage`

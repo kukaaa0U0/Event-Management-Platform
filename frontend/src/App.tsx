@@ -3,6 +3,7 @@ import {
   EventDetails,
   EventSummary,
   Registration,
+  checkInParticipant,
   getEventDetails,
   getEventRegistrations,
   getEvents,
@@ -53,9 +54,13 @@ export default function App() {
   const [registrationState, setRegistrationState] = useState<LoadState>("idle");
   const [registrationForm, setRegistrationForm] = useState<RegistrationFormState>(emptyRegistrationForm);
   const [registrationResult, setRegistrationResult] = useState<Registration | null>(null);
+  const [checkInCode, setCheckInCode] = useState("");
+  const [checkInState, setCheckInState] = useState<LoadState>("idle");
+  const [checkInResult, setCheckInResult] = useState<Registration | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [registrationError, setRegistrationError] = useState<string | null>(null);
   const [registrationsError, setRegistrationsError] = useState<string | null>(null);
+  const [checkInError, setCheckInError] = useState<string | null>(null);
 
   useEffect(() => {
     let isActive = true;
@@ -99,6 +104,10 @@ export default function App() {
     setRegistrationResult(null);
     setRegistrationError(null);
     setRegistrationsError(null);
+    setCheckInCode("");
+    setCheckInResult(null);
+    setCheckInError(null);
+    setCheckInState("idle");
     getEventDetails(selectedEventId)
       .then((item) => {
         if (!isActive) {
@@ -216,6 +225,40 @@ export default function App() {
       setRegistrationError(error instanceof Error ? error.message : "Не удалось зарегистрироваться");
       setRegistrationState("error");
     }
+  }
+
+  async function submitCheckIn(code: string) {
+    if (!selectedEvent) {
+      return;
+    }
+
+    const normalizedCode = code.trim();
+
+    if (!normalizedCode) {
+      setCheckInError("Укажи check-in код.");
+      return;
+    }
+
+    setCheckInState("loading");
+    setCheckInError(null);
+    setCheckInResult(null);
+
+    try {
+      const registration = await checkInParticipant({ checkInCode: normalizedCode });
+
+      setCheckInResult(registration);
+      setCheckInCode("");
+      setCheckInState("success");
+      await refreshRegistrations(selectedEvent.id);
+    } catch (error: unknown) {
+      setCheckInError(error instanceof Error ? error.message : "Не удалось отметить участника");
+      setCheckInState("error");
+    }
+  }
+
+  async function handleCheckInSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    await submitCheckIn(checkInCode);
   }
 
   return (
@@ -396,6 +439,32 @@ export default function App() {
                 <span>{registrations.length}</span>
               </div>
 
+              <form className="check-in-form" onSubmit={handleCheckInSubmit}>
+                <label>
+                  <span>Check-in код</span>
+                  <input
+                    value={checkInCode}
+                    onChange={(event) => {
+                      setCheckInCode(event.target.value);
+                      setCheckInError(null);
+                    }}
+                    placeholder="CHK-..."
+                    disabled={checkInState === "loading"}
+                  />
+                </label>
+                <button className="secondary-button" type="submit" disabled={checkInState === "loading"}>
+                  {checkInState === "loading" ? "Отмечаем..." : "Отметить"}
+                </button>
+              </form>
+
+              {checkInError && <div className="form-alert error">{checkInError}</div>}
+
+              {checkInResult && (
+                <div className="form-alert success">
+                  {checkInResult.participantName} отмечен на событии.
+                </div>
+              )}
+
               {registrationsState === "loading" && (
                 <div className="panel-message">Загрузка участников...</div>
               )}
@@ -422,6 +491,14 @@ export default function App() {
                         <strong>{registration.checkInCode}</strong>
                         <span>{registration.status}</span>
                       </div>
+                      <button
+                        className="small-button"
+                        type="button"
+                        disabled={registration.status === "CheckedIn" || checkInState === "loading"}
+                        onClick={() => submitCheckIn(registration.checkInCode)}
+                      >
+                        {registration.status === "CheckedIn" ? "Отмечен" : "Check-in"}
+                      </button>
                     </div>
                   ))}
                 </div>

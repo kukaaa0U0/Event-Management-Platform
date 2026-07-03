@@ -75,3 +75,5 @@ Planned restrictions:
 Temporary MVP exception:
 
 - current endpoints are open while the frontend and base workflows are being built.
+- current frontend check-in is implemented as an organizer workflow, but it is not
+  protected by authentication yet.

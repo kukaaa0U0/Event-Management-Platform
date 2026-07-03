@@ -35,7 +35,7 @@ public sealed class CheckInController : ControllerBase
 
             if (registration is null)
             {
-                return NotFound();
+                return NotFound(new { message = "Check-in code was not found." });
             }
 
             return Ok(registration);

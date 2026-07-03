@@ -42,6 +42,10 @@ export type RegisterForEventRequest = {
   email: string;
 };
 
+export type CheckInRequest = {
+  checkInCode: string;
+};
+
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "/api").replace(/\/$/, "");
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
@@ -84,6 +88,13 @@ export function registerForEvent(
   payload: RegisterForEventRequest
 ): Promise<Registration> {
   return request<Registration>(`/events/${eventId}/registrations`, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function checkInParticipant(payload: CheckInRequest): Promise<Registration> {
+  return request<Registration>("/check-in", {
     method: "POST",
     body: JSON.stringify(payload)
   });
