@@ -191,6 +191,9 @@ Protected endpoints require this header:
 Authorization: Bearer <accessToken>
 ```
 
+The React frontend can obtain and store this token through its login/register
+panel.
+
 Currently protected:
 
 - `POST /api/events`

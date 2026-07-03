@@ -46,6 +46,26 @@ export type CheckInRequest = {
   checkInCode: string;
 };
 
+export type AuthResponse = {
+  userId: string;
+  fullName: string;
+  email: string;
+  role: string;
+  accessToken: string;
+  expiresAtUtc: string;
+};
+
+export type LoginRequest = {
+  email: string;
+  password: string;
+};
+
+export type RegisterUserRequest = {
+  fullName: string;
+  email: string;
+  password: string;
+};
+
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "/api").replace(/\/$/, "");
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
@@ -79,8 +99,12 @@ export function getEventDetails(eventId: string): Promise<EventDetails> {
   return request<EventDetails>(`/events/${eventId}`);
 }
 
-export function getEventRegistrations(eventId: string): Promise<Registration[]> {
-  return request<Registration[]>(`/events/${eventId}/registrations`);
+export function getEventRegistrations(eventId: string, accessToken: string): Promise<Registration[]> {
+  return request<Registration[]>(`/events/${eventId}/registrations`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
 }
 
 export function registerForEvent(
@@ -93,8 +117,25 @@ export function registerForEvent(
   });
 }
 
-export function checkInParticipant(payload: CheckInRequest): Promise<Registration> {
+export function checkInParticipant(payload: CheckInRequest, accessToken: string): Promise<Registration> {
   return request<Registration>("/check-in", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    },
+    body: JSON.stringify(payload)
+  });
+}
+
+export function login(payload: LoginRequest): Promise<AuthResponse> {
+  return request<AuthResponse>("/auth/login", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function registerUser(payload: RegisterUserRequest): Promise<AuthResponse> {
+  return request<AuthResponse>("/auth/register", {
     method: "POST",
     body: JSON.stringify(payload)
   });

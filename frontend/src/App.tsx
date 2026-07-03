@@ -1,5 +1,6 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
+  AuthResponse,
   EventDetails,
   EventSummary,
   Registration,
@@ -7,10 +8,13 @@ import {
   getEventDetails,
   getEventRegistrations,
   getEvents,
-  registerForEvent
+  login,
+  registerForEvent,
+  registerUser
 } from "./api/events";
 
 type LoadState = "idle" | "loading" | "success" | "error";
+type AuthMode = "login" | "register";
 
 type RegistrationFormState = {
   fullName: string;
@@ -18,11 +22,25 @@ type RegistrationFormState = {
   ticketId: string;
 };
 
+type AuthFormState = {
+  fullName: string;
+  email: string;
+  password: string;
+};
+
 const emptyRegistrationForm: RegistrationFormState = {
   fullName: "",
   email: "",
   ticketId: ""
 };
+
+const emptyAuthForm: AuthFormState = {
+  fullName: "",
+  email: "",
+  password: ""
+};
+
+const authStorageKey = "event-management-auth";
 
 const dateFormatter = new Intl.DateTimeFormat("ru-RU", {
   day: "2-digit",
@@ -44,6 +62,24 @@ function formatPrice(amount: number, currency: string): string {
 }
 
 export default function App() {
+  const [auth, setAuth] = useState<AuthResponse | null>(() => {
+    const rawValue = localStorage.getItem(authStorageKey);
+
+    if (!rawValue) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(rawValue) as AuthResponse;
+    } catch {
+      localStorage.removeItem(authStorageKey);
+      return null;
+    }
+  });
+  const [authMode, setAuthMode] = useState<AuthMode>("login");
+  const [authForm, setAuthForm] = useState<AuthFormState>(emptyAuthForm);
+  const [authState, setAuthState] = useState<LoadState>("idle");
+  const [authError, setAuthError] = useState<string | null>(null);
   const [events, setEvents] = useState<EventSummary[]>([]);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<EventDetails | null>(null);
@@ -130,28 +166,32 @@ export default function App() {
         setDetailsState("error");
       });
 
-    getEventRegistrations(selectedEventId)
-      .then((items) => {
-        if (!isActive) {
-          return;
-        }
+    if (auth) {
+      getEventRegistrations(selectedEventId, auth.accessToken)
+        .then((items) => {
+          if (!isActive) {
+            return;
+          }
 
-        setRegistrations(items);
-        setRegistrationsState("success");
-      })
-      .catch((error: unknown) => {
-        if (!isActive) {
-          return;
-        }
+          setRegistrations(items);
+          setRegistrationsState("success");
+        })
+        .catch((error: unknown) => {
+          if (!isActive) {
+            return;
+          }
 
-        setRegistrationsError(error instanceof Error ? error.message : "Не удалось загрузить участников");
-        setRegistrationsState("error");
-      });
+          setRegistrationsError(error instanceof Error ? error.message : "Не удалось загрузить участников");
+          setRegistrationsState("error");
+        });
+    } else {
+      setRegistrationsState("idle");
+    }
 
     return () => {
       isActive = false;
     };
-  }, [selectedEventId]);
+  }, [selectedEventId, auth]);
 
   const selectedSummary = useMemo(
     () => events.find((eventItem) => eventItem.id === selectedEventId) ?? null,
@@ -166,12 +206,83 @@ export default function App() {
     setRegistrationError(null);
   }
 
+  function updateAuthForm(field: keyof AuthFormState, value: string) {
+    setAuthForm((current) => ({
+      ...current,
+      [field]: value
+    }));
+    setAuthError(null);
+  }
+
+  function saveAuth(response: AuthResponse) {
+    localStorage.setItem(authStorageKey, JSON.stringify(response));
+    setAuth(response);
+    setAuthForm(emptyAuthForm);
+    setAuthState("success");
+  }
+
+  function logout() {
+    localStorage.removeItem(authStorageKey);
+    setAuth(null);
+    setRegistrations([]);
+    setRegistrationsState("idle");
+    setCheckInCode("");
+    setCheckInResult(null);
+    setCheckInError(null);
+  }
+
+  async function handleAuthSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (authMode === "register" && !authForm.fullName.trim()) {
+      setAuthError("Укажи имя.");
+      return;
+    }
+
+    if (!authForm.email.trim()) {
+      setAuthError("Укажи email.");
+      return;
+    }
+
+    if (!authForm.password.trim()) {
+      setAuthError("Укажи пароль.");
+      return;
+    }
+
+    setAuthState("loading");
+    setAuthError(null);
+
+    try {
+      const response =
+        authMode === "login"
+          ? await login({
+              email: authForm.email.trim(),
+              password: authForm.password
+            })
+          : await registerUser({
+              fullName: authForm.fullName.trim(),
+              email: authForm.email.trim(),
+              password: authForm.password
+            });
+
+      saveAuth(response);
+    } catch (error: unknown) {
+      setAuthError(error instanceof Error ? error.message : "Не удалось войти");
+      setAuthState("error");
+    }
+  }
+
   async function refreshRegistrations(eventId: string) {
+    if (!auth) {
+      setRegistrationsState("idle");
+      return;
+    }
+
     setRegistrationsState("loading");
     setRegistrationsError(null);
 
     try {
-      const items = await getEventRegistrations(eventId);
+      const items = await getEventRegistrations(eventId, auth.accessToken);
 
       setRegistrations(items);
       setRegistrationsState("success");
@@ -232,6 +343,11 @@ export default function App() {
       return;
     }
 
+    if (!auth) {
+      setCheckInError("Войди как организатор, чтобы отмечать участников.");
+      return;
+    }
+
     const normalizedCode = code.trim();
 
     if (!normalizedCode) {
@@ -244,7 +360,7 @@ export default function App() {
     setCheckInResult(null);
 
     try {
-      const registration = await checkInParticipant({ checkInCode: normalizedCode });
+      const registration = await checkInParticipant({ checkInCode: normalizedCode }, auth.accessToken);
 
       setCheckInResult(registration);
       setCheckInCode("");
@@ -301,6 +417,92 @@ export default function App() {
 
       <section className="content" aria-label="Детали события">
         {errorMessage && <div className="top-alert">{errorMessage}</div>}
+
+        <section className="auth-panel" aria-label="Вход организатора">
+          {auth ? (
+            <div className="auth-summary">
+              <div>
+                <span>Организатор</span>
+                <strong>{auth.fullName}</strong>
+                <p>{auth.email}</p>
+              </div>
+              <button className="secondary-button" type="button" onClick={logout}>
+                Выйти
+              </button>
+            </div>
+          ) : (
+            <form className="auth-form" onSubmit={handleAuthSubmit}>
+              <div className="auth-tabs" role="tablist" aria-label="Режим входа">
+                <button
+                  className={authMode === "login" ? "auth-tab active" : "auth-tab"}
+                  type="button"
+                  onClick={() => {
+                    setAuthMode("login");
+                    setAuthError(null);
+                  }}
+                >
+                  Вход
+                </button>
+                <button
+                  className={authMode === "register" ? "auth-tab active" : "auth-tab"}
+                  type="button"
+                  onClick={() => {
+                    setAuthMode("register");
+                    setAuthError(null);
+                  }}
+                >
+                  Регистрация
+                </button>
+              </div>
+
+              <div className="auth-fields">
+                {authMode === "register" && (
+                  <label>
+                    <span>Имя</span>
+                    <input
+                      value={authForm.fullName}
+                      onChange={(event) => updateAuthForm("fullName", event.target.value)}
+                      placeholder="Имя организатора"
+                      disabled={authState === "loading"}
+                    />
+                  </label>
+                )}
+
+                <label>
+                  <span>Email</span>
+                  <input
+                    type="email"
+                    value={authForm.email}
+                    onChange={(event) => updateAuthForm("email", event.target.value)}
+                    placeholder="organizer@example.com"
+                    disabled={authState === "loading"}
+                  />
+                </label>
+
+                <label>
+                  <span>Пароль</span>
+                  <input
+                    type="password"
+                    value={authForm.password}
+                    onChange={(event) => updateAuthForm("password", event.target.value)}
+                    placeholder="Минимум 8 символов"
+                    disabled={authState === "loading"}
+                  />
+                </label>
+
+                <button className="secondary-button" type="submit" disabled={authState === "loading"}>
+                  {authState === "loading"
+                    ? "Проверяем..."
+                    : authMode === "login"
+                      ? "Войти"
+                      : "Создать аккаунт"}
+                </button>
+              </div>
+
+              {authError && <div className="form-alert error">{authError}</div>}
+            </form>
+          )}
+        </section>
 
         {!selectedEventId && eventsState !== "loading" && (
           <div className="empty-panel">
@@ -433,77 +635,88 @@ export default function App() {
               </section>
             </div>
 
-            <section className="registrations-panel">
-              <div className="section-heading">
-                <h3>Участники</h3>
-                <span>{registrations.length}</span>
-              </div>
-
-              <form className="check-in-form" onSubmit={handleCheckInSubmit}>
-                <label>
-                  <span>Check-in код</span>
-                  <input
-                    value={checkInCode}
-                    onChange={(event) => {
-                      setCheckInCode(event.target.value);
-                      setCheckInError(null);
-                    }}
-                    placeholder="CHK-..."
-                    disabled={checkInState === "loading"}
-                  />
-                </label>
-                <button className="secondary-button" type="submit" disabled={checkInState === "loading"}>
-                  {checkInState === "loading" ? "Отмечаем..." : "Отметить"}
-                </button>
-              </form>
-
-              {checkInError && <div className="form-alert error">{checkInError}</div>}
-
-              {checkInResult && (
-                <div className="form-alert success">
-                  {checkInResult.participantName} отмечен на событии.
+            {auth ? (
+              <section className="registrations-panel">
+                <div className="section-heading">
+                  <h3>Участники</h3>
+                  <span>{registrations.length}</span>
                 </div>
-              )}
 
-              {registrationsState === "loading" && (
-                <div className="panel-message">Загрузка участников...</div>
-              )}
+                <form className="check-in-form" onSubmit={handleCheckInSubmit}>
+                  <label>
+                    <span>Check-in код</span>
+                    <input
+                      value={checkInCode}
+                      onChange={(event) => {
+                        setCheckInCode(event.target.value);
+                        setCheckInError(null);
+                      }}
+                      placeholder="CHK-..."
+                      disabled={checkInState === "loading"}
+                    />
+                  </label>
+                  <button className="secondary-button" type="submit" disabled={checkInState === "loading"}>
+                    {checkInState === "loading" ? "Отмечаем..." : "Отметить"}
+                  </button>
+                </form>
 
-              {registrationsState === "error" && (
-                <div className="form-alert error">
-                  {registrationsError ?? "Не удалось загрузить участников"}
-                </div>
-              )}
+                {checkInError && <div className="form-alert error">{checkInError}</div>}
 
-              {registrationsState === "success" && registrations.length === 0 && (
-                <div className="panel-message">На это событие пока никто не зарегистрирован.</div>
-              )}
+                {checkInResult && (
+                  <div className="form-alert success">
+                    {checkInResult.participantName} отмечен на событии.
+                  </div>
+                )}
 
-              {registrationsState === "success" && registrations.length > 0 && (
-                <div className="registrations-list">
-                  {registrations.map((registration) => (
-                    <div className="registration-row" key={registration.id}>
-                      <div>
-                        <strong>{registration.participantName}</strong>
-                        <span>{registration.participantEmail}</span>
+                {registrationsState === "loading" && (
+                  <div className="panel-message">Загрузка участников...</div>
+                )}
+
+                {registrationsState === "error" && (
+                  <div className="form-alert error">
+                    {registrationsError ?? "Не удалось загрузить участников"}
+                  </div>
+                )}
+
+                {registrationsState === "success" && registrations.length === 0 && (
+                  <div className="panel-message">На это событие пока никто не зарегистрирован.</div>
+                )}
+
+                {registrationsState === "success" && registrations.length > 0 && (
+                  <div className="registrations-list">
+                    {registrations.map((registration) => (
+                      <div className="registration-row" key={registration.id}>
+                        <div>
+                          <strong>{registration.participantName}</strong>
+                          <span>{registration.participantEmail}</span>
+                        </div>
+                        <div className="registration-code">
+                          <strong>{registration.checkInCode}</strong>
+                          <span>{registration.status}</span>
+                        </div>
+                        <button
+                          className="small-button"
+                          type="button"
+                          disabled={registration.status === "CheckedIn" || checkInState === "loading"}
+                          onClick={() => submitCheckIn(registration.checkInCode)}
+                        >
+                          {registration.status === "CheckedIn" ? "Отмечен" : "Check-in"}
+                        </button>
                       </div>
-                      <div className="registration-code">
-                        <strong>{registration.checkInCode}</strong>
-                        <span>{registration.status}</span>
-                      </div>
-                      <button
-                        className="small-button"
-                        type="button"
-                        disabled={registration.status === "CheckedIn" || checkInState === "loading"}
-                        onClick={() => submitCheckIn(registration.checkInCode)}
-                      >
-                        {registration.status === "CheckedIn" ? "Отмечен" : "Check-in"}
-                      </button>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                )}
+              </section>
+            ) : (
+              <section className="registrations-panel">
+                <div className="section-heading">
+                  <h3>Участники</h3>
                 </div>
-              )}
-            </section>
+                <div className="panel-message">
+                  Войди как организатор события, чтобы видеть участников и выполнять check-in.
+                </div>
+              </section>
+            )}
           </article>
         )}
       </section>

@@ -157,7 +157,8 @@ h3 {
 
 .top-alert,
 .state-message,
-.empty-panel {
+.empty-panel,
+.auth-panel {
   border-radius: 8px;
 }
 
@@ -181,13 +182,105 @@ h3 {
 }
 
 .empty-panel,
-.event-details {
+.event-details,
+.auth-panel {
   max-width: 1080px;
   padding: 30px;
   background: #ffffff;
   border: 1px solid #d8e0e8;
   border-radius: 8px;
   box-shadow: 0 14px 35px rgba(31, 41, 55, 0.08);
+}
+
+.auth-panel {
+  margin-bottom: 18px;
+  padding: 18px;
+}
+
+.auth-form {
+  display: grid;
+  gap: 13px;
+}
+
+.auth-tabs {
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-self: start;
+  padding: 3px;
+  background: #eef2f6;
+  border: 1px solid #d8e0e8;
+  border-radius: 8px;
+}
+
+.auth-tab {
+  min-height: 34px;
+  padding: 6px 12px;
+  color: #4b5563;
+  background: transparent;
+  border: 0;
+  border-radius: 6px;
+  font-weight: 800;
+}
+
+.auth-tab.active {
+  color: #ffffff;
+  background: #243447;
+}
+
+.auth-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.auth-fields label {
+  display: grid;
+  gap: 7px;
+}
+
+.auth-fields label span,
+.auth-summary span {
+  color: #4b5563;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.auth-fields input {
+  min-height: 44px;
+  padding: 10px 12px;
+  color: #111827;
+  background: #ffffff;
+  border: 1px solid #cfd8e3;
+  border-radius: 8px;
+  outline: none;
+}
+
+.auth-fields input:focus {
+  border-color: #2f80ed;
+  box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.16);
+}
+
+.auth-fields input:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.auth-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.auth-summary > div {
+  display: grid;
+  gap: 4px;
+}
+
+.auth-summary p {
+  margin-bottom: 0;
+  color: #667085;
 }
 
 .empty-panel p {
@@ -540,6 +633,10 @@ h3 {
   .event-action-grid {
     grid-template-columns: 1fr;
   }
+
+  .auth-fields {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 560px) {
@@ -586,5 +683,10 @@ h3 {
   .registration-code {
     justify-items: start;
     text-align: left;
+  }
+
+  .auth-summary {
+    align-items: stretch;
+    flex-direction: column;
   }
 }

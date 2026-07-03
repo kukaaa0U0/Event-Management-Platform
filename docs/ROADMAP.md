@@ -39,6 +39,8 @@ Completed:
 - Frontend refreshes registrations after a new participant is registered.
 - Frontend check-in form connected to `POST /api/check-in`.
 - Frontend can mark participants as `CheckedIn` and refresh the registrations list.
+- Frontend login/register panel stores JWT access token locally.
+- Frontend sends `Authorization: Bearer ...` for protected organizer requests.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:
@@ -46,21 +48,21 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Frontend Authentication
+## Next Milestone: Frontend Event Creation
 
 Goal:
 
 ```text
-Organizer can log in from the React web app and use protected workflows
+Organizer can create an event from the React web app
 ```
 
 Tasks:
 
-- add login/register panel to frontend;
-- store JWT access token in browser state/local storage;
-- attach `Authorization: Bearer ...` to protected API requests;
-- show organizer-only blocks only when authenticated;
-- keep public event list/details and participant registration available without login.
+- add create event form for authenticated organizers;
+- call `POST /api/events` with JWT;
+- load categories into the form;
+- refresh event list after creation;
+- keep validation and API errors visible.
 
 Important product rule:
 
@@ -113,8 +115,8 @@ Completed:
 
 Planned next:
 
-- frontend login/register UI;
-- authenticated frontend API client;
+- frontend create event UI;
+- authenticated event creation request;
 - broader role policies as workflows grow;
 - external login later, for example Yandex ID.
 
@@ -130,6 +132,7 @@ Pages:
 - event registration form is currently implemented in `App.tsx`;
 - organizer registrations panel is currently implemented in `App.tsx`;
 - organizer check-in form is currently implemented in `App.tsx`;
+- login/register panel is currently implemented in `App.tsx`;
 - `CreateEventPage`
 - `RegistrationPage`
 - `DashboardPage`

@@ -173,6 +173,7 @@ Purpose:
 - lets a participant register for an event and receive a check-in code;
 - shows organizer-facing registrations for the selected event;
 - lets an organizer perform check-in by participant code;
+- lets an organizer log in/register and stores JWT for protected requests;
 - is served by nginx in Docker.
 
 Current frontend stack:
