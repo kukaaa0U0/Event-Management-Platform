@@ -10,21 +10,25 @@ namespace EventManagement.Infrastructure.Services;
 
 public sealed class EventWriteService : IEventWriteService
 {
-    private static readonly UserId DefaultOrganizerId = new(Guid.Parse("5c5b13f0-b64c-4b40-9bfd-6b2e0dbe39a1"));
-
     private readonly ApplicationDbContext _dbContext;
     private readonly IEventReadService _eventReadService;
+    private readonly IEventAccessService _eventAccessService;
 
-    public EventWriteService(ApplicationDbContext dbContext, IEventReadService eventReadService)
+    public EventWriteService(
+        ApplicationDbContext dbContext,
+        IEventReadService eventReadService,
+        IEventAccessService eventAccessService)
     {
         _dbContext = dbContext;
         _eventReadService = eventReadService;
+        _eventAccessService = eventAccessService;
     }
 
     public async Task<EventDetailsDto?> CreateEventAsync(
         CreateEventCommand command,
         CancellationToken cancellationToken = default)
     {
+        var organizerId = new UserId(command.OrganizerId);
         var categoryId = new EventCategoryId(command.CategoryId);
 
         var categoryExists = await _dbContext.EventCategories
@@ -36,16 +40,16 @@ public sealed class EventWriteService : IEventWriteService
         }
 
         var organizerExists = await _dbContext.Users
-            .AnyAsync(user => user.Id == DefaultOrganizerId, cancellationToken);
+            .AnyAsync(user => user.Id == organizerId, cancellationToken);
 
         if (!organizerExists)
         {
-            throw new InvalidOperationException("Default organizer is missing from the database.");
+            throw new InvalidOperationException("Organizer was not found.");
         }
 
         var eventItem = new Event(
             EventId.New(),
-            DefaultOrganizerId,
+            organizerId,
             categoryId,
             command.Title,
             EventDescription.Create(command.Description),
@@ -59,7 +63,11 @@ public sealed class EventWriteService : IEventWriteService
         return await _eventReadService.GetEventDetailsAsync(eventItem.Id.Value, cancellationToken);
     }
 
-    public async Task<EventDetailsDto?> PublishEventAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<EventDetailsDto?> PublishEventAsync(
+        Guid id,
+        Guid currentUserId,
+        string currentUserRole,
+        CancellationToken cancellationToken = default)
     {
         var eventItem = await GetTrackedEventAsync(id, cancellationToken);
 
@@ -68,19 +76,33 @@ public sealed class EventWriteService : IEventWriteService
             return null;
         }
 
+        if (!await _eventAccessService.CanManageEventAsync(currentUserId, currentUserRole, id, cancellationToken))
+        {
+            throw new UnauthorizedAccessException("Only the event organizer or admin can publish this event.");
+        }
+
         eventItem.Publish();
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return await _eventReadService.GetEventDetailsAsync(id, cancellationToken);
     }
 
-    public async Task<EventDetailsDto?> CancelEventAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task<EventDetailsDto?> CancelEventAsync(
+        Guid id,
+        Guid currentUserId,
+        string currentUserRole,
+        CancellationToken cancellationToken = default)
     {
         var eventItem = await GetTrackedEventAsync(id, cancellationToken);
 
         if (eventItem is null)
         {
             return null;
+        }
+
+        if (!await _eventAccessService.CanManageEventAsync(currentUserId, currentUserRole, id, cancellationToken))
+        {
+            throw new UnauthorizedAccessException("Only the event organizer or admin can cancel this event.");
         }
 
         eventItem.Cancel();

@@ -1,7 +1,9 @@
 using EventManagement.API.Models;
+using EventManagement.API.Extensions;
 using EventManagement.Application.Commands;
 using EventManagement.Application.DTOs;
 using EventManagement.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManagement.API.Controllers;
@@ -39,6 +41,7 @@ public sealed class EventsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<ActionResult<EventDetailsDto>> CreateEvent(
         CreateEventRequest request,
         CancellationToken cancellationToken)
@@ -51,6 +54,7 @@ public sealed class EventsController : ControllerBase
         }
 
         var command = new CreateEventCommand(
+            User.GetUserId(),
             request.CategoryId,
             request.Title,
             request.Description,
@@ -78,11 +82,16 @@ public sealed class EventsController : ControllerBase
     }
 
     [HttpPost("{id:guid}/publish")]
+    [Authorize]
     public async Task<ActionResult<EventDetailsDto>> PublishEvent(Guid id, CancellationToken cancellationToken)
     {
         try
         {
-            var eventDetails = await _eventWriteService.PublishEventAsync(id, cancellationToken);
+            var eventDetails = await _eventWriteService.PublishEventAsync(
+                id,
+                User.GetUserId(),
+                User.GetUserRole(),
+                cancellationToken);
 
             if (eventDetails is null)
             {
@@ -94,15 +103,24 @@ public sealed class EventsController : ControllerBase
         catch (InvalidOperationException exception)
         {
             return BadRequest(new { message = exception.Message });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
         }
     }
 
     [HttpPost("{id:guid}/cancel")]
+    [Authorize]
     public async Task<ActionResult<EventDetailsDto>> CancelEvent(Guid id, CancellationToken cancellationToken)
     {
         try
         {
-            var eventDetails = await _eventWriteService.CancelEventAsync(id, cancellationToken);
+            var eventDetails = await _eventWriteService.CancelEventAsync(
+                id,
+                User.GetUserId(),
+                User.GetUserRole(),
+                cancellationToken);
 
             if (eventDetails is null)
             {
@@ -114,6 +132,10 @@ public sealed class EventsController : ControllerBase
         catch (InvalidOperationException exception)
         {
             return BadRequest(new { message = exception.Message });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
         }
     }
 

@@ -55,7 +55,7 @@ Implementation order:
 1. Email/password registration and login. Done.
 2. Password hashing. Done.
 3. JWT access tokens. Done.
-4. API authorization policies by role and event ownership.
+4. API authorization policies by role and event ownership. Initial backend enforcement is done.
 5. Frontend login screen and authenticated API client.
 6. External OAuth login later, for example Yandex ID.
 
@@ -74,6 +74,6 @@ Planned restrictions:
 
 Temporary MVP exception:
 
-- current endpoints are open while the frontend and base workflows are being built.
-- current frontend check-in is implemented as an organizer workflow, but it is not
-  protected by authentication yet.
+- public event list/details and participant registration remain anonymous for MVP.
+- organizer workflows are protected in the API, but the frontend login/token flow is
+  still planned.

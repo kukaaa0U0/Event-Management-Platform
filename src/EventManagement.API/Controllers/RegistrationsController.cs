@@ -1,7 +1,9 @@
 using EventManagement.API.Models;
+using EventManagement.API.Extensions;
 using EventManagement.Application.Commands;
 using EventManagement.Application.DTOs;
 using EventManagement.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,17 +14,31 @@ namespace EventManagement.API.Controllers;
 public sealed class RegistrationsController : ControllerBase
 {
     private readonly IRegistrationService _registrationService;
+    private readonly IEventAccessService _eventAccessService;
 
-    public RegistrationsController(IRegistrationService registrationService)
+    public RegistrationsController(
+        IRegistrationService registrationService,
+        IEventAccessService eventAccessService)
     {
         _registrationService = registrationService;
+        _eventAccessService = eventAccessService;
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IReadOnlyCollection<RegistrationDto>>> GetEventRegistrations(
         Guid eventId,
         CancellationToken cancellationToken)
     {
+        if (!await _eventAccessService.CanManageEventAsync(
+                User.GetUserId(),
+                User.GetUserRole(),
+                eventId,
+                cancellationToken))
+        {
+            return Forbid();
+        }
+
         var registrations = await _registrationService.GetEventRegistrationsAsync(eventId, cancellationToken);
 
         if (registrations is null)

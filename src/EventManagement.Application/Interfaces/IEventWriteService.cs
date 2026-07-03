@@ -7,7 +7,15 @@ public interface IEventWriteService
 {
     Task<EventDetailsDto?> CreateEventAsync(CreateEventCommand command, CancellationToken cancellationToken = default);
 
-    Task<EventDetailsDto?> PublishEventAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<EventDetailsDto?> PublishEventAsync(
+        Guid id,
+        Guid currentUserId,
+        string currentUserRole,
+        CancellationToken cancellationToken = default);
 
-    Task<EventDetailsDto?> CancelEventAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<EventDetailsDto?> CancelEventAsync(
+        Guid id,
+        Guid currentUserId,
+        string currentUserRole,
+        CancellationToken cancellationToken = default);
 }

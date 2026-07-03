@@ -185,6 +185,20 @@ GET http://localhost:5000/api/events/{eventId}/registrations
 POST http://localhost:5000/api/check-in
 ```
 
+Protected endpoints require this header:
+
+```text
+Authorization: Bearer <accessToken>
+```
+
+Currently protected:
+
+- `POST /api/events`
+- `POST /api/events/{id}/publish`
+- `POST /api/events/{id}/cancel`
+- `GET /api/events/{eventId}/registrations`
+- `POST /api/check-in`
+
 The frontend uses the same endpoints through its nginx proxy:
 
 ```text

@@ -54,6 +54,12 @@ POST http://localhost:5000/api/auth/login
 GET http://localhost:5000/api/events
 ```
 
+Protected organizer endpoints require:
+
+```text
+Authorization: Bearer <accessToken>
+```
+
 `GET /api/events` reads data from PostgreSQL. Without a running database, Swagger and
 `GET /api/health` still work, but event queries require PostgreSQL.
 

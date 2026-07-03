@@ -153,9 +153,9 @@ Postman/browser
 ```
 
 Authentication foundation is partially implemented: users can register/login and
-receive JWT access tokens. Endpoint protection and ownership checks are planned
-next. The intended role and ownership rules are documented in
-[Authorization And Access Rules](AUTHORIZATION.md).
+receive JWT access tokens. Organizer endpoints validate JWT tokens and enforce
+event ownership or admin access for protected workflows. The intended role and
+ownership rules are documented in [Authorization And Access Rules](AUTHORIZATION.md).
 
 ## Frontend
 

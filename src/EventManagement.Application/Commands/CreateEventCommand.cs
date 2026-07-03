@@ -1,6 +1,7 @@
 namespace EventManagement.Application.Commands;
 
 public sealed record CreateEventCommand(
+    Guid OrganizerId,
     Guid CategoryId,
     string Title,
     string Description,

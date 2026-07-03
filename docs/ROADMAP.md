@@ -25,6 +25,10 @@ Completed:
 - `POST /api/check-in` marks participants as checked in by check-in code.
 - `POST /api/auth/register` creates an account and returns a JWT access token.
 - `POST /api/auth/login` validates credentials and returns a JWT access token.
+- JWT bearer validation is configured in the API.
+- Event creation and event mutation endpoints require JWT.
+- Event registration list and check-in require organizer/admin access.
+- Event ownership checks use `Event.OrganizerId`.
 - Seed data for initial events, categories, organizer, and tickets.
 - Users can store nullable `password_hash` for account login without breaking participant-only users.
 - React/Vite frontend foundation.
@@ -42,21 +46,21 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Authorization Enforcement
+## Next Milestone: Frontend Authentication
 
 Goal:
 
 ```text
-Protected endpoints require JWT, role, and event ownership checks
+Organizer can log in from the React web app and use protected workflows
 ```
 
 Tasks:
 
-- configure JWT bearer validation in API;
-- add authenticated user helper for controllers;
-- require auth for event creation and mutations;
-- require organizer/admin access for registration list and check-in;
-- keep public event list/details available without login.
+- add login/register panel to frontend;
+- store JWT access token in browser state/local storage;
+- attach `Authorization: Bearer ...` to protected API requests;
+- show organizer-only blocks only when authenticated;
+- keep public event list/details and participant registration available without login.
 
 Important product rule:
 
@@ -109,9 +113,9 @@ Completed:
 
 Planned next:
 
-- JWT bearer validation;
-- roles: `Participant`, `Organizer`, `Admin`;
-- event ownership checks through `Event.OrganizerId`;
+- frontend login/register UI;
+- authenticated frontend API client;
+- broader role policies as workflows grow;
 - external login later, for example Yandex ID.
 
 Access rules are tracked in [Authorization And Access Rules](AUTHORIZATION.md).
