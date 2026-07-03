@@ -128,6 +128,8 @@ Current endpoints:
 
 ```text
 GET /api/health
+POST /api/auth/register
+POST /api/auth/login
 GET /api/categories
 GET /api/events
 GET /api/events/{id}
@@ -150,8 +152,10 @@ Postman/browser
     -> PostgreSQL
 ```
 
-Authorization is planned but not fully implemented yet. The intended role and
-ownership rules are documented in [Authorization And Access Rules](AUTHORIZATION.md).
+Authentication foundation is partially implemented: users can register/login and
+receive JWT access tokens. Endpoint protection and ownership checks are planned
+next. The intended role and ownership rules are documented in
+[Authorization And Access Rules](AUTHORIZATION.md).
 
 ## Frontend
 

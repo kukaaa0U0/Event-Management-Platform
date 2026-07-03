@@ -23,7 +23,10 @@ Completed:
 - `POST /api/events/{eventId}/registrations` creates participant registrations.
 - `GET /api/events/{eventId}/registrations` lists participants for an event.
 - `POST /api/check-in` marks participants as checked in by check-in code.
+- `POST /api/auth/register` creates an account and returns a JWT access token.
+- `POST /api/auth/login` validates credentials and returns a JWT access token.
 - Seed data for initial events, categories, organizer, and tickets.
+- Users can store nullable `password_hash` for account login without breaking participant-only users.
 - React/Vite frontend foundation.
 - Frontend event list and event details screen connected to API.
 - Frontend registration form connected to `POST /api/events/{eventId}/registrations`.
@@ -39,21 +42,21 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Authentication Foundation
+## Next Milestone: Authorization Enforcement
 
 Goal:
 
 ```text
-Users can register, log in, and receive a JWT token
+Protected endpoints require JWT, role, and event ownership checks
 ```
 
 Tasks:
 
-- add password hash field to users;
-- add `POST /api/auth/register`;
-- add `POST /api/auth/login`;
-- issue JWT access tokens;
-- keep role and event ownership enforcement for the next slice.
+- configure JWT bearer validation in API;
+- add authenticated user helper for controllers;
+- require auth for event creation and mutations;
+- require organizer/admin access for registration list and check-in;
+- keep public event list/details available without login.
 
 Important product rule:
 
@@ -98,11 +101,15 @@ Important product rule:
 
 ### Users/Auth
 
-Planned order:
+Completed:
 
 - email/password registration and login;
 - password hashing;
-- JWT authentication;
+- JWT access token issuing.
+
+Planned next:
+
+- JWT bearer validation;
 - roles: `Participant`, `Organizer`, `Admin`;
 - event ownership checks through `Event.OrganizerId`;
 - external login later, for example Yandex ID.

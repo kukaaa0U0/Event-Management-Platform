@@ -26,6 +26,10 @@ services:
       ASPNETCORE_URLS: http://+:8080
       Database__MigrateOnStartup: "true"
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=event_management;Username=postgres;Password=postgres
+      Jwt__Issuer: EventManagement
+      Jwt__Audience: EventManagement.Frontend
+      Jwt__Secret: dev-only-secret-key-change-before-production-64-characters
+      Jwt__ExpirationMinutes: "120"
     ports:
       - "5000:8080"
     depends_on:

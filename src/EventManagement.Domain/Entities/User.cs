@@ -9,12 +9,13 @@ public sealed class User
     {
     }
 
-    public User(UserId id, string fullName, Email email, UserRole role)
+    public User(UserId id, string fullName, Email email, UserRole role, string? passwordHash = null)
     {
         Id = id;
         ChangeName(fullName);
         Email = email;
         Role = role;
+        PasswordHash = passwordHash;
     }
 
     public UserId Id { get; private set; }
@@ -25,6 +26,8 @@ public sealed class User
 
     public UserRole Role { get; private set; }
 
+    public string? PasswordHash { get; private set; }
+
     public void ChangeName(string fullName)
     {
         if (string.IsNullOrWhiteSpace(fullName))
@@ -33,5 +36,20 @@ public sealed class User
         }
 
         FullName = fullName.Trim();
+    }
+
+    public void ChangeRole(UserRole role)
+    {
+        Role = role;
+    }
+
+    public void SetPasswordHash(string passwordHash)
+    {
+        if (string.IsNullOrWhiteSpace(passwordHash))
+        {
+            throw new ArgumentException("Password hash is required.", nameof(passwordHash));
+        }
+
+        PasswordHash = passwordHash;
     }
 }

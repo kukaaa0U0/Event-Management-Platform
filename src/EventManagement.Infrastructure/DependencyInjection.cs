@@ -28,6 +28,8 @@ public static class DependencyInjection
         services.AddScoped<IEventReadService, EventReadService>();
         services.AddScoped<IEventWriteService, EventWriteService>();
         services.AddScoped<IRegistrationService, RegistrationService>();
+        services.AddScoped<JwtTokenService>();
+        services.AddScoped<IAuthService, AuthService>();
 
         return services;
     }

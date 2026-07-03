@@ -52,9 +52,9 @@ the actual check-in from the event management screen.
 
 Implementation order:
 
-1. Email/password registration and login.
-2. Password hashing.
-3. JWT access tokens.
+1. Email/password registration and login. Done.
+2. Password hashing. Done.
+3. JWT access tokens. Done.
 4. API authorization policies by role and event ownership.
 5. Frontend login screen and authenticated API client.
 6. External OAuth login later, for example Yandex ID.

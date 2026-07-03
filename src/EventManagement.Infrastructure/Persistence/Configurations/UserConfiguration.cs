@@ -34,5 +34,9 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
             .HasConversion(role => role.ToString(), value => Enum.Parse<UserRole>(value))
             .HasMaxLength(30)
             .IsRequired();
+
+        builder.Property(user => user.PasswordHash)
+            .HasColumnName("password_hash")
+            .HasMaxLength(500);
     }
 }

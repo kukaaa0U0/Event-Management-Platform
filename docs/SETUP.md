@@ -172,6 +172,8 @@ http://localhost:5000
 
 ```text
 GET http://localhost:5000/api/health
+POST http://localhost:5000/api/auth/register
+POST http://localhost:5000/api/auth/login
 GET http://localhost:5000/api/categories
 GET http://localhost:5000/api/events
 GET http://localhost:5000/api/events/{id}
