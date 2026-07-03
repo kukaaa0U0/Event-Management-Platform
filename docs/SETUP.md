@@ -183,6 +183,12 @@ GET http://localhost:5000/api/events/{eventId}/registrations
 POST http://localhost:5000/api/check-in
 ```
 
+The frontend uses the same endpoints through its nginx proxy:
+
+```text
+http://localhost:5173/api/...
+```
+
 ## Troubleshooting
 
 If API starts but `/api/events` fails:

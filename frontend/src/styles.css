@@ -405,6 +405,64 @@ h3 {
   color: #166534;
 }
 
+.registrations-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.panel-message {
+  padding: 16px;
+  color: #4b5563;
+  background: #f7fafc;
+  border: 1px solid #dfe7ef;
+  border-radius: 8px;
+}
+
+.registrations-list {
+  display: grid;
+  border: 1px solid #dfe7ef;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.registration-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, auto);
+  gap: 14px;
+  align-items: center;
+  padding: 15px 16px;
+  background: #ffffff;
+}
+
+.registration-row + .registration-row {
+  border-top: 1px solid #dfe7ef;
+}
+
+.registration-row > div,
+.registration-code {
+  display: grid;
+  gap: 5px;
+}
+
+.registration-row span {
+  color: #667085;
+  font-size: 13px;
+}
+
+.registration-row strong {
+  overflow-wrap: anywhere;
+}
+
+.registration-code {
+  justify-items: end;
+  text-align: right;
+}
+
+.registration-code strong {
+  color: #1d4ed8;
+  font-size: 14px;
+}
+
 @media (max-width: 900px) {
   .app-shell {
     grid-template-columns: 1fr;
@@ -442,9 +500,18 @@ h3 {
   }
 
   .details-header,
-  .ticket-row {
+  .ticket-row,
+  .registration-row {
     align-items: stretch;
+  }
+
+  .details-header,
+  .ticket-row {
     flex-direction: column;
+  }
+
+  .registration-row {
+    grid-template-columns: 1fr;
   }
 
   .details-grid {
@@ -452,6 +519,11 @@ h3 {
   }
 
   .ticket-meta {
+    text-align: left;
+  }
+
+  .registration-code {
+    justify-items: start;
     text-align: left;
   }
 }

@@ -75,6 +75,10 @@ export function getEventDetails(eventId: string): Promise<EventDetails> {
   return request<EventDetails>(`/events/${eventId}`);
 }
 
+export function getEventRegistrations(eventId: string): Promise<Registration[]> {
+  return request<Registration[]>(`/events/${eventId}/registrations`);
+}
+
 export function registerForEvent(
   eventId: string,
   payload: RegisterForEventRequest

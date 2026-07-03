@@ -4,6 +4,7 @@ import {
   EventSummary,
   Registration,
   getEventDetails,
+  getEventRegistrations,
   getEvents,
   registerForEvent
 } from "./api/events";
@@ -47,11 +48,14 @@ export default function App() {
   const [selectedEvent, setSelectedEvent] = useState<EventDetails | null>(null);
   const [eventsState, setEventsState] = useState<LoadState>("idle");
   const [detailsState, setDetailsState] = useState<LoadState>("idle");
+  const [registrationsState, setRegistrationsState] = useState<LoadState>("idle");
+  const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [registrationState, setRegistrationState] = useState<LoadState>("idle");
   const [registrationForm, setRegistrationForm] = useState<RegistrationFormState>(emptyRegistrationForm);
   const [registrationResult, setRegistrationResult] = useState<Registration | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [registrationError, setRegistrationError] = useState<string | null>(null);
+  const [registrationsError, setRegistrationsError] = useState<string | null>(null);
 
   useEffect(() => {
     let isActive = true;
@@ -90,8 +94,11 @@ export default function App() {
     let isActive = true;
 
     setDetailsState("loading");
+    setRegistrationsState("loading");
+    setRegistrations([]);
     setRegistrationResult(null);
     setRegistrationError(null);
+    setRegistrationsError(null);
     getEventDetails(selectedEventId)
       .then((item) => {
         if (!isActive) {
@@ -114,6 +121,24 @@ export default function App() {
         setDetailsState("error");
       });
 
+    getEventRegistrations(selectedEventId)
+      .then((items) => {
+        if (!isActive) {
+          return;
+        }
+
+        setRegistrations(items);
+        setRegistrationsState("success");
+      })
+      .catch((error: unknown) => {
+        if (!isActive) {
+          return;
+        }
+
+        setRegistrationsError(error instanceof Error ? error.message : "Не удалось загрузить участников");
+        setRegistrationsState("error");
+      });
+
     return () => {
       isActive = false;
     };
@@ -130,6 +155,21 @@ export default function App() {
       [field]: value
     }));
     setRegistrationError(null);
+  }
+
+  async function refreshRegistrations(eventId: string) {
+    setRegistrationsState("loading");
+    setRegistrationsError(null);
+
+    try {
+      const items = await getEventRegistrations(eventId);
+
+      setRegistrations(items);
+      setRegistrationsState("success");
+    } catch (error: unknown) {
+      setRegistrationsError(error instanceof Error ? error.message : "Не удалось загрузить участников");
+      setRegistrationsState("error");
+    }
   }
 
   async function handleRegistrationSubmit(event: FormEvent<HTMLFormElement>) {
@@ -167,6 +207,11 @@ export default function App() {
 
       setRegistrationResult(registration);
       setRegistrationState("success");
+      setRegistrationForm({
+        ...emptyRegistrationForm,
+        ticketId: selectedEvent.tickets[0]?.id ?? ""
+      });
+      await refreshRegistrations(selectedEvent.id);
     } catch (error: unknown) {
       setRegistrationError(error instanceof Error ? error.message : "Не удалось зарегистрироваться");
       setRegistrationState("error");
@@ -344,6 +389,44 @@ export default function App() {
                 )}
               </section>
             </div>
+
+            <section className="registrations-panel">
+              <div className="section-heading">
+                <h3>Участники</h3>
+                <span>{registrations.length}</span>
+              </div>
+
+              {registrationsState === "loading" && (
+                <div className="panel-message">Загрузка участников...</div>
+              )}
+
+              {registrationsState === "error" && (
+                <div className="form-alert error">
+                  {registrationsError ?? "Не удалось загрузить участников"}
+                </div>
+              )}
+
+              {registrationsState === "success" && registrations.length === 0 && (
+                <div className="panel-message">На это событие пока никто не зарегистрирован.</div>
+              )}
+
+              {registrationsState === "success" && registrations.length > 0 && (
+                <div className="registrations-list">
+                  {registrations.map((registration) => (
+                    <div className="registration-row" key={registration.id}>
+                      <div>
+                        <strong>{registration.participantName}</strong>
+                        <span>{registration.participantEmail}</span>
+                      </div>
+                      <div className="registration-code">
+                        <strong>{registration.checkInCode}</strong>
+                        <span>{registration.status}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
           </article>
         )}
       </section>

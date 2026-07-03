@@ -162,6 +162,7 @@ Purpose:
 - calls API endpoints through a small TypeScript API client;
 - shows event list and event details from PostgreSQL-backed API data;
 - lets a participant register for an event and receive a check-in code;
+- shows organizer-facing registrations for the selected event;
 - is served by nginx in Docker.
 
 Current frontend stack:

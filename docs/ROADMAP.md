@@ -28,6 +28,8 @@ Completed:
 - Frontend event list and event details screen connected to API.
 - Frontend registration form connected to `POST /api/events/{eventId}/registrations`.
 - Frontend shows generated check-in code after successful registration.
+- Frontend organizer panel shows registrations for the selected event.
+- Frontend refreshes registrations after a new participant is registered.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:
@@ -35,20 +37,20 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Organizer Dashboard Foundation
+## Next Milestone: Frontend Check-In Flow
 
 Goal:
 
 ```text
-Organizer can view registrations from the React web app
+Organizer can check in a participant from the React web app
 ```
 
 Tasks:
 
-- add a registrations panel for the selected event;
-- call `GET /api/events/{eventId}/registrations`;
-- show participant name, email, status, and check-in code;
-- refresh the list after a new registration.
+- add a check-in form or action near the registrations panel;
+- call `POST /api/check-in`;
+- update participant status to `CheckedIn` in the UI;
+- show clear errors for missing or already used check-in codes.
 
 ## Backend MVP
 
@@ -102,6 +104,7 @@ Pages:
 
 - event list and event details are currently implemented in `App.tsx`;
 - event registration form is currently implemented in `App.tsx`;
+- organizer registrations panel is currently implemented in `App.tsx`;
 - `CreateEventPage`
 - `RegistrationPage`
 - `DashboardPage`
