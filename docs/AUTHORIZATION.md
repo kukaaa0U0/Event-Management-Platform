@@ -67,6 +67,7 @@ configuration, callback URLs, client secrets, and deployment-specific setup.
 Planned restrictions:
 
 - `POST /api/events` requires an authenticated user.
+- `GET /api/events/my` requires an authenticated user and returns their managed events.
 - `PUT /api/events/{id}` requires organizer ownership or admin role.
 - `POST /api/events/{id}/tickets` requires organizer ownership or admin role.
 - event mutation endpoints require organizer ownership or admin role.

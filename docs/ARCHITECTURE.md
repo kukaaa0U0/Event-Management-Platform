@@ -132,6 +132,7 @@ POST /api/auth/register
 POST /api/auth/login
 GET /api/categories
 GET /api/events
+GET /api/events/my
 GET /api/events/{id}
 GET /api/events/{id}/calendar.ics
 POST /api/events
@@ -154,6 +155,9 @@ Postman/browser
     -> ApplicationDbContext
     -> PostgreSQL
 ```
+
+`GET /api/events/my` is protected. It returns events where the current user is
+the organizer; admins can see all managed events.
 
 `GET /api/events/{id}/calendar.ics` uses the read model and formats the event as
 an iCalendar file. The current MVP supports direct download/import. True
@@ -195,6 +199,7 @@ Purpose:
 - shows organizer-facing registrations for the selected event;
 - lets an organizer perform check-in by participant code;
 - lets an organizer log in/register and stores JWT for protected requests;
+- lets an organizer switch between all events and their own managed events;
 - lets an authenticated organizer create a draft event;
 - lets an authenticated organizer edit an event they own;
 - lets an authenticated organizer add tickets to an event they own;

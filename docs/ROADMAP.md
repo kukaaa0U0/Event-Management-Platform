@@ -15,6 +15,7 @@ Completed:
 - Docker Compose foundation for PostgreSQL and API.
 - `GET /api/health`.
 - `GET /api/events` wired to database read service.
+- `GET /api/events/my` returns events managed by the current organizer/admin.
 - `GET /api/events/{id}` wired to database read service with ticket details.
 - `GET /api/events/{id}/calendar.ics` downloads an iCalendar file for an event.
 - `GET /api/categories`.
@@ -44,6 +45,7 @@ Completed:
 - Frontend can mark participants as `CheckedIn` and refresh the registrations list.
 - Frontend login/register panel stores JWT access token locally.
 - Frontend sends `Authorization: Bearer ...` for protected organizer requests.
+- Frontend sidebar can switch between all events and the current organizer's events.
 - Frontend create event form loads categories and calls protected `POST /api/events`.
 - Frontend refreshes the event list and selects the newly created draft event.
 - Frontend edit event form calls protected `PUT /api/events/{id}`.
@@ -58,20 +60,20 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Organizer Dashboard
+## Next Milestone: Public/Organizer Layout Split
 
 Goal:
 
 ```text
-Organizer can focus on events they manage and see key event management actions together
+Public event browsing and organizer management become visually separated
 ```
 
 Tasks:
 
-- add "my events" view/filter for authenticated organizer;
-- separate public participant workflow from organizer workflow;
-- show event management actions in one predictable area;
-- keep public event list simple for anonymous visitors.
+- keep public visitor flow focused on event details and registration;
+- move organizer-only forms into a clearer management area;
+- reduce accidental attempts to edit events not owned by the current organizer;
+- prepare the frontend for future React Router pages.
 
 Important product rule:
 
@@ -83,6 +85,7 @@ Important product rule:
 ### Events
 
 - `GET /api/events`
+- `GET /api/events/my`
 - `GET /api/events/{id}`
 - `GET /api/events/{id}/calendar.ics`
 - `POST /api/events`
@@ -126,7 +129,7 @@ Completed:
 
 Planned next:
 
-- organizer dashboard / my events workflow;
+- public/organizer UI separation;
 - broader role policies as workflows grow;
 - external login later, for example Yandex ID.
 
@@ -139,6 +142,7 @@ Create React app after the first backend workflows are stable.
 Pages:
 
 - event list and event details are currently implemented in `App.tsx`;
+- event list supports `All` and `My` scopes in `App.tsx`;
 - event registration form is currently implemented in `App.tsx`;
 - organizer registrations panel is currently implemented in `App.tsx`;
 - organizer check-in form is currently implemented in `App.tsx`;

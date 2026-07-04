@@ -176,6 +176,7 @@ POST http://localhost:5000/api/auth/register
 POST http://localhost:5000/api/auth/login
 GET http://localhost:5000/api/categories
 GET http://localhost:5000/api/events
+GET http://localhost:5000/api/events/my
 GET http://localhost:5000/api/events/{id}
 GET http://localhost:5000/api/events/{id}/calendar.ics
 POST http://localhost:5000/api/events
@@ -203,6 +204,7 @@ tickets through `POST /api/events/{id}/tickets` and edit event details through
 Currently protected:
 
 - `POST /api/events`
+- `GET /api/events/my`
 - `PUT /api/events/{id}`
 - `POST /api/events/{id}/tickets`
 - `POST /api/events/{id}/publish`

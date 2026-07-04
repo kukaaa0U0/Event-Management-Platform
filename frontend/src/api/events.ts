@@ -124,6 +124,14 @@ export function getEvents(): Promise<EventSummary[]> {
   return request<EventSummary[]>("/events");
 }
 
+export function getMyEvents(accessToken: string): Promise<EventSummary[]> {
+  return request<EventSummary[]>("/events/my", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+}
+
 export function getCategories(): Promise<Category[]> {
   return request<Category[]>("/categories");
 }

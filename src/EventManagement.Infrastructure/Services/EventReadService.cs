@@ -1,5 +1,7 @@
 using EventManagement.Application.DTOs;
 using EventManagement.Application.Interfaces;
+using EventManagement.Domain.Entities;
+using EventManagement.Domain.Enums;
 using EventManagement.Domain.ValueObjects;
 using EventManagement.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -23,15 +25,30 @@ public sealed class EventReadService : IEventReadService
             .ToListAsync(cancellationToken);
 
         return events
-            .Select(eventItem => new EventSummaryDto(
-                eventItem.Id.Value,
-                eventItem.Title,
-                eventItem.Description.Value,
-                eventItem.Location.City,
-                eventItem.Location.Address,
-                eventItem.StartsAtUtc,
-                eventItem.EndsAtUtc,
-                eventItem.Status.ToString()))
+            .Select(ToSummaryDto)
+            .ToList();
+    }
+
+    public async Task<IReadOnlyCollection<EventSummaryDto>> GetManagedEventsAsync(
+        Guid currentUserId,
+        string currentUserRole,
+        CancellationToken cancellationToken = default)
+    {
+        var query = _dbContext.Events
+            .AsNoTracking();
+
+        if (!currentUserRole.Equals(UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
+        {
+            var organizerId = new UserId(currentUserId);
+            query = query.Where(eventItem => eventItem.OrganizerId == organizerId);
+        }
+
+        var events = await query
+            .OrderBy(eventItem => eventItem.StartsAtUtc)
+            .ToListAsync(cancellationToken);
+
+        return events
+            .Select(ToSummaryDto)
             .ToList();
     }
 
@@ -75,5 +92,18 @@ public sealed class EventReadService : IEventReadService
             eventItem.UpdatedAtUtc,
             eventItem.CalendarSequence,
             tickets);
+    }
+
+    private static EventSummaryDto ToSummaryDto(Event eventItem)
+    {
+        return new EventSummaryDto(
+            eventItem.Id.Value,
+            eventItem.Title,
+            eventItem.Description.Value,
+            eventItem.Location.City,
+            eventItem.Location.Address,
+            eventItem.StartsAtUtc,
+            eventItem.EndsAtUtc,
+            eventItem.Status.ToString());
     }
 }

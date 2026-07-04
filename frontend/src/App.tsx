@@ -13,6 +13,7 @@ import {
   getEventDetails,
   getEventRegistrations,
   getEvents,
+  getMyEvents,
   login,
   registerForEvent,
   registerUser,
@@ -21,6 +22,7 @@ import {
 
 type LoadState = "idle" | "loading" | "success" | "error";
 type AuthMode = "login" | "register";
+type EventScope = "all" | "mine";
 
 type RegistrationFormState = {
   fullName: string;
@@ -152,6 +154,7 @@ export default function App() {
   const [authForm, setAuthForm] = useState<AuthFormState>(emptyAuthForm);
   const [authState, setAuthState] = useState<LoadState>("idle");
   const [authError, setAuthError] = useState<string | null>(null);
+  const [eventScope, setEventScope] = useState<EventScope>("all");
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesState, setCategoriesState] = useState<LoadState>("idle");
   const [events, setEvents] = useState<EventSummary[]>([]);
@@ -188,14 +191,24 @@ export default function App() {
     let isActive = true;
 
     setEventsState("loading");
-    getEvents()
+    setErrorMessage(null);
+
+    const eventsRequest = eventScope === "mine" && auth
+      ? getMyEvents(auth.accessToken)
+      : getEvents();
+
+    eventsRequest
       .then((items) => {
         if (!isActive) {
           return;
         }
 
         setEvents(items);
-        setSelectedEventId(items[0]?.id ?? null);
+        setSelectedEventId((current) =>
+          current && items.some((eventItem) => eventItem.id === current)
+            ? current
+            : items[0]?.id ?? null
+        );
         setEventsState("success");
       })
       .catch((error: unknown) => {
@@ -210,7 +223,7 @@ export default function App() {
     return () => {
       isActive = false;
     };
-  }, []);
+  }, [eventScope, auth]);
 
   useEffect(() => {
     let isActive = true;
@@ -322,6 +335,27 @@ export default function App() {
     [events, selectedEventId]
   );
 
+  async function refreshEvents(preferredSelectedEventId?: string) {
+    const items = eventScope === "mine" && auth
+      ? await getMyEvents(auth.accessToken)
+      : await getEvents();
+
+    setEvents(items);
+    setSelectedEventId((current) => {
+      if (preferredSelectedEventId && items.some((eventItem) => eventItem.id === preferredSelectedEventId)) {
+        return preferredSelectedEventId;
+      }
+
+      if (current && items.some((eventItem) => eventItem.id === current)) {
+        return current;
+      }
+
+      return items[0]?.id ?? null;
+    });
+
+    return items;
+  }
+
   function updateRegistrationForm(field: keyof RegistrationFormState, value: string) {
     setRegistrationForm((current) => ({
       ...current,
@@ -375,6 +409,7 @@ export default function App() {
   function logout() {
     localStorage.removeItem(authStorageKey);
     setAuth(null);
+    setEventScope("all");
     setRegistrations([]);
     setRegistrationsState("idle");
     setCheckInCode("");
@@ -447,10 +482,7 @@ export default function App() {
         auth.accessToken
       );
 
-      const updatedEvents = await getEvents();
-
-      setEvents(updatedEvents);
-      setSelectedEventId(createdEvent.id);
+      await refreshEvents(createdEvent.id);
       setCreateEventForm({
         ...createDefaultEventForm(),
         categoryId: createEventForm.categoryId
@@ -533,9 +565,7 @@ export default function App() {
         auth.accessToken
       );
 
-      const updatedEvents = await getEvents();
-
-      setEvents(updatedEvents);
+      await refreshEvents(updatedEvent.id);
       setSelectedEvent(updatedEvent);
       setEditEventForm(createEventFormFromDetails(updatedEvent));
       setEditedEventMessage("Событие обновлено.");
@@ -766,6 +796,25 @@ export default function App() {
           <h1>События</h1>
         </div>
 
+        {auth && (
+          <div className="event-scope-tabs" role="tablist" aria-label="Фильтр событий">
+            <button
+              className={eventScope === "all" ? "event-scope-tab active" : "event-scope-tab"}
+              type="button"
+              onClick={() => setEventScope("all")}
+            >
+              Все
+            </button>
+            <button
+              className={eventScope === "mine" ? "event-scope-tab active" : "event-scope-tab"}
+              type="button"
+              onClick={() => setEventScope("mine")}
+            >
+              Мои
+            </button>
+          </div>
+        )}
+
         {eventsState === "loading" && <div className="state-message">Загрузка событий...</div>}
 
         {eventsState === "error" && (
@@ -775,7 +824,9 @@ export default function App() {
         )}
 
         {eventsState === "success" && events.length === 0 && (
-          <div className="state-message">Пока нет событий.</div>
+          <div className="state-message">
+            {eventScope === "mine" ? "У тебя пока нет своих событий." : "Пока нет событий."}
+          </div>
         )}
 
         <div className="event-list">
