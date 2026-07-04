@@ -18,7 +18,7 @@ Each event belongs to one organizer through `Event.OrganizerId`.
 Planned access rules:
 
 - any authenticated user may create an event and become its organizer;
-- only the event organizer or an admin may update, publish, cancel, or complete it;
+- only the event organizer or an admin may update, publish, cancel, complete it, or add tickets;
 - only the event organizer or an admin may view the full registrations list;
 - participants may only see their own registration data after user accounts are added.
 
@@ -67,6 +67,7 @@ configuration, callback URLs, client secrets, and deployment-specific setup.
 Planned restrictions:
 
 - `POST /api/events` requires an authenticated user.
+- `POST /api/events/{id}/tickets` requires organizer ownership or admin role.
 - event mutation endpoints require organizer ownership or admin role.
 - `GET /api/events/{eventId}/registrations` requires organizer ownership or admin role.
 - `POST /api/check-in` requires organizer ownership or admin role.

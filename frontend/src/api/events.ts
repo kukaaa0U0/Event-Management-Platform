@@ -82,6 +82,14 @@ export type CreateEventRequest = {
   endsAtUtc: string;
 };
 
+export type CreateTicketRequest = {
+  name: string;
+  type: string;
+  priceAmount: number;
+  priceCurrency: string;
+  capacity: number;
+};
+
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "/api").replace(/\/$/, "");
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
@@ -121,6 +129,20 @@ export function getEventDetails(eventId: string): Promise<EventDetails> {
 
 export function createEvent(payload: CreateEventRequest, accessToken: string): Promise<EventDetails> {
   return request<EventDetails>("/events", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    },
+    body: JSON.stringify(payload)
+  });
+}
+
+export function createTicket(
+  eventId: string,
+  payload: CreateTicketRequest,
+  accessToken: string
+): Promise<EventDetails> {
+  return request<EventDetails>(`/events/${eventId}/tickets`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${accessToken}`

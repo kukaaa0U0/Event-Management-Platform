@@ -178,6 +178,7 @@ GET http://localhost:5000/api/categories
 GET http://localhost:5000/api/events
 GET http://localhost:5000/api/events/{id}
 POST http://localhost:5000/api/events
+POST http://localhost:5000/api/events/{id}/tickets
 POST http://localhost:5000/api/events/{id}/publish
 POST http://localhost:5000/api/events/{id}/cancel
 POST http://localhost:5000/api/events/{eventId}/registrations
@@ -193,11 +194,13 @@ Authorization: Bearer <accessToken>
 
 The React frontend can obtain and store this token through its login/register
 panel. After login, the frontend also shows the create event form and sends the
-token to `POST /api/events`.
+token to `POST /api/events`. On the selected event screen, it can also add
+tickets through `POST /api/events/{id}/tickets`.
 
 Currently protected:
 
 - `POST /api/events`
+- `POST /api/events/{id}/tickets`
 - `POST /api/events/{id}/publish`
 - `POST /api/events/{id}/cancel`
 - `GET /api/events/{eventId}/registrations`

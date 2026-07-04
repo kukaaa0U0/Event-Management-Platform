@@ -7,6 +7,7 @@ import {
   Registration,
   checkInParticipant,
   createEvent,
+  createTicket,
   getCategories,
   getEventDetails,
   getEventRegistrations,
@@ -42,6 +43,14 @@ type CreateEventFormState = {
   endsAtLocal: string;
 };
 
+type CreateTicketFormState = {
+  name: string;
+  type: string;
+  priceAmount: string;
+  priceCurrency: string;
+  capacity: string;
+};
+
 const emptyRegistrationForm: RegistrationFormState = {
   fullName: "",
   email: "",
@@ -52,6 +61,14 @@ const emptyAuthForm: AuthFormState = {
   fullName: "",
   email: "",
   password: ""
+};
+
+const emptyTicketForm: CreateTicketFormState = {
+  name: "",
+  type: "Regular",
+  priceAmount: "0",
+  priceCurrency: "RUB",
+  capacity: "50"
 };
 
 function toDateTimeLocalValue(date: Date): string {
@@ -139,6 +156,10 @@ export default function App() {
   const [createEventState, setCreateEventState] = useState<LoadState>("idle");
   const [createEventError, setCreateEventError] = useState<string | null>(null);
   const [createdEventMessage, setCreatedEventMessage] = useState<string | null>(null);
+  const [createTicketForm, setCreateTicketForm] = useState<CreateTicketFormState>(emptyTicketForm);
+  const [createTicketState, setCreateTicketState] = useState<LoadState>("idle");
+  const [createTicketError, setCreateTicketError] = useState<string | null>(null);
+  const [createdTicketMessage, setCreatedTicketMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [registrationError, setRegistrationError] = useState<string | null>(null);
   const [registrationsError, setRegistrationsError] = useState<string | null>(null);
@@ -220,6 +241,10 @@ export default function App() {
     setCheckInResult(null);
     setCheckInError(null);
     setCheckInState("idle");
+    setCreateTicketForm(emptyTicketForm);
+    setCreateTicketError(null);
+    setCreatedTicketMessage(null);
+    setCreateTicketState("idle");
     getEventDetails(selectedEventId)
       .then((item) => {
         if (!isActive) {
@@ -297,6 +322,15 @@ export default function App() {
     }));
     setCreateEventError(null);
     setCreatedEventMessage(null);
+  }
+
+  function updateCreateTicketForm(field: keyof CreateTicketFormState, value: string) {
+    setCreateTicketForm((current) => ({
+      ...current,
+      [field]: value
+    }));
+    setCreateTicketError(null);
+    setCreatedTicketMessage(null);
   }
 
   function saveAuth(response: AuthResponse) {
@@ -394,6 +428,72 @@ export default function App() {
     } catch (error: unknown) {
       setCreateEventError(error instanceof Error ? error.message : "Не удалось создать событие");
       setCreateEventState("error");
+    }
+  }
+
+  async function handleCreateTicketSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!selectedEvent) {
+      return;
+    }
+
+    if (!auth) {
+      setCreateTicketError("Войди как организатор, чтобы добавить билет.");
+      return;
+    }
+
+    if (!createTicketForm.name.trim()) {
+      setCreateTicketError("Укажи название билета.");
+      return;
+    }
+
+    const priceAmount = Number(createTicketForm.priceAmount);
+    const capacity = Number.parseInt(createTicketForm.capacity, 10);
+
+    if (Number.isNaN(priceAmount) || priceAmount < 0) {
+      setCreateTicketError("Укажи корректную цену.");
+      return;
+    }
+
+    if (Number.isNaN(capacity) || capacity <= 0) {
+      setCreateTicketError("Количество мест должно быть больше нуля.");
+      return;
+    }
+
+    if (!createTicketForm.priceCurrency.trim()) {
+      setCreateTicketError("Укажи валюту.");
+      return;
+    }
+
+    setCreateTicketState("loading");
+    setCreateTicketError(null);
+    setCreatedTicketMessage(null);
+
+    try {
+      const updatedEvent = await createTicket(
+        selectedEvent.id,
+        {
+          name: createTicketForm.name.trim(),
+          type: createTicketForm.type,
+          priceAmount,
+          priceCurrency: createTicketForm.priceCurrency.trim().toUpperCase(),
+          capacity
+        },
+        auth.accessToken
+      );
+
+      setSelectedEvent(updatedEvent);
+      setRegistrationForm({
+        ...emptyRegistrationForm,
+        ticketId: updatedEvent.tickets[0]?.id ?? ""
+      });
+      setCreateTicketForm(emptyTicketForm);
+      setCreatedTicketMessage("Билет добавлен.");
+      setCreateTicketState("success");
+    } catch (error: unknown) {
+      setCreateTicketError(error instanceof Error ? error.message : "Не удалось добавить билет");
+      setCreateTicketState("error");
     }
   }
 
@@ -858,6 +958,78 @@ export default function App() {
                     <div className="panel-message inside-list">Билеты для этого события пока не созданы.</div>
                   )}
                 </div>
+
+                {auth && (
+                  <form className="ticket-form" onSubmit={handleCreateTicketSubmit}>
+                    <div className="section-heading compact">
+                      <h3>Добавить билет</h3>
+                    </div>
+
+                    <label className="wide-field">
+                      <span>Название</span>
+                      <input
+                        value={createTicketForm.name}
+                        onChange={(event) => updateCreateTicketForm("name", event.target.value)}
+                        placeholder="Regular"
+                        disabled={createTicketState === "loading"}
+                      />
+                    </label>
+
+                    <label>
+                      <span>Тип</span>
+                      <select
+                        value={createTicketForm.type}
+                        onChange={(event) => updateCreateTicketForm("type", event.target.value)}
+                        disabled={createTicketState === "loading"}
+                      >
+                        <option value="Regular">Regular</option>
+                        <option value="EarlyBird">Early Bird</option>
+                        <option value="Vip">VIP</option>
+                      </select>
+                    </label>
+
+                    <label>
+                      <span>Цена</span>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={createTicketForm.priceAmount}
+                        onChange={(event) => updateCreateTicketForm("priceAmount", event.target.value)}
+                        disabled={createTicketState === "loading"}
+                      />
+                    </label>
+
+                    <label>
+                      <span>Валюта</span>
+                      <input
+                        value={createTicketForm.priceCurrency}
+                        onChange={(event) => updateCreateTicketForm("priceCurrency", event.target.value)}
+                        maxLength={3}
+                        disabled={createTicketState === "loading"}
+                      />
+                    </label>
+
+                    <label>
+                      <span>Мест</span>
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        value={createTicketForm.capacity}
+                        onChange={(event) => updateCreateTicketForm("capacity", event.target.value)}
+                        disabled={createTicketState === "loading"}
+                      />
+                    </label>
+
+                    <button className="secondary-button" type="submit" disabled={createTicketState === "loading"}>
+                      {createTicketState === "loading" ? "Добавляем..." : "Добавить билет"}
+                    </button>
+
+                    {createTicketError && <div className="form-alert error wide-field">{createTicketError}</div>}
+                    {createdTicketMessage && <div className="form-alert success wide-field">{createdTicketMessage}</div>}
+                  </form>
+                )}
               </section>
 
               <section className="registration-section">

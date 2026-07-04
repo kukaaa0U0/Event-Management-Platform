@@ -2,6 +2,7 @@ using EventManagement.Application.Commands;
 using EventManagement.Application.DTOs;
 using EventManagement.Application.Interfaces;
 using EventManagement.Domain.Entities;
+using EventManagement.Domain.Enums;
 using EventManagement.Domain.ValueObjects;
 using EventManagement.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -61,6 +62,45 @@ public sealed class EventWriteService : IEventWriteService
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return await _eventReadService.GetEventDetailsAsync(eventItem.Id.Value, cancellationToken);
+    }
+
+    public async Task<EventDetailsDto?> CreateTicketAsync(
+        CreateTicketCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var eventItem = await GetTrackedEventAsync(command.EventId, cancellationToken);
+
+        if (eventItem is null)
+        {
+            return null;
+        }
+
+        if (!await _eventAccessService.CanManageEventAsync(
+                command.CurrentUserId,
+                command.CurrentUserRole,
+                command.EventId,
+                cancellationToken))
+        {
+            throw new UnauthorizedAccessException("Only the event organizer or admin can add tickets.");
+        }
+
+        if (!Enum.TryParse<TicketType>(command.Type, ignoreCase: true, out var ticketType))
+        {
+            throw new ArgumentException("Ticket type is invalid.");
+        }
+
+        var ticket = new Ticket(
+            TicketId.New(),
+            eventItem.Id,
+            command.Name,
+            ticketType,
+            Money.Create(command.PriceAmount, command.PriceCurrency),
+            command.Capacity);
+
+        eventItem.AddTicket(ticket);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return await _eventReadService.GetEventDetailsAsync(command.EventId, cancellationToken);
     }
 
     public async Task<EventDetailsDto?> PublishEventAsync(

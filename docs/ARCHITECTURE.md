@@ -134,6 +134,7 @@ GET /api/categories
 GET /api/events
 GET /api/events/{id}
 POST /api/events
+POST /api/events/{id}/tickets
 POST /api/events/{id}/publish
 POST /api/events/{id}/cancel
 POST /api/events/{eventId}/registrations
@@ -175,6 +176,7 @@ Purpose:
 - lets an organizer perform check-in by participant code;
 - lets an organizer log in/register and stores JWT for protected requests;
 - lets an authenticated organizer create a draft event;
+- lets an authenticated organizer add tickets to an event they own;
 - is served by nginx in Docker.
 
 Current frontend stack:
@@ -201,6 +203,18 @@ Organizer in React
     -> POST /api/events with JWT
     -> EventsController
     -> IEventWriteService
+    -> ApplicationDbContext
+    -> PostgreSQL
+```
+
+Create ticket flow:
+
+```text
+Organizer in React
+    -> POST /api/events/{id}/tickets with JWT
+    -> EventsController
+    -> IEventWriteService
+    -> EventWriteService checks event ownership/admin access
     -> ApplicationDbContext
     -> PostgreSQL
 ```

@@ -18,6 +18,7 @@ Completed:
 - `GET /api/events/{id}` wired to database read service with ticket details.
 - `GET /api/categories`.
 - `POST /api/events` creates draft events in PostgreSQL.
+- `POST /api/events/{id}/tickets` creates ticket types for organizer-owned events.
 - `POST /api/events/{id}/publish`.
 - `POST /api/events/{id}/cancel`.
 - `POST /api/events/{eventId}/registrations` creates participant registrations.
@@ -43,6 +44,8 @@ Completed:
 - Frontend sends `Authorization: Bearer ...` for protected organizer requests.
 - Frontend create event form loads categories and calls protected `POST /api/events`.
 - Frontend refreshes the event list and selects the newly created draft event.
+- Frontend ticket form calls protected `POST /api/events/{id}/tickets`.
+- Frontend refreshes selected event details after ticket creation.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:
@@ -50,21 +53,27 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Ticket Management
+## Next Milestone: iCalendar Export
 
 Goal:
 
 ```text
-Organizer can add ticket types to an event from the React web app
+Participant can download an event as an .ics calendar file
 ```
 
 Tasks:
 
-- add backend endpoint for creating tickets;
-- enforce event owner/admin access for ticket creation;
-- add frontend ticket creation form on selected organizer event;
-- refresh event details after ticket creation;
-- keep validation and API errors visible.
+- add `GET /api/events/{id}/calendar.ics`;
+- generate valid iCalendar text with stable `UID`, `DTSTART`, `DTEND`, `SUMMARY`, `DESCRIPTION`, `LOCATION`;
+- return `text/calendar` with file download headers;
+- add frontend button for downloading the `.ics` file;
+- document that localhost supports file download, but true calendar subscription needs a public URL.
+
+Later iCalendar improvement:
+
+- add `UpdatedAtUtc` or `CalendarSequence` to events;
+- include `LAST-MODIFIED`, `DTSTAMP`, and `SEQUENCE`;
+- expose a stable calendar URL for subscription-style updates.
 
 Important product rule:
 
@@ -81,6 +90,7 @@ Important product rule:
 - `PUT /api/events/{id}`
 - `POST /api/events/{id}/publish`
 - `POST /api/events/{id}/cancel`
+- `POST /api/events/{id}/tickets`
 
 ### Categories
 
@@ -117,7 +127,7 @@ Completed:
 
 Planned next:
 
-- ticket management for organizer-owned events;
+- iCalendar `.ics` export for events;
 - broader role policies as workflows grow;
 - external login later, for example Yandex ID.
 
@@ -135,6 +145,7 @@ Pages:
 - organizer check-in form is currently implemented in `App.tsx`;
 - login/register panel is currently implemented in `App.tsx`;
 - create event form is currently implemented in `App.tsx`;
+- create ticket form is currently implemented in `App.tsx`;
 - `RegistrationPage`
 - `DashboardPage`
 - `LoginPage`
@@ -150,6 +161,7 @@ Frontend stack:
 ## Later Features
 
 - QR code image generation;
+- iCalendar subscription-style updates after a public deployment URL exists;
 - registration/check-in modes: `OrganizerOnly`, `SelfCheckIn`, `EventCode`;
 - Yandex ID or another external OAuth provider;
 - email notification abstraction;

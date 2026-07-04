@@ -81,6 +81,55 @@ public sealed class EventsController : ControllerBase
         }
     }
 
+    [HttpPost("{id:guid}/tickets")]
+    [Authorize]
+    public async Task<ActionResult<EventDetailsDto>> CreateTicket(
+        Guid id,
+        CreateTicketRequest request,
+        CancellationToken cancellationToken)
+    {
+        var validationError = ValidateCreateTicketRequest(request);
+
+        if (validationError is not null)
+        {
+            return BadRequest(new { message = validationError });
+        }
+
+        var command = new CreateTicketCommand(
+            id,
+            User.GetUserId(),
+            User.GetUserRole(),
+            request.Name,
+            request.Type,
+            request.PriceAmount,
+            request.PriceCurrency,
+            request.Capacity);
+
+        try
+        {
+            var eventDetails = await _eventWriteService.CreateTicketAsync(command, cancellationToken);
+
+            if (eventDetails is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(eventDetails);
+        }
+        catch (ArgumentOutOfRangeException exception)
+        {
+            return BadRequest(new { message = exception.Message });
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(new { message = exception.Message });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
+        }
+    }
+
     [HttpPost("{id:guid}/publish")]
     [Authorize]
     public async Task<ActionResult<EventDetailsDto>> PublishEvent(Guid id, CancellationToken cancellationToken)
@@ -169,6 +218,36 @@ public sealed class EventsController : ControllerBase
         if (request.EndsAtUtc <= request.StartsAtUtc)
         {
             return "EndsAtUtc must be later than StartsAtUtc.";
+        }
+
+        return null;
+    }
+
+    private static string? ValidateCreateTicketRequest(CreateTicketRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.Name))
+        {
+            return "Name is required.";
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Type))
+        {
+            return "Type is required.";
+        }
+
+        if (request.PriceAmount < 0)
+        {
+            return "PriceAmount cannot be negative.";
+        }
+
+        if (string.IsNullOrWhiteSpace(request.PriceCurrency))
+        {
+            return "PriceCurrency is required.";
+        }
+
+        if (request.Capacity <= 0)
+        {
+            return "Capacity must be greater than zero.";
         }
 
         return null;
