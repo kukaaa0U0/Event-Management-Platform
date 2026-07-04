@@ -152,6 +152,54 @@ public sealed class EventsController : ControllerBase
         }
     }
 
+    [HttpPut("{id:guid}")]
+    [Authorize]
+    public async Task<ActionResult<EventDetailsDto>> UpdateEvent(
+        Guid id,
+        UpdateEventRequest request,
+        CancellationToken cancellationToken)
+    {
+        var validationError = ValidateUpdateEventRequest(request);
+
+        if (validationError is not null)
+        {
+            return BadRequest(new { message = validationError });
+        }
+
+        var command = new UpdateEventCommand(
+            id,
+            User.GetUserId(),
+            User.GetUserRole(),
+            request.CategoryId,
+            request.Title,
+            request.Description,
+            request.City,
+            request.Address,
+            request.VenueName,
+            request.StartsAtUtc,
+            request.EndsAtUtc);
+
+        try
+        {
+            var eventDetails = await _eventWriteService.UpdateEventAsync(command, cancellationToken);
+
+            if (eventDetails is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(eventDetails);
+        }
+        catch (ArgumentException exception)
+        {
+            return BadRequest(new { message = exception.Message });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
+        }
+    }
+
     [HttpPost("{id:guid}/publish")]
     [Authorize]
     public async Task<ActionResult<EventDetailsDto>> PublishEvent(Guid id, CancellationToken cancellationToken)
@@ -270,6 +318,41 @@ public sealed class EventsController : ControllerBase
         if (request.Capacity <= 0)
         {
             return "Capacity must be greater than zero.";
+        }
+
+        return null;
+    }
+
+    private static string? ValidateUpdateEventRequest(UpdateEventRequest request)
+    {
+        if (request.CategoryId == Guid.Empty)
+        {
+            return "CategoryId is required.";
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Title))
+        {
+            return "Title is required.";
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Description))
+        {
+            return "Description is required.";
+        }
+
+        if (string.IsNullOrWhiteSpace(request.City))
+        {
+            return "City is required.";
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Address))
+        {
+            return "Address is required.";
+        }
+
+        if (request.EndsAtUtc <= request.StartsAtUtc)
+        {
+            return "EndsAtUtc must be later than StartsAtUtc.";
         }
 
         return null;

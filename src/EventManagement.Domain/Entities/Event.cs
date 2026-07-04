@@ -24,9 +24,11 @@ public sealed class Event
         Id = id;
         OrganizerId = organizerId;
         CategoryId = categoryId;
-        UpdateDetails(title, description, location, startsAtUtc, endsAtUtc);
+        SetDetails(title, description, location, startsAtUtc, endsAtUtc);
         Status = EventStatus.Draft;
         CreatedAtUtc = DateTime.UtcNow;
+        UpdatedAtUtc = CreatedAtUtc;
+        CalendarSequence = 0;
     }
 
     public EventId Id { get; private set; }
@@ -49,9 +51,29 @@ public sealed class Event
 
     public DateTime CreatedAtUtc { get; private set; }
 
+    public DateTime UpdatedAtUtc { get; private set; }
+
+    public int CalendarSequence { get; private set; }
+
     public IReadOnlyCollection<Ticket> Tickets => _tickets.AsReadOnly();
 
+    public void ChangeCategory(EventCategoryId categoryId)
+    {
+        CategoryId = categoryId;
+    }
+
     public void UpdateDetails(
+        string title,
+        EventDescription description,
+        EventLocation location,
+        DateTime startsAtUtc,
+        DateTime endsAtUtc)
+    {
+        SetDetails(title, description, location, startsAtUtc, endsAtUtc);
+        TouchCalendar();
+    }
+
+    private void SetDetails(
         string title,
         EventDescription description,
         EventLocation location,
@@ -83,6 +105,7 @@ public sealed class Event
         }
 
         Status = EventStatus.Published;
+        TouchCalendar();
     }
 
     public void Cancel()
@@ -93,6 +116,7 @@ public sealed class Event
         }
 
         Status = EventStatus.Cancelled;
+        TouchCalendar();
     }
 
     public void AddTicket(Ticket ticket)
@@ -103,5 +127,11 @@ public sealed class Event
         }
 
         _tickets.Add(ticket);
+    }
+
+    private void TouchCalendar()
+    {
+        UpdatedAtUtc = DateTime.UtcNow;
+        CalendarSequence++;
     }
 }

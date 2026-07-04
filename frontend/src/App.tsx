@@ -15,7 +15,8 @@ import {
   getEvents,
   login,
   registerForEvent,
-  registerUser
+  registerUser,
+  updateEvent
 } from "./api/events";
 
 type LoadState = "idle" | "loading" | "success" | "error";
@@ -98,6 +99,19 @@ function createDefaultEventForm(): CreateEventFormState {
   };
 }
 
+function createEventFormFromDetails(eventDetails: EventDetails): CreateEventFormState {
+  return {
+    categoryId: eventDetails.categoryId,
+    title: eventDetails.title,
+    description: eventDetails.description,
+    city: eventDetails.city,
+    address: eventDetails.address,
+    venueName: eventDetails.venueName ?? "",
+    startsAtLocal: toDateTimeLocalValue(new Date(eventDetails.startsAtUtc)),
+    endsAtLocal: toDateTimeLocalValue(new Date(eventDetails.endsAtUtc))
+  };
+}
+
 const authStorageKey = "event-management-auth";
 
 const dateFormatter = new Intl.DateTimeFormat("ru-RU", {
@@ -157,6 +171,10 @@ export default function App() {
   const [createEventState, setCreateEventState] = useState<LoadState>("idle");
   const [createEventError, setCreateEventError] = useState<string | null>(null);
   const [createdEventMessage, setCreatedEventMessage] = useState<string | null>(null);
+  const [editEventForm, setEditEventForm] = useState<CreateEventFormState>(() => createDefaultEventForm());
+  const [editEventState, setEditEventState] = useState<LoadState>("idle");
+  const [editEventError, setEditEventError] = useState<string | null>(null);
+  const [editedEventMessage, setEditedEventMessage] = useState<string | null>(null);
   const [createTicketForm, setCreateTicketForm] = useState<CreateTicketFormState>(emptyTicketForm);
   const [createTicketState, setCreateTicketState] = useState<LoadState>("idle");
   const [createTicketError, setCreateTicketError] = useState<string | null>(null);
@@ -246,6 +264,9 @@ export default function App() {
     setCreateTicketError(null);
     setCreatedTicketMessage(null);
     setCreateTicketState("idle");
+    setEditEventError(null);
+    setEditedEventMessage(null);
+    setEditEventState("idle");
     getEventDetails(selectedEventId)
       .then((item) => {
         if (!isActive) {
@@ -253,6 +274,7 @@ export default function App() {
         }
 
         setSelectedEvent(item);
+        setEditEventForm(createEventFormFromDetails(item));
         setRegistrationForm({
           ...emptyRegistrationForm,
           ticketId: item.tickets[0]?.id ?? ""
@@ -323,6 +345,15 @@ export default function App() {
     }));
     setCreateEventError(null);
     setCreatedEventMessage(null);
+  }
+
+  function updateEditEventForm(field: keyof CreateEventFormState, value: string) {
+    setEditEventForm((current) => ({
+      ...current,
+      [field]: value
+    }));
+    setEditEventError(null);
+    setEditedEventMessage(null);
   }
 
   function updateCreateTicketForm(field: keyof CreateTicketFormState, value: string) {
@@ -429,6 +460,89 @@ export default function App() {
     } catch (error: unknown) {
       setCreateEventError(error instanceof Error ? error.message : "Не удалось создать событие");
       setCreateEventState("error");
+    }
+  }
+
+  async function handleEditEventSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!selectedEvent) {
+      return;
+    }
+
+    if (!auth) {
+      setEditEventError("Войди как организатор, чтобы редактировать событие.");
+      return;
+    }
+
+    if (!editEventForm.categoryId) {
+      setEditEventError("Выбери категорию.");
+      return;
+    }
+
+    if (!editEventForm.title.trim()) {
+      setEditEventError("Укажи название события.");
+      return;
+    }
+
+    if (!editEventForm.description.trim()) {
+      setEditEventError("Добавь описание события.");
+      return;
+    }
+
+    if (!editEventForm.city.trim()) {
+      setEditEventError("Укажи город.");
+      return;
+    }
+
+    if (!editEventForm.address.trim()) {
+      setEditEventError("Укажи адрес.");
+      return;
+    }
+
+    const startsAt = new Date(editEventForm.startsAtLocal);
+    const endsAt = new Date(editEventForm.endsAtLocal);
+
+    if (Number.isNaN(startsAt.getTime()) || Number.isNaN(endsAt.getTime())) {
+      setEditEventError("Укажи корректные дату и время.");
+      return;
+    }
+
+    if (endsAt <= startsAt) {
+      setEditEventError("Окончание должно быть позже начала.");
+      return;
+    }
+
+    setEditEventState("loading");
+    setEditEventError(null);
+    setEditedEventMessage(null);
+
+    try {
+      const updatedEvent = await updateEvent(
+        selectedEvent.id,
+        {
+          categoryId: editEventForm.categoryId,
+          title: editEventForm.title.trim(),
+          description: editEventForm.description.trim(),
+          city: editEventForm.city.trim(),
+          address: editEventForm.address.trim(),
+          venueName: editEventForm.venueName.trim() || null,
+          startsAtUtc: startsAt.toISOString(),
+          endsAtUtc: endsAt.toISOString()
+        },
+        auth.accessToken
+      );
+
+      const updatedEvents = await getEvents();
+
+      setEvents(updatedEvents);
+      setSelectedEvent(updatedEvent);
+      setEditEventForm(createEventFormFromDetails(updatedEvent));
+      setEditedEventMessage("Событие обновлено.");
+      setEditEventState("success");
+    } catch (error: unknown) {
+      setEditEventError(error instanceof Error ? error.message : "Не удалось обновить событие");
+      setEditEventState("error");
     }
   }
 
@@ -939,6 +1053,109 @@ export default function App() {
                 <strong>{selectedEvent.venueName ?? "Не указана"}</strong>
               </div>
             </div>
+
+            {auth && (
+              <section className="edit-event-panel" aria-label="Редактирование события">
+                <div className="section-heading compact">
+                  <h3>Редактировать событие</h3>
+                  <span>{selectedEvent.calendarSequence}</span>
+                </div>
+
+                <form className="edit-event-form" onSubmit={handleEditEventSubmit}>
+                  <label>
+                    <span>Категория</span>
+                    <select
+                      value={editEventForm.categoryId}
+                      onChange={(event) => updateEditEventForm("categoryId", event.target.value)}
+                      disabled={categoriesState === "loading" || editEventState === "loading"}
+                    >
+                      {categories.length === 0 && <option value="">Категории не загружены</option>}
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+
+                  <label className="wide-field">
+                    <span>Название</span>
+                    <input
+                      value={editEventForm.title}
+                      onChange={(event) => updateEditEventForm("title", event.target.value)}
+                      disabled={editEventState === "loading"}
+                    />
+                  </label>
+
+                  <label className="wide-field">
+                    <span>Описание</span>
+                    <textarea
+                      value={editEventForm.description}
+                      onChange={(event) => updateEditEventForm("description", event.target.value)}
+                      disabled={editEventState === "loading"}
+                    />
+                  </label>
+
+                  <label>
+                    <span>Город</span>
+                    <input
+                      value={editEventForm.city}
+                      onChange={(event) => updateEditEventForm("city", event.target.value)}
+                      disabled={editEventState === "loading"}
+                    />
+                  </label>
+
+                  <label>
+                    <span>Адрес</span>
+                    <input
+                      value={editEventForm.address}
+                      onChange={(event) => updateEditEventForm("address", event.target.value)}
+                      disabled={editEventState === "loading"}
+                    />
+                  </label>
+
+                  <label>
+                    <span>Площадка</span>
+                    <input
+                      value={editEventForm.venueName}
+                      onChange={(event) => updateEditEventForm("venueName", event.target.value)}
+                      disabled={editEventState === "loading"}
+                    />
+                  </label>
+
+                  <label>
+                    <span>Начало</span>
+                    <input
+                      type="datetime-local"
+                      value={editEventForm.startsAtLocal}
+                      onChange={(event) => updateEditEventForm("startsAtLocal", event.target.value)}
+                      disabled={editEventState === "loading"}
+                    />
+                  </label>
+
+                  <label>
+                    <span>Окончание</span>
+                    <input
+                      type="datetime-local"
+                      value={editEventForm.endsAtLocal}
+                      onChange={(event) => updateEditEventForm("endsAtLocal", event.target.value)}
+                      disabled={editEventState === "loading"}
+                    />
+                  </label>
+
+                  <button
+                    className="secondary-button"
+                    type="submit"
+                    disabled={editEventState === "loading" || categoriesState === "loading"}
+                  >
+                    {editEventState === "loading" ? "Сохраняем..." : "Сохранить изменения"}
+                  </button>
+                </form>
+
+                {editEventError && <div className="form-alert error">{editEventError}</div>}
+                {editedEventMessage && <div className="form-alert success">{editedEventMessage}</div>}
+              </section>
+            )}
 
             <div className="event-action-grid">
               <section className="tickets-section">

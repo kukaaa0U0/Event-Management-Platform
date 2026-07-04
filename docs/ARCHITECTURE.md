@@ -135,6 +135,7 @@ GET /api/events
 GET /api/events/{id}
 GET /api/events/{id}/calendar.ics
 POST /api/events
+PUT /api/events/{id}
 POST /api/events/{id}/tickets
 POST /api/events/{id}/publish
 POST /api/events/{id}/cancel
@@ -159,6 +160,19 @@ an iCalendar file. The current MVP supports direct download/import. True
 calendar subscription updates require a publicly reachable URL and later update
 metadata such as `SEQUENCE` and `LAST-MODIFIED`.
 
+Event update flow:
+
+```text
+Organizer in React
+    -> PUT /api/events/{id} with JWT
+    -> EventsController
+    -> IEventWriteService
+    -> EventWriteService checks event ownership/admin access
+    -> Event updates details, UpdatedAtUtc, and CalendarSequence
+    -> ApplicationDbContext
+    -> PostgreSQL
+```
+
 Authentication foundation is partially implemented: users can register/login and
 receive JWT access tokens. Organizer endpoints validate JWT tokens and enforce
 event ownership or admin access for protected workflows. The intended role and
@@ -182,6 +196,7 @@ Purpose:
 - lets an organizer perform check-in by participant code;
 - lets an organizer log in/register and stores JWT for protected requests;
 - lets an authenticated organizer create a draft event;
+- lets an authenticated organizer edit an event they own;
 - lets an authenticated organizer add tickets to an event they own;
 - lets a visitor download an event as an `.ics` calendar file;
 - is served by nginx in Docker.

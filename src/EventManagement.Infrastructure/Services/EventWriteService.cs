@@ -64,6 +64,48 @@ public sealed class EventWriteService : IEventWriteService
         return await _eventReadService.GetEventDetailsAsync(eventItem.Id.Value, cancellationToken);
     }
 
+    public async Task<EventDetailsDto?> UpdateEventAsync(
+        UpdateEventCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var eventItem = await GetTrackedEventAsync(command.EventId, cancellationToken);
+
+        if (eventItem is null)
+        {
+            return null;
+        }
+
+        if (!await _eventAccessService.CanManageEventAsync(
+                command.CurrentUserId,
+                command.CurrentUserRole,
+                command.EventId,
+                cancellationToken))
+        {
+            throw new UnauthorizedAccessException("Only the event organizer or admin can update this event.");
+        }
+
+        var categoryId = new EventCategoryId(command.CategoryId);
+        var categoryExists = await _dbContext.EventCategories
+            .AnyAsync(category => category.Id == categoryId, cancellationToken);
+
+        if (!categoryExists)
+        {
+            throw new ArgumentException("Category was not found.");
+        }
+
+        eventItem.ChangeCategory(categoryId);
+        eventItem.UpdateDetails(
+            command.Title,
+            EventDescription.Create(command.Description),
+            EventLocation.Create(command.City, command.Address, command.VenueName),
+            EnsureUtc(command.StartsAtUtc),
+            EnsureUtc(command.EndsAtUtc));
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return await _eventReadService.GetEventDetailsAsync(command.EventId, cancellationToken);
+    }
+
     public async Task<EventDetailsDto?> CreateTicketAsync(
         CreateTicketCommand command,
         CancellationToken cancellationToken = default)

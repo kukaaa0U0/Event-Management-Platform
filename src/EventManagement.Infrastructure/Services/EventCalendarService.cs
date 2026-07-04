@@ -35,6 +35,8 @@ public sealed class EventCalendarService : IEventCalendarService
             "BEGIN:VEVENT",
             $"UID:{eventDetails.Id}@event-management-platform.local",
             $"DTSTAMP:{FormatUtc(DateTime.UtcNow)}",
+            $"LAST-MODIFIED:{FormatUtc(eventDetails.UpdatedAtUtc)}",
+            $"SEQUENCE:{eventDetails.CalendarSequence}",
             $"DTSTART:{FormatUtc(eventDetails.StartsAtUtc)}",
             $"DTEND:{FormatUtc(eventDetails.EndsAtUtc)}",
             $"SUMMARY:{EscapeText(eventDetails.Title)}",

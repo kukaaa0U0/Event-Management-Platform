@@ -63,6 +63,7 @@ public sealed class EventReadService : IEventReadService
 
         return new EventDetailsDto(
             eventItem.Id.Value,
+            eventItem.CategoryId.Value,
             eventItem.Title,
             eventItem.Description.Value,
             eventItem.Location.City,
@@ -71,6 +72,8 @@ public sealed class EventReadService : IEventReadService
             eventItem.StartsAtUtc,
             eventItem.EndsAtUtc,
             eventItem.Status.ToString(),
+            eventItem.UpdatedAtUtc,
+            eventItem.CalendarSequence,
             tickets);
     }
 }

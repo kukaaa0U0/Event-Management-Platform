@@ -19,6 +19,7 @@ Completed:
 - `GET /api/events/{id}/calendar.ics` downloads an iCalendar file for an event.
 - `GET /api/categories`.
 - `POST /api/events` creates draft events in PostgreSQL.
+- `PUT /api/events/{id}` updates organizer-owned event details.
 - `POST /api/events/{id}/tickets` creates ticket types for organizer-owned events.
 - `POST /api/events/{id}/publish`.
 - `POST /api/events/{id}/cancel`.
@@ -45,6 +46,8 @@ Completed:
 - Frontend sends `Authorization: Bearer ...` for protected organizer requests.
 - Frontend create event form loads categories and calls protected `POST /api/events`.
 - Frontend refreshes the event list and selects the newly created draft event.
+- Frontend edit event form calls protected `PUT /api/events/{id}`.
+- Frontend refreshes event details and event list after editing.
 - Frontend ticket form calls protected `POST /api/events/{id}/tickets`.
 - Frontend refreshes selected event details after ticket creation.
 - Frontend event details include a `.ics` calendar download button.
@@ -55,22 +58,20 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Event Editing And Calendar Updates
+## Next Milestone: Organizer Dashboard
 
 Goal:
 
 ```text
-Organizer can edit event details and calendar files can reflect updates
+Organizer can focus on events they manage and see key event management actions together
 ```
 
 Tasks:
 
-- add backend event update endpoint;
-- enforce event owner/admin access for event updates;
-- add frontend edit event form for organizer-owned events;
-- add `UpdatedAtUtc` or `CalendarSequence` to events;
-- include `LAST-MODIFIED`, `DTSTAMP`, and `SEQUENCE`;
-- expose a stable calendar URL for subscription-style updates.
+- add "my events" view/filter for authenticated organizer;
+- separate public participant workflow from organizer workflow;
+- show event management actions in one predictable area;
+- keep public event list simple for anonymous visitors.
 
 Important product rule:
 
@@ -125,8 +126,7 @@ Completed:
 
 Planned next:
 
-- event editing for organizer-owned events;
-- iCalendar update metadata with `LAST-MODIFIED` and `SEQUENCE`;
+- organizer dashboard / my events workflow;
 - broader role policies as workflows grow;
 - external login later, for example Yandex ID.
 
@@ -144,6 +144,7 @@ Pages:
 - organizer check-in form is currently implemented in `App.tsx`;
 - login/register panel is currently implemented in `App.tsx`;
 - create event form is currently implemented in `App.tsx`;
+- edit event form is currently implemented in `App.tsx`;
 - create ticket form is currently implemented in `App.tsx`;
 - `.ics` calendar download button is currently implemented in `App.tsx`;
 - `RegistrationPage`

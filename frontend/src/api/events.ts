@@ -24,7 +24,10 @@ export type Ticket = {
 };
 
 export type EventDetails = EventSummary & {
+  categoryId: string;
   venueName: string | null;
+  updatedAtUtc: string;
+  calendarSequence: number;
   tickets: Ticket[];
 };
 
@@ -82,6 +85,8 @@ export type CreateEventRequest = {
   endsAtUtc: string;
 };
 
+export type UpdateEventRequest = CreateEventRequest;
+
 export type CreateTicketRequest = {
   name: string;
   type: string;
@@ -134,6 +139,20 @@ export function getEventCalendarUrl(eventId: string): string {
 export function createEvent(payload: CreateEventRequest, accessToken: string): Promise<EventDetails> {
   return request<EventDetails>("/events", {
     method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    },
+    body: JSON.stringify(payload)
+  });
+}
+
+export function updateEvent(
+  eventId: string,
+  payload: UpdateEventRequest,
+  accessToken: string
+): Promise<EventDetails> {
+  return request<EventDetails>(`/events/${eventId}`, {
+    method: "PUT",
     headers: {
       Authorization: `Bearer ${accessToken}`
     },

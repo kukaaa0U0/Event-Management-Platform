@@ -457,21 +457,25 @@ h3 {
 }
 
 .registration-form,
-.ticket-form {
+.ticket-form,
+.edit-event-panel,
+.edit-event-form {
   display: grid;
   gap: 13px;
 }
 
 .registration-form label,
 .check-in-form label,
-.ticket-form label {
+.ticket-form label,
+.edit-event-form label {
   display: grid;
   gap: 7px;
 }
 
 .registration-form label span,
 .check-in-form label span,
-.ticket-form label span {
+.ticket-form label span,
+.edit-event-form label span {
   color: #4b5563;
   font-size: 13px;
   font-weight: 700;
@@ -481,7 +485,10 @@ h3 {
 .registration-form select,
 .check-in-form input,
 .ticket-form input,
-.ticket-form select {
+.ticket-form select,
+.edit-event-form input,
+.edit-event-form select,
+.edit-event-form textarea {
   min-height: 44px;
   padding: 10px 12px;
   color: #111827;
@@ -495,9 +502,17 @@ h3 {
 .registration-form select:focus,
 .check-in-form input:focus,
 .ticket-form input:focus,
-.ticket-form select:focus {
+.ticket-form select:focus,
+.edit-event-form input:focus,
+.edit-event-form select:focus,
+.edit-event-form textarea:focus {
   border-color: #2f80ed;
   box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.16);
+}
+
+.edit-event-form textarea {
+  min-height: 92px;
+  resize: vertical;
 }
 
 .registration-form input:disabled,
@@ -505,6 +520,9 @@ h3 {
 .check-in-form input:disabled,
 .ticket-form input:disabled,
 .ticket-form select:disabled,
+.edit-event-form input:disabled,
+.edit-event-form select:disabled,
+.edit-event-form textarea:disabled,
 .create-event-form input:disabled,
 .create-event-form select:disabled,
 .create-event-form textarea:disabled,
@@ -550,6 +568,26 @@ h3 {
 
 .section-heading.compact h3 {
   font-size: 18px;
+}
+
+.edit-event-panel {
+  padding: 16px;
+  background: #f7fafc;
+  border: 1px solid #dfe7ef;
+  border-radius: 8px;
+}
+
+.edit-event-form {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+}
+
+.edit-event-form .wide-field {
+  grid-column: span 2;
+}
+
+.edit-event-form button {
+  grid-column: 1 / -1;
 }
 
 .primary-button,
@@ -732,7 +770,12 @@ h3 {
     grid-template-columns: 1fr;
   }
 
-  .create-event-form .wide-field {
+  .edit-event-form {
+    grid-template-columns: 1fr;
+  }
+
+  .create-event-form .wide-field,
+  .edit-event-form .wide-field {
     grid-column: auto;
   }
 }
