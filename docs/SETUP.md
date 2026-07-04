@@ -192,7 +192,8 @@ Authorization: Bearer <accessToken>
 ```
 
 The React frontend can obtain and store this token through its login/register
-panel.
+panel. After login, the frontend also shows the create event form and sends the
+token to `POST /api/events`.
 
 Currently protected:
 

@@ -1,10 +1,13 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   AuthResponse,
+  Category,
   EventDetails,
   EventSummary,
   Registration,
   checkInParticipant,
+  createEvent,
+  getCategories,
   getEventDetails,
   getEventRegistrations,
   getEvents,
@@ -28,6 +31,17 @@ type AuthFormState = {
   password: string;
 };
 
+type CreateEventFormState = {
+  categoryId: string;
+  title: string;
+  description: string;
+  city: string;
+  address: string;
+  venueName: string;
+  startsAtLocal: string;
+  endsAtLocal: string;
+};
+
 const emptyRegistrationForm: RegistrationFormState = {
   fullName: "",
   email: "",
@@ -39,6 +53,32 @@ const emptyAuthForm: AuthFormState = {
   email: "",
   password: ""
 };
+
+function toDateTimeLocalValue(date: Date): string {
+  const pad = (value: number) => value.toString().padStart(2, "0");
+
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
+function createDefaultEventForm(): CreateEventFormState {
+  const startsAt = new Date();
+  startsAt.setDate(startsAt.getDate() + 7);
+  startsAt.setMinutes(0, 0, 0);
+
+  const endsAt = new Date(startsAt);
+  endsAt.setHours(endsAt.getHours() + 2);
+
+  return {
+    categoryId: "",
+    title: "",
+    description: "",
+    city: "",
+    address: "",
+    venueName: "",
+    startsAtLocal: toDateTimeLocalValue(startsAt),
+    endsAtLocal: toDateTimeLocalValue(endsAt)
+  };
+}
 
 const authStorageKey = "event-management-auth";
 
@@ -80,6 +120,8 @@ export default function App() {
   const [authForm, setAuthForm] = useState<AuthFormState>(emptyAuthForm);
   const [authState, setAuthState] = useState<LoadState>("idle");
   const [authError, setAuthError] = useState<string | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoriesState, setCategoriesState] = useState<LoadState>("idle");
   const [events, setEvents] = useState<EventSummary[]>([]);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<EventDetails | null>(null);
@@ -93,6 +135,10 @@ export default function App() {
   const [checkInCode, setCheckInCode] = useState("");
   const [checkInState, setCheckInState] = useState<LoadState>("idle");
   const [checkInResult, setCheckInResult] = useState<Registration | null>(null);
+  const [createEventForm, setCreateEventForm] = useState<CreateEventFormState>(() => createDefaultEventForm());
+  const [createEventState, setCreateEventState] = useState<LoadState>("idle");
+  const [createEventError, setCreateEventError] = useState<string | null>(null);
+  const [createdEventMessage, setCreatedEventMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [registrationError, setRegistrationError] = useState<string | null>(null);
   const [registrationsError, setRegistrationsError] = useState<string | null>(null);
@@ -119,6 +165,36 @@ export default function App() {
 
         setErrorMessage(error instanceof Error ? error.message : "Не удалось загрузить события");
         setEventsState("error");
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let isActive = true;
+
+    setCategoriesState("loading");
+    getCategories()
+      .then((items) => {
+        if (!isActive) {
+          return;
+        }
+
+        setCategories(items);
+        setCreateEventForm((current) => ({
+          ...current,
+          categoryId: current.categoryId || items[0]?.id || ""
+        }));
+        setCategoriesState("success");
+      })
+      .catch(() => {
+        if (!isActive) {
+          return;
+        }
+
+        setCategoriesState("error");
       });
 
     return () => {
@@ -214,6 +290,15 @@ export default function App() {
     setAuthError(null);
   }
 
+  function updateCreateEventForm(field: keyof CreateEventFormState, value: string) {
+    setCreateEventForm((current) => ({
+      ...current,
+      [field]: value
+    }));
+    setCreateEventError(null);
+    setCreatedEventMessage(null);
+  }
+
   function saveAuth(response: AuthResponse) {
     localStorage.setItem(authStorageKey, JSON.stringify(response));
     setAuth(response);
@@ -229,6 +314,87 @@ export default function App() {
     setCheckInCode("");
     setCheckInResult(null);
     setCheckInError(null);
+  }
+
+  async function handleCreateEventSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!auth) {
+      setCreateEventError("Войди как организатор, чтобы создать событие.");
+      return;
+    }
+
+    if (!createEventForm.categoryId) {
+      setCreateEventError("Выбери категорию.");
+      return;
+    }
+
+    if (!createEventForm.title.trim()) {
+      setCreateEventError("Укажи название события.");
+      return;
+    }
+
+    if (!createEventForm.description.trim()) {
+      setCreateEventError("Добавь описание события.");
+      return;
+    }
+
+    if (!createEventForm.city.trim()) {
+      setCreateEventError("Укажи город.");
+      return;
+    }
+
+    if (!createEventForm.address.trim()) {
+      setCreateEventError("Укажи адрес.");
+      return;
+    }
+
+    const startsAt = new Date(createEventForm.startsAtLocal);
+    const endsAt = new Date(createEventForm.endsAtLocal);
+
+    if (Number.isNaN(startsAt.getTime()) || Number.isNaN(endsAt.getTime())) {
+      setCreateEventError("Укажи корректные дату и время.");
+      return;
+    }
+
+    if (endsAt <= startsAt) {
+      setCreateEventError("Окончание должно быть позже начала.");
+      return;
+    }
+
+    setCreateEventState("loading");
+    setCreateEventError(null);
+    setCreatedEventMessage(null);
+
+    try {
+      const createdEvent = await createEvent(
+        {
+          categoryId: createEventForm.categoryId,
+          title: createEventForm.title.trim(),
+          description: createEventForm.description.trim(),
+          city: createEventForm.city.trim(),
+          address: createEventForm.address.trim(),
+          venueName: createEventForm.venueName.trim() || null,
+          startsAtUtc: startsAt.toISOString(),
+          endsAtUtc: endsAt.toISOString()
+        },
+        auth.accessToken
+      );
+
+      const updatedEvents = await getEvents();
+
+      setEvents(updatedEvents);
+      setSelectedEventId(createdEvent.id);
+      setCreateEventForm({
+        ...createDefaultEventForm(),
+        categoryId: createEventForm.categoryId
+      });
+      setCreatedEventMessage("Событие создано в статусе Draft.");
+      setCreateEventState("success");
+    } catch (error: unknown) {
+      setCreateEventError(error instanceof Error ? error.message : "Не удалось создать событие");
+      setCreateEventState("error");
+    }
   }
 
   async function handleAuthSubmit(event: FormEvent<HTMLFormElement>) {
@@ -504,6 +670,125 @@ export default function App() {
           )}
         </section>
 
+        {auth && (
+          <section className="create-event-panel" aria-label="Создание события">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Organizer</p>
+                <h3>Создать событие</h3>
+              </div>
+            </div>
+
+            <form className="create-event-form" onSubmit={handleCreateEventSubmit}>
+              <label>
+                <span>Категория</span>
+                <select
+                  value={createEventForm.categoryId}
+                  onChange={(event) => updateCreateEventForm("categoryId", event.target.value)}
+                  disabled={categoriesState === "loading" || createEventState === "loading"}
+                >
+                  {categories.length === 0 && <option value="">Категории не загружены</option>}
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="wide-field">
+                <span>Название</span>
+                <input
+                  value={createEventForm.title}
+                  onChange={(event) => updateCreateEventForm("title", event.target.value)}
+                  placeholder="Например, День карьеры"
+                  disabled={createEventState === "loading"}
+                />
+              </label>
+
+              <label className="wide-field">
+                <span>Описание</span>
+                <textarea
+                  value={createEventForm.description}
+                  onChange={(event) => updateCreateEventForm("description", event.target.value)}
+                  placeholder="Кратко опиши, для кого событие и что там будет"
+                  disabled={createEventState === "loading"}
+                />
+              </label>
+
+              <label>
+                <span>Город</span>
+                <input
+                  value={createEventForm.city}
+                  onChange={(event) => updateCreateEventForm("city", event.target.value)}
+                  placeholder="Москва"
+                  disabled={createEventState === "loading"}
+                />
+              </label>
+
+              <label>
+                <span>Адрес</span>
+                <input
+                  value={createEventForm.address}
+                  onChange={(event) => updateCreateEventForm("address", event.target.value)}
+                  placeholder="ул. Примерная, 1"
+                  disabled={createEventState === "loading"}
+                />
+              </label>
+
+              <label>
+                <span>Площадка</span>
+                <input
+                  value={createEventForm.venueName}
+                  onChange={(event) => updateCreateEventForm("venueName", event.target.value)}
+                  placeholder="Корпус А, аудитория 101"
+                  disabled={createEventState === "loading"}
+                />
+              </label>
+
+              <label>
+                <span>Начало</span>
+                <input
+                  type="datetime-local"
+                  value={createEventForm.startsAtLocal}
+                  onChange={(event) => updateCreateEventForm("startsAtLocal", event.target.value)}
+                  disabled={createEventState === "loading"}
+                />
+              </label>
+
+              <label>
+                <span>Окончание</span>
+                <input
+                  type="datetime-local"
+                  value={createEventForm.endsAtLocal}
+                  onChange={(event) => updateCreateEventForm("endsAtLocal", event.target.value)}
+                  disabled={createEventState === "loading"}
+                />
+              </label>
+
+              <div className="create-event-actions">
+                <button
+                  className="primary-button"
+                  type="submit"
+                  disabled={
+                    createEventState === "loading" ||
+                    categoriesState === "loading" ||
+                    categories.length === 0
+                  }
+                >
+                  {createEventState === "loading" ? "Создаем..." : "Создать событие"}
+                </button>
+              </div>
+            </form>
+
+            {categoriesState === "error" && (
+              <div className="form-alert error">Не удалось загрузить категории для формы.</div>
+            )}
+            {createEventError && <div className="form-alert error">{createEventError}</div>}
+            {createdEventMessage && <div className="form-alert success">{createdEventMessage}</div>}
+          </section>
+        )}
+
         {!selectedEventId && eventsState !== "loading" && (
           <div className="empty-panel">
             <h2>Выбери событие</h2>
@@ -569,6 +854,9 @@ export default function App() {
                       </div>
                     </div>
                   ))}
+                  {selectedEvent.tickets.length === 0 && (
+                    <div className="panel-message inside-list">Билеты для этого события пока не созданы.</div>
+                  )}
                 </div>
               </section>
 

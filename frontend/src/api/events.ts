@@ -9,6 +9,11 @@ export type EventSummary = {
   status: string;
 };
 
+export type Category = {
+  id: string;
+  name: string;
+};
+
 export type Ticket = {
   id: string;
   name: string;
@@ -66,6 +71,17 @@ export type RegisterUserRequest = {
   password: string;
 };
 
+export type CreateEventRequest = {
+  categoryId: string;
+  title: string;
+  description: string;
+  city: string;
+  address: string;
+  venueName: string | null;
+  startsAtUtc: string;
+  endsAtUtc: string;
+};
+
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "/api").replace(/\/$/, "");
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
@@ -95,8 +111,22 @@ export function getEvents(): Promise<EventSummary[]> {
   return request<EventSummary[]>("/events");
 }
 
+export function getCategories(): Promise<Category[]> {
+  return request<Category[]>("/categories");
+}
+
 export function getEventDetails(eventId: string): Promise<EventDetails> {
   return request<EventDetails>(`/events/${eventId}`);
+}
+
+export function createEvent(payload: CreateEventRequest, accessToken: string): Promise<EventDetails> {
+  return request<EventDetails>("/events", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    },
+    body: JSON.stringify(payload)
+  });
 }
 
 export function getEventRegistrations(eventId: string, accessToken: string): Promise<Registration[]> {

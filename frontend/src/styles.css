@@ -27,7 +27,8 @@ select {
 }
 
 input,
-select {
+select,
+textarea {
   width: 100%;
 }
 
@@ -158,7 +159,8 @@ h3 {
 .top-alert,
 .state-message,
 .empty-panel,
-.auth-panel {
+.auth-panel,
+.create-event-panel {
   border-radius: 8px;
 }
 
@@ -183,7 +185,8 @@ h3 {
 
 .empty-panel,
 .event-details,
-.auth-panel {
+.auth-panel,
+.create-event-panel {
   max-width: 1080px;
   padding: 30px;
   background: #ffffff;
@@ -195,6 +198,12 @@ h3 {
 .auth-panel {
   margin-bottom: 18px;
   padding: 18px;
+}
+
+.create-event-panel {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 18px;
 }
 
 .auth-form {
@@ -234,19 +243,24 @@ h3 {
   align-items: end;
 }
 
-.auth-fields label {
+.auth-fields label,
+.create-event-form label {
   display: grid;
   gap: 7px;
 }
 
 .auth-fields label span,
-.auth-summary span {
+.auth-summary span,
+.create-event-form label span {
   color: #4b5563;
   font-size: 13px;
   font-weight: 700;
 }
 
-.auth-fields input {
+.auth-fields input,
+.create-event-form input,
+.create-event-form select,
+.create-event-form textarea {
   min-height: 44px;
   padding: 10px 12px;
   color: #111827;
@@ -256,14 +270,41 @@ h3 {
   outline: none;
 }
 
-.auth-fields input:focus {
+.create-event-form textarea {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.auth-fields input:focus,
+.create-event-form input:focus,
+.create-event-form select:focus,
+.create-event-form textarea:focus {
   border-color: #2f80ed;
   box-shadow: 0 0 0 3px rgba(47, 128, 237, 0.16);
 }
 
-.auth-fields input:disabled {
+.auth-fields input:disabled,
+.create-event-form input:disabled,
+.create-event-form select:disabled,
+.create-event-form textarea:disabled {
   cursor: not-allowed;
   opacity: 0.65;
+}
+
+.create-event-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 13px;
+  align-items: end;
+}
+
+.create-event-form .wide-field {
+  grid-column: span 2;
+}
+
+.create-event-actions {
+  display: flex;
+  align-items: end;
 }
 
 .auth-summary {
@@ -441,6 +482,9 @@ h3 {
 .registration-form input:disabled,
 .registration-form select:disabled,
 .check-in-form input:disabled,
+.create-event-form input:disabled,
+.create-event-form select:disabled,
+.create-event-form textarea:disabled,
 .primary-button:disabled,
 .secondary-button:disabled,
 .small-button:disabled {
@@ -568,6 +612,11 @@ h3 {
   border-radius: 8px;
 }
 
+.panel-message.inside-list {
+  border: 0;
+  border-radius: 0;
+}
+
 .registrations-list {
   display: grid;
   border: 1px solid #dfe7ef;
@@ -636,6 +685,14 @@ h3 {
 
   .auth-fields {
     grid-template-columns: 1fr;
+  }
+
+  .create-event-form {
+    grid-template-columns: 1fr;
+  }
+
+  .create-event-form .wide-field {
+    grid-column: auto;
   }
 }
 

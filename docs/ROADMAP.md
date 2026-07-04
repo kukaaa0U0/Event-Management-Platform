@@ -41,6 +41,8 @@ Completed:
 - Frontend can mark participants as `CheckedIn` and refresh the registrations list.
 - Frontend login/register panel stores JWT access token locally.
 - Frontend sends `Authorization: Bearer ...` for protected organizer requests.
+- Frontend create event form loads categories and calls protected `POST /api/events`.
+- Frontend refreshes the event list and selects the newly created draft event.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:
@@ -48,20 +50,20 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Frontend Event Creation
+## Next Milestone: Ticket Management
 
 Goal:
 
 ```text
-Organizer can create an event from the React web app
+Organizer can add ticket types to an event from the React web app
 ```
 
 Tasks:
 
-- add create event form for authenticated organizers;
-- call `POST /api/events` with JWT;
-- load categories into the form;
-- refresh event list after creation;
+- add backend endpoint for creating tickets;
+- enforce event owner/admin access for ticket creation;
+- add frontend ticket creation form on selected organizer event;
+- refresh event details after ticket creation;
 - keep validation and API errors visible.
 
 Important product rule:
@@ -115,8 +117,7 @@ Completed:
 
 Planned next:
 
-- frontend create event UI;
-- authenticated event creation request;
+- ticket management for organizer-owned events;
 - broader role policies as workflows grow;
 - external login later, for example Yandex ID.
 
@@ -133,7 +134,7 @@ Pages:
 - organizer registrations panel is currently implemented in `App.tsx`;
 - organizer check-in form is currently implemented in `App.tsx`;
 - login/register panel is currently implemented in `App.tsx`;
-- `CreateEventPage`
+- create event form is currently implemented in `App.tsx`;
 - `RegistrationPage`
 - `DashboardPage`
 - `LoginPage`

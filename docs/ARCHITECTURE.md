@@ -174,6 +174,7 @@ Purpose:
 - shows organizer-facing registrations for the selected event;
 - lets an organizer perform check-in by participant code;
 - lets an organizer log in/register and stores JWT for protected requests;
+- lets an authenticated organizer create a draft event;
 - is served by nginx in Docker.
 
 Current frontend stack:
@@ -190,6 +191,17 @@ Browser
     -> frontend nginx on http://localhost:5173
     -> /api proxy
     -> EventManagement.API
+    -> PostgreSQL
+```
+
+Create event flow:
+
+```text
+Organizer in React
+    -> POST /api/events with JWT
+    -> EventsController
+    -> IEventWriteService
+    -> ApplicationDbContext
     -> PostgreSQL
 ```
 
