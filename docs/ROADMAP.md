@@ -16,6 +16,7 @@ Completed:
 - `GET /api/health`.
 - `GET /api/events` wired to database read service.
 - `GET /api/events/{id}` wired to database read service with ticket details.
+- `GET /api/events/{id}/calendar.ics` downloads an iCalendar file for an event.
 - `GET /api/categories`.
 - `POST /api/events` creates draft events in PostgreSQL.
 - `POST /api/events/{id}/tickets` creates ticket types for organizer-owned events.
@@ -46,6 +47,7 @@ Completed:
 - Frontend refreshes the event list and selects the newly created draft event.
 - Frontend ticket form calls protected `POST /api/events/{id}/tickets`.
 - Frontend refreshes selected event details after ticket creation.
+- Frontend event details include a `.ics` calendar download button.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:
@@ -53,24 +55,19 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: iCalendar Export
+## Next Milestone: Event Editing And Calendar Updates
 
 Goal:
 
 ```text
-Participant can download an event as an .ics calendar file
+Organizer can edit event details and calendar files can reflect updates
 ```
 
 Tasks:
 
-- add `GET /api/events/{id}/calendar.ics`;
-- generate valid iCalendar text with stable `UID`, `DTSTART`, `DTEND`, `SUMMARY`, `DESCRIPTION`, `LOCATION`;
-- return `text/calendar` with file download headers;
-- add frontend button for downloading the `.ics` file;
-- document that localhost supports file download, but true calendar subscription needs a public URL.
-
-Later iCalendar improvement:
-
+- add backend event update endpoint;
+- enforce event owner/admin access for event updates;
+- add frontend edit event form for organizer-owned events;
 - add `UpdatedAtUtc` or `CalendarSequence` to events;
 - include `LAST-MODIFIED`, `DTSTAMP`, and `SEQUENCE`;
 - expose a stable calendar URL for subscription-style updates.
@@ -86,6 +83,7 @@ Important product rule:
 
 - `GET /api/events`
 - `GET /api/events/{id}`
+- `GET /api/events/{id}/calendar.ics`
 - `POST /api/events`
 - `PUT /api/events/{id}`
 - `POST /api/events/{id}/publish`
@@ -127,7 +125,8 @@ Completed:
 
 Planned next:
 
-- iCalendar `.ics` export for events;
+- event editing for organizer-owned events;
+- iCalendar update metadata with `LAST-MODIFIED` and `SEQUENCE`;
 - broader role policies as workflows grow;
 - external login later, for example Yandex ID.
 
@@ -146,6 +145,7 @@ Pages:
 - login/register panel is currently implemented in `App.tsx`;
 - create event form is currently implemented in `App.tsx`;
 - create ticket form is currently implemented in `App.tsx`;
+- `.ics` calendar download button is currently implemented in `App.tsx`;
 - `RegistrationPage`
 - `DashboardPage`
 - `LoginPage`

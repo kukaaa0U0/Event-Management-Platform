@@ -177,6 +177,7 @@ POST http://localhost:5000/api/auth/login
 GET http://localhost:5000/api/categories
 GET http://localhost:5000/api/events
 GET http://localhost:5000/api/events/{id}
+GET http://localhost:5000/api/events/{id}/calendar.ics
 POST http://localhost:5000/api/events
 POST http://localhost:5000/api/events/{id}/tickets
 POST http://localhost:5000/api/events/{id}/publish
@@ -211,6 +212,16 @@ The frontend uses the same endpoints through its nginx proxy:
 ```text
 http://localhost:5173/api/...
 ```
+
+Event calendar download:
+
+```text
+GET http://localhost:5173/api/events/{id}/calendar.ics
+```
+
+On `localhost`, this works as a downloadable `.ics` file. Calendar subscription
+mode in external calendar apps needs a public URL that the calendar provider can
+reach.
 
 ## Troubleshooting
 

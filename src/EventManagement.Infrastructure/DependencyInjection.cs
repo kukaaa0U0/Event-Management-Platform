@@ -26,6 +26,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ICategoryReadService, CategoryReadService>();
         services.AddScoped<IEventReadService, EventReadService>();
+        services.AddScoped<IEventCalendarService, EventCalendarService>();
         services.AddScoped<IEventWriteService, EventWriteService>();
         services.AddScoped<IEventAccessService, EventAccessService>();
         services.AddScoped<IRegistrationService, RegistrationService>();

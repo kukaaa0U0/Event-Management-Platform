@@ -5,6 +5,7 @@ using EventManagement.Application.DTOs;
 using EventManagement.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text;
 
 namespace EventManagement.API.Controllers;
 
@@ -13,11 +14,16 @@ namespace EventManagement.API.Controllers;
 public sealed class EventsController : ControllerBase
 {
     private readonly IEventReadService _eventReadService;
+    private readonly IEventCalendarService _eventCalendarService;
     private readonly IEventWriteService _eventWriteService;
 
-    public EventsController(IEventReadService eventReadService, IEventWriteService eventWriteService)
+    public EventsController(
+        IEventReadService eventReadService,
+        IEventCalendarService eventCalendarService,
+        IEventWriteService eventWriteService)
     {
         _eventReadService = eventReadService;
+        _eventCalendarService = eventCalendarService;
         _eventWriteService = eventWriteService;
     }
 
@@ -38,6 +44,22 @@ public sealed class EventsController : ControllerBase
         }
 
         return Ok(eventDetails);
+    }
+
+    [HttpGet("{id:guid}/calendar.ics")]
+    public async Task<IActionResult> DownloadCalendarFile(Guid id, CancellationToken cancellationToken)
+    {
+        var calendarFile = await _eventCalendarService.GetEventCalendarFileAsync(id, cancellationToken);
+
+        if (calendarFile is null)
+        {
+            return NotFound();
+        }
+
+        return File(
+            Encoding.UTF8.GetBytes(calendarFile.Content),
+            "text/calendar; charset=utf-8",
+            calendarFile.FileName);
     }
 
     [HttpPost]

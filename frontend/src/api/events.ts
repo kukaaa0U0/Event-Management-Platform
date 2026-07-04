@@ -127,6 +127,10 @@ export function getEventDetails(eventId: string): Promise<EventDetails> {
   return request<EventDetails>(`/events/${eventId}`);
 }
 
+export function getEventCalendarUrl(eventId: string): string {
+  return `${apiBaseUrl}/events/${eventId}/calendar.ics`;
+}
+
 export function createEvent(payload: CreateEventRequest, accessToken: string): Promise<EventDetails> {
   return request<EventDetails>("/events", {
     method: "POST",

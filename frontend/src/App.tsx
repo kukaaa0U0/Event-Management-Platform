@@ -9,6 +9,7 @@ import {
   createEvent,
   createTicket,
   getCategories,
+  getEventCalendarUrl,
   getEventDetails,
   getEventRegistrations,
   getEvents,
@@ -910,7 +911,12 @@ export default function App() {
                 <p className="eyebrow">{selectedEvent.city}</p>
                 <h2>{selectedEvent.title}</h2>
               </div>
-              <span className="status-pill large">{selectedEvent.status}</span>
+              <div className="details-actions">
+                <span className="status-pill large">{selectedEvent.status}</span>
+                <a className="secondary-button calendar-button" href={getEventCalendarUrl(selectedEvent.id)} download>
+                  Скачать .ics
+                </a>
+              </div>
             </div>
 
             <p className="description">{selectedEvent.description}</p>

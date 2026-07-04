@@ -133,6 +133,7 @@ POST /api/auth/login
 GET /api/categories
 GET /api/events
 GET /api/events/{id}
+GET /api/events/{id}/calendar.ics
 POST /api/events
 POST /api/events/{id}/tickets
 POST /api/events/{id}/publish
@@ -152,6 +153,11 @@ Postman/browser
     -> ApplicationDbContext
     -> PostgreSQL
 ```
+
+`GET /api/events/{id}/calendar.ics` uses the read model and formats the event as
+an iCalendar file. The current MVP supports direct download/import. True
+calendar subscription updates require a publicly reachable URL and later update
+metadata such as `SEQUENCE` and `LAST-MODIFIED`.
 
 Authentication foundation is partially implemented: users can register/login and
 receive JWT access tokens. Organizer endpoints validate JWT tokens and enforce
@@ -177,6 +183,7 @@ Purpose:
 - lets an organizer log in/register and stores JWT for protected requests;
 - lets an authenticated organizer create a draft event;
 - lets an authenticated organizer add tickets to an event they own;
+- lets a visitor download an event as an `.ics` calendar file;
 - is served by nginx in Docker.
 
 Current frontend stack:
