@@ -158,6 +158,7 @@ export default function App() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesState, setCategoriesState] = useState<LoadState>("idle");
   const [events, setEvents] = useState<EventSummary[]>([]);
+  const [managedEventIds, setManagedEventIds] = useState<string[]>([]);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<EventDetails | null>(null);
   const [eventsState, setEventsState] = useState<LoadState>("idle");
@@ -256,6 +257,35 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (!auth) {
+      setManagedEventIds([]);
+      return;
+    }
+
+    let isActive = true;
+
+    getMyEvents(auth.accessToken)
+      .then((items) => {
+        if (!isActive) {
+          return;
+        }
+
+        setManagedEventIds(items.map((eventItem) => eventItem.id));
+      })
+      .catch(() => {
+        if (!isActive) {
+          return;
+        }
+
+        setManagedEventIds([]);
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [auth]);
+
+  useEffect(() => {
     if (!selectedEventId) {
       setSelectedEvent(null);
       return;
@@ -264,7 +294,7 @@ export default function App() {
     let isActive = true;
 
     setDetailsState("loading");
-    setRegistrationsState("loading");
+    setRegistrationsState("idle");
     setRegistrations([]);
     setRegistrationResult(null);
     setRegistrationError(null);
@@ -303,28 +333,6 @@ export default function App() {
         setDetailsState("error");
       });
 
-    if (auth) {
-      getEventRegistrations(selectedEventId, auth.accessToken)
-        .then((items) => {
-          if (!isActive) {
-            return;
-          }
-
-          setRegistrations(items);
-          setRegistrationsState("success");
-        })
-        .catch((error: unknown) => {
-          if (!isActive) {
-            return;
-          }
-
-          setRegistrationsError(error instanceof Error ? error.message : "Не удалось загрузить участников");
-          setRegistrationsState("error");
-        });
-    } else {
-      setRegistrationsState("idle");
-    }
-
     return () => {
       isActive = false;
     };
@@ -335,11 +343,54 @@ export default function App() {
     [events, selectedEventId]
   );
 
+  const isSelectedEventManaged = useMemo(
+    () => Boolean(auth && selectedEventId && managedEventIds.includes(selectedEventId)),
+    [auth, managedEventIds, selectedEventId]
+  );
+
+  useEffect(() => {
+    if (!selectedEventId || !auth || !isSelectedEventManaged) {
+      setRegistrations([]);
+      setRegistrationsState("idle");
+      setRegistrationsError(null);
+      return;
+    }
+
+    let isActive = true;
+
+    setRegistrationsState("loading");
+    setRegistrationsError(null);
+
+    getEventRegistrations(selectedEventId, auth.accessToken)
+      .then((items) => {
+        if (!isActive) {
+          return;
+        }
+
+        setRegistrations(items);
+        setRegistrationsState("success");
+      })
+      .catch((error: unknown) => {
+        if (!isActive) {
+          return;
+        }
+
+        setRegistrationsError(error instanceof Error ? error.message : "Не удалось загрузить участников");
+        setRegistrationsState("error");
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [selectedEventId, auth, isSelectedEventManaged]);
+
   async function refreshEvents(preferredSelectedEventId?: string) {
+    const managedItems = auth ? await getMyEvents(auth.accessToken) : [];
     const items = eventScope === "mine" && auth
-      ? await getMyEvents(auth.accessToken)
+      ? managedItems
       : await getEvents();
 
+    setManagedEventIds(managedItems.map((eventItem) => eventItem.id));
     setEvents(items);
     setSelectedEventId((current) => {
       if (preferredSelectedEventId && items.some((eventItem) => eventItem.id === preferredSelectedEventId)) {
@@ -410,6 +461,7 @@ export default function App() {
     localStorage.removeItem(authStorageKey);
     setAuth(null);
     setEventScope("all");
+    setManagedEventIds([]);
     setRegistrations([]);
     setRegistrationsState("idle");
     setCheckInCode("");
@@ -502,8 +554,8 @@ export default function App() {
       return;
     }
 
-    if (!auth) {
-      setEditEventError("Войди как организатор, чтобы редактировать событие.");
+    if (!auth || !isSelectedEventManaged) {
+      setEditEventError("Управление доступно только организатору этого события.");
       return;
     }
 
@@ -583,8 +635,8 @@ export default function App() {
       return;
     }
 
-    if (!auth) {
-      setCreateTicketError("Войди как организатор, чтобы добавить билет.");
+    if (!auth || !isSelectedEventManaged) {
+      setCreateTicketError("Управление билетами доступно только организатору этого события.");
       return;
     }
 
@@ -684,7 +736,7 @@ export default function App() {
   }
 
   async function refreshRegistrations(eventId: string) {
-    if (!auth) {
+    if (!auth || !isSelectedEventManaged) {
       setRegistrationsState("idle");
       return;
     }
@@ -754,8 +806,8 @@ export default function App() {
       return;
     }
 
-    if (!auth) {
-      setCheckInError("Войди как организатор, чтобы отмечать участников.");
+    if (!auth || !isSelectedEventManaged) {
+      setCheckInError("Check-in доступен только организатору этого события.");
       return;
     }
 
@@ -1105,7 +1157,7 @@ export default function App() {
               </div>
             </div>
 
-            {auth && (
+            {isSelectedEventManaged && (
               <section className="edit-event-panel" aria-label="Редактирование события">
                 <div className="section-heading compact">
                   <h3>Редактировать событие</h3>
@@ -1233,7 +1285,7 @@ export default function App() {
                   )}
                 </div>
 
-                {auth && (
+                {isSelectedEventManaged && (
                   <form className="ticket-form" onSubmit={handleCreateTicketSubmit}>
                     <div className="section-heading compact">
                       <h3>Добавить билет</h3>
@@ -1369,7 +1421,7 @@ export default function App() {
               </section>
             </div>
 
-            {auth ? (
+            {isSelectedEventManaged ? (
               <section className="registrations-panel">
                 <div className="section-heading">
                   <h3>Участники</h3>
@@ -1440,6 +1492,15 @@ export default function App() {
                     ))}
                   </div>
                 )}
+              </section>
+            ) : auth ? (
+              <section className="registrations-panel">
+                <div className="section-heading">
+                  <h3>Управление событием</h3>
+                </div>
+                <div className="panel-message">
+                  Это событие принадлежит другому организатору. Переключись на вкладку "Мои", чтобы управлять своими событиями.
+                </div>
               </section>
             ) : (
               <section className="registrations-panel">

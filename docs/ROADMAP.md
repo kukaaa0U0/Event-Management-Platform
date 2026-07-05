@@ -46,6 +46,7 @@ Completed:
 - Frontend login/register panel stores JWT access token locally.
 - Frontend sends `Authorization: Bearer ...` for protected organizer requests.
 - Frontend sidebar can switch between all events and the current organizer's events.
+- Frontend hides edit, ticket, participants, and check-in controls for events not managed by the current user.
 - Frontend create event form loads categories and calls protected `POST /api/events`.
 - Frontend refreshes the event list and selects the newly created draft event.
 - Frontend edit event form calls protected `PUT /api/events/{id}`.
@@ -60,20 +61,20 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Public/Organizer Layout Split
+## Next Milestone: Publish And Cancel Controls
 
 Goal:
 
 ```text
-Public event browsing and organizer management become visually separated
+Organizer can publish or cancel events from the React web app
 ```
 
 Tasks:
 
-- keep public visitor flow focused on event details and registration;
-- move organizer-only forms into a clearer management area;
-- reduce accidental attempts to edit events not owned by the current organizer;
-- prepare the frontend for future React Router pages.
+- add frontend actions for `POST /api/events/{id}/publish`;
+- add frontend actions for `POST /api/events/{id}/cancel`;
+- refresh event details and event list after status changes;
+- keep actions visible only for events managed by the current user.
 
 Important product rule:
 
@@ -129,7 +130,7 @@ Completed:
 
 Planned next:
 
-- public/organizer UI separation;
+- frontend publish/cancel controls;
 - broader role policies as workflows grow;
 - external login later, for example Yandex ID.
 

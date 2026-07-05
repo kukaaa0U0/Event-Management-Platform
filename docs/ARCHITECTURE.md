@@ -200,6 +200,7 @@ Purpose:
 - lets an organizer perform check-in by participant code;
 - lets an organizer log in/register and stores JWT for protected requests;
 - lets an organizer switch between all events and their own managed events;
+- hides organizer controls for events not returned by the managed-events API;
 - lets an authenticated organizer create a draft event;
 - lets an authenticated organizer edit an event they own;
 - lets an authenticated organizer add tickets to an event they own;
