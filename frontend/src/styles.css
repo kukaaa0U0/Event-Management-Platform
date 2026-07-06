@@ -637,9 +637,10 @@ h3 {
 
 .edit-event-panel {
   padding: 16px;
-  background: #f7fafc;
-  border: 1px solid #dfe7ef;
+  background: #ffffff;
+  border: 1px solid #b8c7d9;
   border-radius: 8px;
+  box-shadow: 0 16px 32px rgba(31, 41, 55, 0.1);
 }
 
 .event-management-panel {

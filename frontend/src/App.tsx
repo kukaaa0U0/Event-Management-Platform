@@ -206,6 +206,7 @@ export default function App() {
   const [editEventState, setEditEventState] = useState<LoadState>("idle");
   const [editEventError, setEditEventError] = useState<string | null>(null);
   const [editedEventMessage, setEditedEventMessage] = useState<string | null>(null);
+  const [isEditEventOpen, setIsEditEventOpen] = useState(false);
   const [eventStatusState, setEventStatusState] = useState<LoadState>("idle");
   const [eventStatusError, setEventStatusError] = useState<string | null>(null);
   const [eventStatusMessage, setEventStatusMessage] = useState<string | null>(null);
@@ -416,6 +417,7 @@ export default function App() {
     setEditEventError(null);
     setEditedEventMessage(null);
     setEditEventState("idle");
+    setIsEditEventOpen(false);
     setEventStatusError(null);
     setEventStatusMessage(null);
     setEventStatusState("idle");
@@ -1510,6 +1512,13 @@ export default function App() {
                   <button
                     className="secondary-button"
                     type="button"
+                    onClick={() => setIsEditEventOpen((current) => !current)}
+                  >
+                    {isEditEventOpen ? "Скрыть редактор" : "Редактировать"}
+                  </button>
+                  <button
+                    className="secondary-button"
+                    type="button"
                     disabled={selectedEvent.status !== "Draft" || eventStatusState === "loading"}
                     onClick={() => handleEventStatusAction("publish")}
                   >
@@ -1566,11 +1575,13 @@ export default function App() {
               </section>
             )}
 
-            {isSelectedEventManaged && (
+            {isSelectedEventManaged && isEditEventOpen && (
               <section className="edit-event-panel" aria-label="Редактирование события">
                 <div className="section-heading compact">
                   <h3>Редактировать событие</h3>
-                  <span>{selectedEvent.calendarSequence}</span>
+                  <button className="small-button" type="button" onClick={() => setIsEditEventOpen(false)}>
+                    Закрыть
+                  </button>
                 </div>
 
                 <form className="edit-event-form" onSubmit={handleEditEventSubmit}>
