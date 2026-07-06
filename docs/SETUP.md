@@ -199,7 +199,8 @@ The React frontend can obtain and store this token through its login/register
 panel. After login, the frontend also shows the create event form and sends the
 token to `POST /api/events`. On the selected event screen, it can also add
 tickets through `POST /api/events/{id}/tickets` and edit event details through
-`PUT /api/events/{id}`.
+`PUT /api/events/{id}`. For events managed by the current user, the frontend can
+also publish or cancel the event through the protected status endpoints.
 
 Currently protected:
 

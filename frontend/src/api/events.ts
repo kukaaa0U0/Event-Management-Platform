@@ -168,6 +168,24 @@ export function updateEvent(
   });
 }
 
+export function publishEvent(eventId: string, accessToken: string): Promise<EventDetails> {
+  return request<EventDetails>(`/events/${eventId}/publish`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+}
+
+export function cancelEvent(eventId: string, accessToken: string): Promise<EventDetails> {
+  return request<EventDetails>(`/events/${eventId}/cancel`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+}
+
 export function createTicket(
   eventId: string,
   payload: CreateTicketRequest,

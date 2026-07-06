@@ -51,6 +51,8 @@ Completed:
 - Frontend refreshes the event list and selects the newly created draft event.
 - Frontend edit event form calls protected `PUT /api/events/{id}`.
 - Frontend refreshes event details and event list after editing.
+- Frontend publish/cancel controls call protected event status endpoints.
+- Frontend refreshes event details and event list after publishing or cancelling.
 - Frontend ticket form calls protected `POST /api/events/{id}/tickets`.
 - Frontend refreshes selected event details after ticket creation.
 - Frontend event details include a `.ics` calendar download button.
@@ -61,20 +63,21 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Publish And Cancel Controls
+## Next Milestone: Registration And Check-In Modes
 
 Goal:
 
 ```text
-Organizer can publish or cancel events from the React web app
+Organizer can control whether registration and check-in are available for an event
 ```
 
 Tasks:
 
-- add frontend actions for `POST /api/events/{id}/publish`;
-- add frontend actions for `POST /api/events/{id}/cancel`;
-- refresh event details and event list after status changes;
-- keep actions visible only for events managed by the current user.
+- add event settings for registration enabled/disabled;
+- add event settings for check-in enabled/disabled;
+- block participant registration for draft, cancelled, or registration-disabled events;
+- keep the first check-in mode as organizer-only;
+- expose these settings in the organizer management panel.
 
 Important product rule:
 
@@ -130,7 +133,7 @@ Completed:
 
 Planned next:
 
-- frontend publish/cancel controls;
+- registration/check-in mode controls;
 - broader role policies as workflows grow;
 - external login later, for example Yandex ID.
 

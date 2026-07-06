@@ -203,6 +203,7 @@ Purpose:
 - hides organizer controls for events not returned by the managed-events API;
 - lets an authenticated organizer create a draft event;
 - lets an authenticated organizer edit an event they own;
+- lets an authenticated organizer publish or cancel an event they own;
 - lets an authenticated organizer add tickets to an event they own;
 - lets a visitor download an event as an `.ics` calendar file;
 - is served by nginx in Docker.
@@ -243,6 +244,19 @@ Organizer in React
     -> EventsController
     -> IEventWriteService
     -> EventWriteService checks event ownership/admin access
+    -> ApplicationDbContext
+    -> PostgreSQL
+```
+
+Publish/cancel flow:
+
+```text
+Organizer in React
+    -> POST /api/events/{id}/publish or /cancel with JWT
+    -> EventsController
+    -> IEventWriteService
+    -> EventWriteService checks event ownership/admin access
+    -> Event updates lifecycle status and calendar metadata
     -> ApplicationDbContext
     -> PostgreSQL
 ```

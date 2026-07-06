@@ -481,6 +481,7 @@ h3 {
 
 .registration-form,
 .ticket-form,
+.event-management-panel,
 .edit-event-panel,
 .edit-event-form {
   display: grid;
@@ -551,6 +552,7 @@ h3 {
 .create-event-form textarea:disabled,
 .primary-button:disabled,
 .secondary-button:disabled,
+.danger-button:disabled,
 .small-button:disabled {
   cursor: not-allowed;
   opacity: 0.65;
@@ -600,6 +602,19 @@ h3 {
   border-radius: 8px;
 }
 
+.event-management-panel {
+  padding: 16px;
+  background: #f7fafc;
+  border: 1px solid #dfe7ef;
+  border-radius: 8px;
+}
+
+.event-management-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .edit-event-form {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: end;
@@ -615,6 +630,7 @@ h3 {
 
 .primary-button,
 .secondary-button,
+.danger-button,
 .small-button {
   display: inline-flex;
   align-items: center;
@@ -624,7 +640,8 @@ h3 {
 }
 
 .primary-button,
-.secondary-button {
+.secondary-button,
+.danger-button {
   min-height: 44px;
   padding: 10px 16px;
 }
@@ -647,6 +664,16 @@ h3 {
 
 .secondary-button:hover:not(:disabled) {
   background: #1d2b3b;
+}
+
+.danger-button {
+  color: #ffffff;
+  background: #b42318;
+  border: 1px solid #912018;
+}
+
+.danger-button:hover:not(:disabled) {
+  background: #912018;
 }
 
 .small-button {

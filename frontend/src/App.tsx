@@ -5,6 +5,7 @@ import {
   EventDetails,
   EventSummary,
   Registration,
+  cancelEvent,
   checkInParticipant,
   createEvent,
   createTicket,
@@ -15,6 +16,7 @@ import {
   getEvents,
   getMyEvents,
   login,
+  publishEvent,
   registerForEvent,
   registerUser,
   updateEvent
@@ -179,6 +181,9 @@ export default function App() {
   const [editEventState, setEditEventState] = useState<LoadState>("idle");
   const [editEventError, setEditEventError] = useState<string | null>(null);
   const [editedEventMessage, setEditedEventMessage] = useState<string | null>(null);
+  const [eventStatusState, setEventStatusState] = useState<LoadState>("idle");
+  const [eventStatusError, setEventStatusError] = useState<string | null>(null);
+  const [eventStatusMessage, setEventStatusMessage] = useState<string | null>(null);
   const [createTicketForm, setCreateTicketForm] = useState<CreateTicketFormState>(emptyTicketForm);
   const [createTicketState, setCreateTicketState] = useState<LoadState>("idle");
   const [createTicketError, setCreateTicketError] = useState<string | null>(null);
@@ -310,6 +315,9 @@ export default function App() {
     setEditEventError(null);
     setEditedEventMessage(null);
     setEditEventState("idle");
+    setEventStatusError(null);
+    setEventStatusMessage(null);
+    setEventStatusState("idle");
     getEventDetails(selectedEventId)
       .then((item) => {
         if (!isActive) {
@@ -625,6 +633,37 @@ export default function App() {
     } catch (error: unknown) {
       setEditEventError(error instanceof Error ? error.message : "Не удалось обновить событие");
       setEditEventState("error");
+    }
+  }
+
+  async function handleEventStatusAction(action: "publish" | "cancel") {
+    if (!selectedEvent) {
+      return;
+    }
+
+    if (!auth || !isSelectedEventManaged) {
+      setEventStatusError("Управление статусом доступно только организатору этого события.");
+      return;
+    }
+
+    setEventStatusState("loading");
+    setEventStatusError(null);
+    setEventStatusMessage(null);
+
+    try {
+      const updatedEvent =
+        action === "publish"
+          ? await publishEvent(selectedEvent.id, auth.accessToken)
+          : await cancelEvent(selectedEvent.id, auth.accessToken);
+
+      await refreshEvents(updatedEvent.id);
+      setSelectedEvent(updatedEvent);
+      setEditEventForm(createEventFormFromDetails(updatedEvent));
+      setEventStatusMessage(action === "publish" ? "Событие опубликовано." : "Событие отменено.");
+      setEventStatusState("success");
+    } catch (error: unknown) {
+      setEventStatusError(error instanceof Error ? error.message : "Не удалось изменить статус события");
+      setEventStatusState("error");
     }
   }
 
@@ -1156,6 +1195,41 @@ export default function App() {
                 <strong>{selectedEvent.venueName ?? "Не указана"}</strong>
               </div>
             </div>
+
+            {isSelectedEventManaged && (
+              <section className="event-management-panel" aria-label="Управление статусом события">
+                <div className="section-heading compact">
+                  <h3>Управление событием</h3>
+                  <span>{selectedEvent.status}</span>
+                </div>
+
+                <div className="event-management-actions">
+                  <button
+                    className="secondary-button"
+                    type="button"
+                    disabled={selectedEvent.status !== "Draft" || eventStatusState === "loading"}
+                    onClick={() => handleEventStatusAction("publish")}
+                  >
+                    {eventStatusState === "loading" ? "Обновляем..." : "Опубликовать"}
+                  </button>
+                  <button
+                    className="danger-button"
+                    type="button"
+                    disabled={
+                      selectedEvent.status === "Cancelled" ||
+                      selectedEvent.status === "Completed" ||
+                      eventStatusState === "loading"
+                    }
+                    onClick={() => handleEventStatusAction("cancel")}
+                  >
+                    Отменить
+                  </button>
+                </div>
+
+                {eventStatusError && <div className="form-alert error">{eventStatusError}</div>}
+                {eventStatusMessage && <div className="form-alert success">{eventStatusMessage}</div>}
+              </section>
+            )}
 
             {isSelectedEventManaged && (
               <section className="edit-event-panel" aria-label="Редактирование события">
