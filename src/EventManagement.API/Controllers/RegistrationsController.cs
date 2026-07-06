@@ -55,7 +55,11 @@ public sealed class RegistrationsController : ControllerBase
         RegisterForEventRequest request,
         CancellationToken cancellationToken)
     {
-        var validationError = ValidateRequest(request);
+        var currentUserId = User.Identity?.IsAuthenticated == true
+            ? User.GetUserId()
+            : (Guid?)null;
+
+        var validationError = ValidateRequest(request, currentUserId.HasValue);
 
         if (validationError is not null)
         {
@@ -66,7 +70,8 @@ public sealed class RegistrationsController : ControllerBase
             eventId,
             request.TicketId,
             request.FullName,
-            request.Email);
+            request.Email,
+            currentUserId);
 
         try
         {
@@ -93,19 +98,19 @@ public sealed class RegistrationsController : ControllerBase
         }
     }
 
-    private static string? ValidateRequest(RegisterForEventRequest request)
+    private static string? ValidateRequest(RegisterForEventRequest request, bool hasAuthenticatedUser)
     {
         if (request.TicketId == Guid.Empty)
         {
             return "TicketId is required.";
         }
 
-        if (string.IsNullOrWhiteSpace(request.FullName))
+        if (!hasAuthenticatedUser && string.IsNullOrWhiteSpace(request.FullName))
         {
             return "FullName is required.";
         }
 
-        if (string.IsNullOrWhiteSpace(request.Email))
+        if (!hasAuthenticatedUser && string.IsNullOrWhiteSpace(request.Email))
         {
             return "Email is required.";
         }

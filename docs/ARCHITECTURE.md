@@ -143,6 +143,7 @@ POST /api/events/{id}/publish
 POST /api/events/{id}/cancel
 POST /api/events/{eventId}/registrations
 GET /api/events/{eventId}/registrations
+GET /api/registrations/my
 POST /api/check-in
 ```
 
@@ -210,6 +211,8 @@ Purpose:
 - calls API endpoints through a small TypeScript API client;
 - shows event list and event details from PostgreSQL-backed API data;
 - lets a participant register for an event and receive a check-in code;
+- uses the logged-in account for participant registration when a JWT is available;
+- shows the logged-in user's own event registrations;
 - shows organizer-facing registrations for the selected event;
 - lets an organizer perform check-in by participant code;
 - lets an organizer log in/register and stores JWT for protected requests;

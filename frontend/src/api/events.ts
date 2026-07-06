@@ -46,6 +46,21 @@ export type Registration = {
   checkedInAtUtc: string | null;
 };
 
+export type MyRegistration = {
+  id: string;
+  eventId: string;
+  ticketId: string;
+  eventTitle: string;
+  city: string;
+  startsAtUtc: string;
+  endsAtUtc: string;
+  eventStatus: string;
+  registrationStatus: string;
+  checkInCode: string;
+  createdAtUtc: string;
+  checkedInAtUtc: string | null;
+};
+
 export type RegisterForEventRequest = {
   ticketId: string;
   fullName: string;
@@ -229,12 +244,26 @@ export function getEventRegistrations(eventId: string, accessToken: string): Pro
   });
 }
 
+export function getMyRegistrations(accessToken: string): Promise<MyRegistration[]> {
+  return request<MyRegistration[]>("/registrations/my", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+}
+
 export function registerForEvent(
   eventId: string,
-  payload: RegisterForEventRequest
+  payload: RegisterForEventRequest,
+  accessToken?: string
 ): Promise<Registration> {
   return request<Registration>(`/events/${eventId}/registrations`, {
     method: "POST",
+    headers: accessToken
+      ? {
+          Authorization: `Bearer ${accessToken}`
+        }
+      : undefined,
     body: JSON.stringify(payload)
   });
 }

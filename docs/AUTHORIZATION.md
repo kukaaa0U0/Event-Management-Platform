@@ -20,7 +20,7 @@ Planned access rules:
 - any authenticated user may create an event and become its organizer;
 - only the event organizer or an admin may update, publish, cancel, complete it, change event modes, or add tickets;
 - only the event organizer or an admin may view the full registrations list;
-- participants may only see their own registration data after user accounts are added.
+- participants can see their own registration data through `GET /api/registrations/my`.
 
 ## Event Modes
 
@@ -73,11 +73,13 @@ Planned restrictions:
 - `POST /api/events/{id}/tickets` requires organizer ownership or admin role.
 - event mutation endpoints require organizer ownership or admin role.
 - `GET /api/events/{eventId}/registrations` requires organizer ownership or admin role.
+- `GET /api/registrations/my` requires authentication and returns only the current user's registrations.
 - `POST /api/check-in` requires organizer ownership or admin role.
 - public event list/details may remain anonymous while the platform is in MVP mode.
 
 Temporary MVP exception:
 
 - public event list/details and participant registration remain anonymous for MVP.
+- if participant registration includes a JWT, the registration is attached to the authenticated account.
 - organizer workflows are protected in the API and the frontend can send JWT tokens
   for those requests.

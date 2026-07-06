@@ -4,4 +4,5 @@ public sealed record RegisterForEventCommand(
     Guid EventId,
     Guid TicketId,
     string FullName,
-    string Email);
+    string Email,
+    Guid? CurrentUserId = null);

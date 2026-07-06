@@ -4,6 +4,7 @@ import {
   Category,
   EventDetails,
   EventSummary,
+  MyRegistration,
   Registration,
   cancelEvent,
   checkInParticipant,
@@ -14,6 +15,7 @@ import {
   getEventDetails,
   getEventRegistrations,
   getEvents,
+  getMyRegistrations,
   getMyEvents,
   login,
   publishEvent,
@@ -176,6 +178,9 @@ export default function App() {
   const [selectedEvent, setSelectedEvent] = useState<EventDetails | null>(null);
   const [eventsState, setEventsState] = useState<LoadState>("idle");
   const [detailsState, setDetailsState] = useState<LoadState>("idle");
+  const [myRegistrationsState, setMyRegistrationsState] = useState<LoadState>("idle");
+  const [myRegistrations, setMyRegistrations] = useState<MyRegistration[]>([]);
+  const [myRegistrationsError, setMyRegistrationsError] = useState<string | null>(null);
   const [registrationsState, setRegistrationsState] = useState<LoadState>("idle");
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [registrationState, setRegistrationState] = useState<LoadState>("idle");
@@ -279,6 +284,9 @@ export default function App() {
   useEffect(() => {
     if (!auth) {
       setManagedEventIds([]);
+      setMyRegistrations([]);
+      setMyRegistrationsState("idle");
+      setMyRegistrationsError(null);
       return;
     }
 
@@ -298,6 +306,39 @@ export default function App() {
         }
 
         setManagedEventIds([]);
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [auth]);
+
+  useEffect(() => {
+    if (!auth) {
+      return;
+    }
+
+    let isActive = true;
+
+    setMyRegistrationsState("loading");
+    setMyRegistrationsError(null);
+
+    getMyRegistrations(auth.accessToken)
+      .then((items) => {
+        if (!isActive) {
+          return;
+        }
+
+        setMyRegistrations(items);
+        setMyRegistrationsState("success");
+      })
+      .catch((error: unknown) => {
+        if (!isActive) {
+          return;
+        }
+
+        setMyRegistrationsError(error instanceof Error ? error.message : "Не удалось загрузить твои регистрации");
+        setMyRegistrationsState("error");
       });
 
     return () => {
@@ -351,6 +392,8 @@ export default function App() {
         });
         setRegistrationForm({
           ...emptyRegistrationForm,
+          fullName: auth?.fullName ?? "",
+          email: auth?.email ?? "",
           ticketId: item.tickets[0]?.id ?? ""
         });
         setDetailsState("success");
@@ -448,6 +491,27 @@ export default function App() {
     return items;
   }
 
+  async function refreshMyRegistrations() {
+    if (!auth) {
+      setMyRegistrations([]);
+      setMyRegistrationsState("idle");
+      return;
+    }
+
+    setMyRegistrationsState("loading");
+    setMyRegistrationsError(null);
+
+    try {
+      const items = await getMyRegistrations(auth.accessToken);
+
+      setMyRegistrations(items);
+      setMyRegistrationsState("success");
+    } catch (error: unknown) {
+      setMyRegistrationsError(error instanceof Error ? error.message : "Не удалось загрузить твои регистрации");
+      setMyRegistrationsState("error");
+    }
+  }
+
   function updateRegistrationForm(field: keyof RegistrationFormState, value: string) {
     setRegistrationForm((current) => ({
       ...current,
@@ -512,6 +576,9 @@ export default function App() {
     setAuth(null);
     setEventScope("all");
     setManagedEventIds([]);
+    setMyRegistrations([]);
+    setMyRegistrationsState("idle");
+    setMyRegistrationsError(null);
     setRegistrations([]);
     setRegistrationsState("idle");
     setCheckInCode("");
@@ -897,12 +964,15 @@ export default function App() {
       return;
     }
 
-    if (!registrationForm.fullName.trim()) {
+    const participantName = auth?.fullName ?? registrationForm.fullName.trim();
+    const participantEmail = auth?.email ?? registrationForm.email.trim();
+
+    if (!participantName) {
       setRegistrationError("Укажи имя участника.");
       return;
     }
 
-    if (!registrationForm.email.trim()) {
+    if (!participantEmail) {
       setRegistrationError("Укажи email участника.");
       return;
     }
@@ -914,17 +984,20 @@ export default function App() {
     try {
       const registration = await registerForEvent(selectedEvent.id, {
         ticketId: registrationForm.ticketId,
-        fullName: registrationForm.fullName.trim(),
-        email: registrationForm.email.trim()
-      });
+        fullName: participantName,
+        email: participantEmail
+      }, auth?.accessToken);
 
       setRegistrationResult(registration);
       setRegistrationState("success");
       setRegistrationForm({
         ...emptyRegistrationForm,
+        fullName: auth?.fullName ?? "",
+        email: auth?.email ?? "",
         ticketId: selectedEvent.tickets[0]?.id ?? ""
       });
       await refreshRegistrations(selectedEvent.id);
+      await refreshMyRegistrations();
     } catch (error: unknown) {
       setRegistrationError(error instanceof Error ? error.message : "Не удалось зарегистрироваться");
       setRegistrationState("error");
@@ -1122,6 +1195,54 @@ export default function App() {
             </form>
           )}
         </section>
+
+        {auth && (
+          <section className="my-registrations-panel" aria-label="Мои регистрации">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Participant</p>
+                <h3>Мои регистрации</h3>
+              </div>
+              <span>{myRegistrations.length}</span>
+            </div>
+
+            {myRegistrationsState === "loading" && (
+              <div className="panel-message">Загрузка твоих регистраций...</div>
+            )}
+
+            {myRegistrationsState === "error" && (
+              <div className="form-alert error">
+                {myRegistrationsError ?? "Не удалось загрузить твои регистрации"}
+              </div>
+            )}
+
+            {myRegistrationsState === "success" && myRegistrations.length === 0 && (
+              <div className="panel-message">Ты пока не зарегистрирован на события.</div>
+            )}
+
+            {myRegistrationsState === "success" && myRegistrations.length > 0 && (
+              <div className="my-registration-list">
+                {myRegistrations.map((registration) => (
+                  <button
+                    className="my-registration-row"
+                    key={registration.id}
+                    type="button"
+                    onClick={() => setSelectedEventId(registration.eventId)}
+                  >
+                    <div>
+                      <strong>{registration.eventTitle}</strong>
+                      <span>{registration.city} · {formatDate(registration.startsAtUtc)}</span>
+                    </div>
+                    <div className="my-registration-meta">
+                      <span>{registration.registrationStatus}</span>
+                      <strong>{registration.checkInCode}</strong>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
         {auth && (
           <section className="create-event-panel" aria-label="Создание события">
@@ -1569,6 +1690,10 @@ export default function App() {
                   <div className="panel-message">Регистрация на это событие сейчас закрыта.</div>
                 )}
 
+                {auth && isRegistrationOpen && (
+                  <div className="panel-message">Регистрация будет привязана к аккаунту {auth.email}.</div>
+                )}
+
                 <form className="registration-form" onSubmit={handleRegistrationSubmit}>
                   <label>
                     <span>Билет</span>
@@ -1591,7 +1716,7 @@ export default function App() {
                       value={registrationForm.fullName}
                       onChange={(event) => updateRegistrationForm("fullName", event.target.value)}
                       placeholder="Например, Иван Петров"
-                      disabled={!isRegistrationOpen || registrationState === "loading"}
+                      disabled={Boolean(auth) || !isRegistrationOpen || registrationState === "loading"}
                     />
                   </label>
 
@@ -1602,7 +1727,7 @@ export default function App() {
                       value={registrationForm.email}
                       onChange={(event) => updateRegistrationForm("email", event.target.value)}
                       placeholder="ivan@example.com"
-                      disabled={!isRegistrationOpen || registrationState === "loading"}
+                      disabled={Boolean(auth) || !isRegistrationOpen || registrationState === "loading"}
                     />
                   </label>
 

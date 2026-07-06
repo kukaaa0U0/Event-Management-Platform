@@ -26,6 +26,7 @@ Completed:
 - `POST /api/events/{id}/cancel`.
 - `POST /api/events/{eventId}/registrations` creates participant registrations.
 - `GET /api/events/{eventId}/registrations` lists participants for an event.
+- `GET /api/registrations/my` lists registrations for the current authenticated user.
 - `POST /api/check-in` marks participants as checked in by check-in code.
 - `POST /api/auth/register` creates an account and returns a JWT access token.
 - `POST /api/auth/login` validates credentials and returns a JWT access token.
@@ -38,6 +39,8 @@ Completed:
 - React/Vite frontend foundation.
 - Frontend event list and event details screen connected to API.
 - Frontend registration form connected to `POST /api/events/{eventId}/registrations`.
+- Frontend registration form uses the logged-in account when JWT is available.
+- Frontend shows "My registrations" for the logged-in account.
 - Frontend shows generated check-in code after successful registration.
 - Frontend organizer panel shows registrations for the selected event.
 - Frontend refreshes registrations after a new participant is registered.
@@ -69,20 +72,19 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Participant Account Flow
+## Next Milestone: Organizer Dashboard
 
 Goal:
 
 ```text
-Authenticated users can register for events from their own account and later see their registrations
+Organizer can see useful summary information about their events
 ```
 
 Tasks:
 
-- decide whether anonymous registration remains available or becomes optional;
-- connect participant registration to the logged-in user when authenticated;
-- add a "My registrations" view;
-- keep organizer ownership and participant visibility separated.
+- show counts for registrations and checked-in participants per event;
+- show a compact dashboard for the current organizer;
+- keep detailed participant lists protected by ownership/admin access.
 
 Important product rule:
 
@@ -121,6 +123,7 @@ Important product rule:
 - `POST /api/events/{eventId}/registrations`
 - prevent duplicate registration by event/user;
 - create check-in code;
+- `GET /api/registrations/my`;
 - `GET /api/events/{eventId}/registrations`.
 
 ### Check-In
@@ -139,7 +142,7 @@ Completed:
 
 Planned next:
 
-- participant account registration flow;
+- organizer dashboard statistics;
 - broader role policies as workflows grow;
 - external login later, for example Yandex ID.
 

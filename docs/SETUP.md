@@ -187,6 +187,7 @@ POST http://localhost:5000/api/events/{id}/publish
 POST http://localhost:5000/api/events/{id}/cancel
 POST http://localhost:5000/api/events/{eventId}/registrations
 GET http://localhost:5000/api/events/{eventId}/registrations
+GET http://localhost:5000/api/registrations/my
 POST http://localhost:5000/api/check-in
 ```
 
@@ -221,6 +222,10 @@ The frontend uses the same endpoints through its nginx proxy:
 ```text
 http://localhost:5173/api/...
 ```
+
+When a logged-in user registers for an event, the frontend sends the JWT and the
+registration is attached to that account. Without JWT, anonymous registration by
+name and email still works.
 
 Event calendar download:
 

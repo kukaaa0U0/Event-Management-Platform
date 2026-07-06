@@ -9,6 +9,10 @@ public interface IRegistrationService
         Guid eventId,
         CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyCollection<MyRegistrationDto>> GetUserRegistrationsAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default);
+
     Task<RegistrationDto?> RegisterForEventAsync(
         RegisterForEventCommand command,
         CancellationToken cancellationToken = default);

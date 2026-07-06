@@ -754,6 +754,68 @@ h3 {
   gap: 12px;
 }
 
+.my-registrations-panel {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  background: #ffffff;
+  border: 1px solid #dfe7ef;
+  border-radius: 8px;
+}
+
+.my-registration-list {
+  display: grid;
+  border: 1px solid #dfe7ef;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.my-registration-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(160px, auto);
+  gap: 14px;
+  align-items: center;
+  padding: 14px 16px;
+  text-align: left;
+  background: #ffffff;
+  border: 0;
+}
+
+.my-registration-row + .my-registration-row {
+  border-top: 1px solid #dfe7ef;
+}
+
+.my-registration-row:hover {
+  background: #f7fafc;
+}
+
+.my-registration-row > div,
+.my-registration-meta {
+  display: grid;
+  gap: 5px;
+}
+
+.my-registration-row span,
+.my-registration-meta span {
+  color: #667085;
+  font-size: 13px;
+}
+
+.my-registration-row strong {
+  color: #1f2937;
+  overflow-wrap: anywhere;
+}
+
+.my-registration-meta {
+  justify-items: end;
+  text-align: right;
+}
+
+.my-registration-meta strong {
+  color: #1d4ed8;
+  font-size: 14px;
+}
+
 .check-in-form {
   display: grid;
   grid-template-columns: minmax(220px, 1fr) auto;
@@ -895,6 +957,10 @@ h3 {
     grid-template-columns: 1fr;
   }
 
+  .my-registration-row {
+    grid-template-columns: 1fr;
+  }
+
   .check-in-form {
     grid-template-columns: 1fr;
   }
@@ -916,6 +982,11 @@ h3 {
   }
 
   .registration-code {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .my-registration-meta {
     justify-items: start;
     text-align: left;
   }

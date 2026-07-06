@@ -48,13 +48,46 @@ public sealed class RegistrationService : IRegistrationService
             .ToList();
     }
 
+    public async Task<IReadOnlyCollection<MyRegistrationDto>> GetUserRegistrationsAsync(
+        Guid userId,
+        CancellationToken cancellationToken = default)
+    {
+        var typedUserId = new UserId(userId);
+
+        var rows = await _dbContext.Registrations
+            .AsNoTracking()
+            .Where(registration => registration.UserId == typedUserId)
+            .Join(
+                _dbContext.Events.AsNoTracking(),
+                registration => registration.EventId,
+                eventItem => eventItem.Id,
+                (registration, eventItem) => new { Registration = registration, Event = eventItem })
+            .OrderBy(row => row.Event.StartsAtUtc)
+            .ToListAsync(cancellationToken);
+
+        return rows
+            .Select(row => new MyRegistrationDto(
+                row.Registration.Id.Value,
+                row.Registration.EventId.Value,
+                row.Registration.TicketId.Value,
+                row.Event.Title,
+                row.Event.Location.City,
+                row.Event.StartsAtUtc,
+                row.Event.EndsAtUtc,
+                row.Event.Status.ToString(),
+                row.Registration.Status.ToString(),
+                row.Registration.CheckInCode,
+                row.Registration.CreatedAtUtc,
+                row.Registration.CheckedInAtUtc))
+            .ToList();
+    }
+
     public async Task<RegistrationDto?> RegisterForEventAsync(
         RegisterForEventCommand command,
         CancellationToken cancellationToken = default)
     {
         var eventId = new EventId(command.EventId);
         var ticketId = new TicketId(command.TicketId);
-        var email = Email.Create(command.Email);
 
         var eventItem = await _dbContext.Events
             .FirstOrDefaultAsync(item => item.Id == eventId, cancellationToken);
@@ -74,14 +107,9 @@ public sealed class RegistrationService : IRegistrationService
             return null;
         }
 
-        var user = await _dbContext.Users
-            .FirstOrDefaultAsync(existingUser => existingUser.Email == email, cancellationToken);
-
-        if (user is null)
-        {
-            user = new User(UserId.New(), command.FullName, email, UserRole.Participant);
-            await _dbContext.Users.AddAsync(user, cancellationToken);
-        }
+        var user = command.CurrentUserId.HasValue
+            ? await GetCurrentUserAsync(command.CurrentUserId.Value, cancellationToken)
+            : await GetOrCreateAnonymousUserAsync(command.FullName, command.Email, cancellationToken);
 
         var alreadyRegistered = await _dbContext.Registrations
             .AnyAsync(registration => registration.EventId == eventId && registration.UserId == user.Id, cancellationToken);
@@ -102,6 +130,35 @@ public sealed class RegistrationService : IRegistrationService
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return ToDto(registration, user);
+    }
+
+    private async Task<User> GetCurrentUserAsync(Guid userId, CancellationToken cancellationToken)
+    {
+        var typedUserId = new UserId(userId);
+
+        return await _dbContext.Users
+            .FirstOrDefaultAsync(user => user.Id == typedUserId, cancellationToken)
+            ?? throw new InvalidOperationException("Authenticated user was not found.");
+    }
+
+    private async Task<User> GetOrCreateAnonymousUserAsync(
+        string fullName,
+        string emailValue,
+        CancellationToken cancellationToken)
+    {
+        var email = Email.Create(emailValue);
+        var user = await _dbContext.Users
+            .FirstOrDefaultAsync(existingUser => existingUser.Email == email, cancellationToken);
+
+        if (user is not null)
+        {
+            return user;
+        }
+
+        user = new User(UserId.New(), fullName, email, UserRole.Participant);
+        await _dbContext.Users.AddAsync(user, cancellationToken);
+
+        return user;
     }
 
     public async Task<RegistrationDto?> CheckInAsync(
