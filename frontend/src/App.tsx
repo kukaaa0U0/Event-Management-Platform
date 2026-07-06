@@ -32,6 +32,7 @@ import { OrganizerDashboardPanel } from "./components/OrganizerDashboardPanel";
 type LoadState = "idle" | "loading" | "success" | "error";
 type AuthMode = "login" | "register";
 type EventScope = "all" | "mine";
+type WorkspaceTab = "overview" | "create" | "account";
 
 type RegistrationFormState = {
   fullName: string;
@@ -173,6 +174,7 @@ export default function App() {
   const [authForm, setAuthForm] = useState<AuthFormState>(emptyAuthForm);
   const [authState, setAuthState] = useState<LoadState>("idle");
   const [authError, setAuthError] = useState<string | null>(null);
+  const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<WorkspaceTab>(() => auth ? "overview" : "account");
   const [eventScope, setEventScope] = useState<EventScope>("all");
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesState, setCategoriesState] = useState<LoadState>("idle");
@@ -633,11 +635,13 @@ export default function App() {
     setAuth(response);
     setAuthForm(emptyAuthForm);
     setAuthState("success");
+    setActiveWorkspaceTab("overview");
   }
 
   function logout() {
     localStorage.removeItem(authStorageKey);
     setAuth(null);
+    setActiveWorkspaceTab("account");
     setEventScope("all");
     setManagedEventIds([]);
     setMyRegistrations([]);
@@ -1186,6 +1190,39 @@ export default function App() {
       <section className="content" aria-label="Детали события">
         {errorMessage && <div className="top-alert">{errorMessage}</div>}
 
+        <section className="workspace-panel" aria-label="Рабочая область">
+          <div>
+            <p className="eyebrow">Workspace</p>
+            <h2>{auth ? "Панель управления" : "Вход в систему"}</h2>
+          </div>
+          <div className="workspace-tabs" role="tablist" aria-label="Разделы рабочей области">
+            <button
+              className={activeWorkspaceTab === "overview" ? "workspace-tab active" : "workspace-tab"}
+              type="button"
+              onClick={() => setActiveWorkspaceTab("overview")}
+              disabled={!auth}
+            >
+              Обзор
+            </button>
+            <button
+              className={activeWorkspaceTab === "create" ? "workspace-tab active" : "workspace-tab"}
+              type="button"
+              onClick={() => setActiveWorkspaceTab("create")}
+              disabled={!auth}
+            >
+              Создать
+            </button>
+            <button
+              className={activeWorkspaceTab === "account" ? "workspace-tab active" : "workspace-tab"}
+              type="button"
+              onClick={() => setActiveWorkspaceTab("account")}
+            >
+              Аккаунт
+            </button>
+          </div>
+        </section>
+
+        {activeWorkspaceTab === "account" && (
         <section className="auth-panel" aria-label="Вход организатора">
           {auth ? (
             <div className="auth-summary">
@@ -1271,8 +1308,9 @@ export default function App() {
             </form>
           )}
         </section>
+        )}
 
-        {auth && (
+        {auth && activeWorkspaceTab === "overview" && (
           <MyRegistrationsPanel
             registrations={myRegistrations}
             state={myRegistrationsState}
@@ -1282,7 +1320,7 @@ export default function App() {
           />
         )}
 
-        {auth && (
+        {auth && activeWorkspaceTab === "overview" && (
           <OrganizerDashboardPanel
             events={dashboardEvents}
             state={dashboardState}
@@ -1292,7 +1330,7 @@ export default function App() {
           />
         )}
 
-        {auth && (
+        {auth && activeWorkspaceTab === "create" && (
           <section className="create-event-panel" aria-label="Создание события">
             <div className="section-heading">
               <div>

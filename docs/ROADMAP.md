@@ -53,6 +53,7 @@ Completed:
 - Frontend sidebar can switch between all events and the current organizer's events.
 - Frontend organizer dashboard shows event, registration, checked-in, and capacity counts.
 - Frontend organizer dashboard panel is extracted from `App.tsx`.
+- Frontend workspace tabs separate overview, event creation, and account panels.
 - Frontend hides edit, ticket, participants, and check-in controls for events not managed by the current user.
 - Frontend create event form loads categories and calls protected `POST /api/events`.
 - Frontend refreshes the event list and selects the newly created draft event.
