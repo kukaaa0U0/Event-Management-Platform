@@ -218,6 +218,7 @@ export default function App() {
   const [createTicketState, setCreateTicketState] = useState<LoadState>("idle");
   const [createTicketError, setCreateTicketError] = useState<string | null>(null);
   const [createdTicketMessage, setCreatedTicketMessage] = useState<string | null>(null);
+  const [isCreateTicketOpen, setIsCreateTicketOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [registrationError, setRegistrationError] = useState<string | null>(null);
   const [registrationsError, setRegistrationsError] = useState<string | null>(null);
@@ -414,6 +415,7 @@ export default function App() {
     setCreateTicketError(null);
     setCreatedTicketMessage(null);
     setCreateTicketState("idle");
+    setIsCreateTicketOpen(false);
     setEditEventError(null);
     setEditedEventMessage(null);
     setEditEventState("idle");
@@ -958,6 +960,7 @@ export default function App() {
         ticketId: updatedEvent.tickets[0]?.id ?? ""
       });
       setCreateTicketForm(emptyTicketForm);
+      setIsCreateTicketOpen(false);
       setCreatedTicketMessage("Билет добавлен.");
       setCreateTicketState("success");
     } catch (error: unknown) {
@@ -1706,9 +1709,22 @@ export default function App() {
                 </div>
 
                 {isSelectedEventManaged && (
+                  <button
+                    className="secondary-button ticket-toggle-button"
+                    type="button"
+                    onClick={() => setIsCreateTicketOpen((current) => !current)}
+                  >
+                    {isCreateTicketOpen ? "Скрыть форму билета" : "Добавить билет"}
+                  </button>
+                )}
+
+                {isSelectedEventManaged && isCreateTicketOpen && (
                   <form className="ticket-form" onSubmit={handleCreateTicketSubmit}>
                     <div className="section-heading compact">
                       <h3>Добавить билет</h3>
+                      <button className="small-button" type="button" onClick={() => setIsCreateTicketOpen(false)}>
+                        Закрыть
+                      </button>
                     </div>
 
                     <label className="wide-field">

@@ -55,6 +55,7 @@ Completed:
 - Frontend organizer dashboard panel is extracted from `App.tsx`.
 - Frontend workspace tabs separate overview, event creation, and account panels.
 - Frontend event edit form is hidden behind an explicit edit action to reduce detail-page clutter.
+- Frontend ticket creation form is hidden behind an explicit action to reduce detail-page clutter.
 - Frontend hides edit, ticket, participants, and check-in controls for events not managed by the current user.
 - Frontend create event form loads categories and calls protected `POST /api/events`.
 - Frontend refreshes the event list and selects the newly created draft event.
