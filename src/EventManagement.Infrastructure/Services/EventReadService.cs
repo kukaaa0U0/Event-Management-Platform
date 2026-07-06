@@ -91,6 +91,8 @@ public sealed class EventReadService : IEventReadService
             eventItem.Status.ToString(),
             eventItem.UpdatedAtUtc,
             eventItem.CalendarSequence,
+            eventItem.RegistrationEnabled,
+            eventItem.CheckInEnabled,
             tickets);
     }
 

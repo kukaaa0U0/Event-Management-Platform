@@ -19,7 +19,8 @@ import {
   publishEvent,
   registerForEvent,
   registerUser,
-  updateEvent
+  updateEvent,
+  updateEventSettings
 } from "./api/events";
 
 type LoadState = "idle" | "loading" | "success" | "error";
@@ -57,6 +58,11 @@ type CreateTicketFormState = {
   capacity: string;
 };
 
+type EventSettingsFormState = {
+  registrationEnabled: boolean;
+  checkInEnabled: boolean;
+};
+
 const emptyRegistrationForm: RegistrationFormState = {
   fullName: "",
   email: "",
@@ -75,6 +81,11 @@ const emptyTicketForm: CreateTicketFormState = {
   priceAmount: "0",
   priceCurrency: "RUB",
   capacity: "50"
+};
+
+const defaultEventSettingsForm: EventSettingsFormState = {
+  registrationEnabled: true,
+  checkInEnabled: false
 };
 
 function toDateTimeLocalValue(date: Date): string {
@@ -184,6 +195,10 @@ export default function App() {
   const [eventStatusState, setEventStatusState] = useState<LoadState>("idle");
   const [eventStatusError, setEventStatusError] = useState<string | null>(null);
   const [eventStatusMessage, setEventStatusMessage] = useState<string | null>(null);
+  const [eventSettingsForm, setEventSettingsForm] = useState<EventSettingsFormState>(defaultEventSettingsForm);
+  const [eventSettingsState, setEventSettingsState] = useState<LoadState>("idle");
+  const [eventSettingsError, setEventSettingsError] = useState<string | null>(null);
+  const [eventSettingsMessage, setEventSettingsMessage] = useState<string | null>(null);
   const [createTicketForm, setCreateTicketForm] = useState<CreateTicketFormState>(emptyTicketForm);
   const [createTicketState, setCreateTicketState] = useState<LoadState>("idle");
   const [createTicketError, setCreateTicketError] = useState<string | null>(null);
@@ -318,6 +333,10 @@ export default function App() {
     setEventStatusError(null);
     setEventStatusMessage(null);
     setEventStatusState("idle");
+    setEventSettingsForm(defaultEventSettingsForm);
+    setEventSettingsError(null);
+    setEventSettingsMessage(null);
+    setEventSettingsState("idle");
     getEventDetails(selectedEventId)
       .then((item) => {
         if (!isActive) {
@@ -326,6 +345,10 @@ export default function App() {
 
         setSelectedEvent(item);
         setEditEventForm(createEventFormFromDetails(item));
+        setEventSettingsForm({
+          registrationEnabled: item.registrationEnabled,
+          checkInEnabled: item.checkInEnabled
+        });
         setRegistrationForm({
           ...emptyRegistrationForm,
           ticketId: item.tickets[0]?.id ?? ""
@@ -354,6 +377,16 @@ export default function App() {
   const isSelectedEventManaged = useMemo(
     () => Boolean(auth && selectedEventId && managedEventIds.includes(selectedEventId)),
     [auth, managedEventIds, selectedEventId]
+  );
+
+  const isRegistrationOpen = Boolean(
+    selectedEvent?.status === "Published" && selectedEvent.registrationEnabled
+  );
+
+  const isCheckInOpen = Boolean(
+    selectedEvent &&
+      (selectedEvent.status === "Published" || selectedEvent.status === "Ongoing") &&
+      selectedEvent.checkInEnabled
   );
 
   useEffect(() => {
@@ -456,6 +489,15 @@ export default function App() {
     }));
     setCreateTicketError(null);
     setCreatedTicketMessage(null);
+  }
+
+  function updateEventSettingsForm(field: keyof EventSettingsFormState, value: boolean) {
+    setEventSettingsForm((current) => ({
+      ...current,
+      [field]: value
+    }));
+    setEventSettingsError(null);
+    setEventSettingsMessage(null);
   }
 
   function saveAuth(response: AuthResponse) {
@@ -659,11 +701,55 @@ export default function App() {
       await refreshEvents(updatedEvent.id);
       setSelectedEvent(updatedEvent);
       setEditEventForm(createEventFormFromDetails(updatedEvent));
+      setEventSettingsForm({
+        registrationEnabled: updatedEvent.registrationEnabled,
+        checkInEnabled: updatedEvent.checkInEnabled
+      });
       setEventStatusMessage(action === "publish" ? "Событие опубликовано." : "Событие отменено.");
       setEventStatusState("success");
     } catch (error: unknown) {
       setEventStatusError(error instanceof Error ? error.message : "Не удалось изменить статус события");
       setEventStatusState("error");
+    }
+  }
+
+  async function handleEventSettingsSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!selectedEvent) {
+      return;
+    }
+
+    if (!auth || !isSelectedEventManaged) {
+      setEventSettingsError("Режимы события может менять только организатор этого события.");
+      return;
+    }
+
+    setEventSettingsState("loading");
+    setEventSettingsError(null);
+    setEventSettingsMessage(null);
+
+    try {
+      const updatedEvent = await updateEventSettings(
+        selectedEvent.id,
+        {
+          registrationEnabled: eventSettingsForm.registrationEnabled,
+          checkInEnabled: eventSettingsForm.checkInEnabled
+        },
+        auth.accessToken
+      );
+
+      await refreshEvents(updatedEvent.id);
+      setSelectedEvent(updatedEvent);
+      setEventSettingsForm({
+        registrationEnabled: updatedEvent.registrationEnabled,
+        checkInEnabled: updatedEvent.checkInEnabled
+      });
+      setEventSettingsMessage("Режимы события сохранены.");
+      setEventSettingsState("success");
+    } catch (error: unknown) {
+      setEventSettingsError(error instanceof Error ? error.message : "Не удалось сохранить режимы события");
+      setEventSettingsState("error");
     }
   }
 
@@ -801,6 +887,11 @@ export default function App() {
       return;
     }
 
+    if (!isRegistrationOpen) {
+      setRegistrationError("Регистрация на это событие сейчас закрыта.");
+      return;
+    }
+
     if (!registrationForm.ticketId) {
       setRegistrationError("Выбери билет.");
       return;
@@ -847,6 +938,11 @@ export default function App() {
 
     if (!auth || !isSelectedEventManaged) {
       setCheckInError("Check-in доступен только организатору этого события.");
+      return;
+    }
+
+    if (!isCheckInOpen) {
+      setCheckInError("Check-in для этого события сейчас выключен.");
       return;
     }
 
@@ -1226,8 +1322,40 @@ export default function App() {
                   </button>
                 </div>
 
+                <form className="event-settings-form" onSubmit={handleEventSettingsSubmit}>
+                  <label className="setting-toggle">
+                    <input
+                      type="checkbox"
+                      checked={eventSettingsForm.registrationEnabled}
+                      onChange={(event) => updateEventSettingsForm("registrationEnabled", event.target.checked)}
+                      disabled={eventSettingsState === "loading" || selectedEvent.status === "Cancelled"}
+                    />
+                    <span>Регистрация включена</span>
+                  </label>
+
+                  <label className="setting-toggle">
+                    <input
+                      type="checkbox"
+                      checked={eventSettingsForm.checkInEnabled}
+                      onChange={(event) => updateEventSettingsForm("checkInEnabled", event.target.checked)}
+                      disabled={eventSettingsState === "loading" || selectedEvent.status === "Cancelled"}
+                    />
+                    <span>Check-in включен</span>
+                  </label>
+
+                  <button
+                    className="secondary-button"
+                    type="submit"
+                    disabled={eventSettingsState === "loading" || selectedEvent.status === "Cancelled"}
+                  >
+                    {eventSettingsState === "loading" ? "Сохраняем..." : "Сохранить режимы"}
+                  </button>
+                </form>
+
                 {eventStatusError && <div className="form-alert error">{eventStatusError}</div>}
                 {eventStatusMessage && <div className="form-alert success">{eventStatusMessage}</div>}
+                {eventSettingsError && <div className="form-alert error">{eventSettingsError}</div>}
+                {eventSettingsMessage && <div className="form-alert success">{eventSettingsMessage}</div>}
               </section>
             )}
 
@@ -1437,13 +1565,17 @@ export default function App() {
                   <h3>Регистрация</h3>
                 </div>
 
+                {!isRegistrationOpen && (
+                  <div className="panel-message">Регистрация на это событие сейчас закрыта.</div>
+                )}
+
                 <form className="registration-form" onSubmit={handleRegistrationSubmit}>
                   <label>
                     <span>Билет</span>
                     <select
                       value={registrationForm.ticketId}
                       onChange={(event) => updateRegistrationForm("ticketId", event.target.value)}
-                      disabled={selectedEvent.tickets.length === 0 || registrationState === "loading"}
+                      disabled={!isRegistrationOpen || selectedEvent.tickets.length === 0 || registrationState === "loading"}
                     >
                       {selectedEvent.tickets.map((ticket) => (
                         <option key={ticket.id} value={ticket.id}>
@@ -1459,7 +1591,7 @@ export default function App() {
                       value={registrationForm.fullName}
                       onChange={(event) => updateRegistrationForm("fullName", event.target.value)}
                       placeholder="Например, Иван Петров"
-                      disabled={registrationState === "loading"}
+                      disabled={!isRegistrationOpen || registrationState === "loading"}
                     />
                   </label>
 
@@ -1470,7 +1602,7 @@ export default function App() {
                       value={registrationForm.email}
                       onChange={(event) => updateRegistrationForm("email", event.target.value)}
                       placeholder="ivan@example.com"
-                      disabled={registrationState === "loading"}
+                      disabled={!isRegistrationOpen || registrationState === "loading"}
                     />
                   </label>
 
@@ -1479,7 +1611,7 @@ export default function App() {
                   <button
                     className="primary-button"
                     type="submit"
-                    disabled={selectedEvent.tickets.length === 0 || registrationState === "loading"}
+                    disabled={!isRegistrationOpen || selectedEvent.tickets.length === 0 || registrationState === "loading"}
                   >
                     {registrationState === "loading" ? "Регистрируем..." : "Зарегистрироваться"}
                   </button>
@@ -1502,6 +1634,10 @@ export default function App() {
                   <span>{registrations.length}</span>
                 </div>
 
+                {!isCheckInOpen && (
+                  <div className="panel-message">Check-in для этого события сейчас выключен.</div>
+                )}
+
                 <form className="check-in-form" onSubmit={handleCheckInSubmit}>
                   <label>
                     <span>Check-in код</span>
@@ -1512,10 +1648,10 @@ export default function App() {
                         setCheckInError(null);
                       }}
                       placeholder="CHK-..."
-                      disabled={checkInState === "loading"}
+                      disabled={!isCheckInOpen || checkInState === "loading"}
                     />
                   </label>
-                  <button className="secondary-button" type="submit" disabled={checkInState === "loading"}>
+                  <button className="secondary-button" type="submit" disabled={!isCheckInOpen || checkInState === "loading"}>
                     {checkInState === "loading" ? "Отмечаем..." : "Отметить"}
                   </button>
                 </form>

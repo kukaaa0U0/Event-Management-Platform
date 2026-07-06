@@ -137,6 +137,7 @@ GET /api/events/{id}
 GET /api/events/{id}/calendar.ics
 POST /api/events
 PUT /api/events/{id}
+PUT /api/events/{id}/settings
 POST /api/events/{id}/tickets
 POST /api/events/{id}/publish
 POST /api/events/{id}/cancel
@@ -177,6 +178,19 @@ Organizer in React
     -> PostgreSQL
 ```
 
+Event settings flow:
+
+```text
+Organizer in React
+    -> PUT /api/events/{id}/settings with JWT
+    -> EventsController
+    -> IEventWriteService
+    -> EventWriteService checks event ownership/admin access
+    -> Event updates RegistrationEnabled and CheckInEnabled
+    -> ApplicationDbContext
+    -> PostgreSQL
+```
+
 Authentication foundation is partially implemented: users can register/login and
 receive JWT access tokens. Organizer endpoints validate JWT tokens and enforce
 event ownership or admin access for protected workflows. The intended role and
@@ -204,6 +218,7 @@ Purpose:
 - lets an authenticated organizer create a draft event;
 - lets an authenticated organizer edit an event they own;
 - lets an authenticated organizer publish or cancel an event they own;
+- lets an authenticated organizer enable or disable registration and check-in;
 - lets an authenticated organizer add tickets to an event they own;
 - lets a visitor download an event as an `.ics` calendar file;
 - is served by nginx in Docker.

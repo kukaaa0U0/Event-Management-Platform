@@ -28,6 +28,8 @@ export type EventDetails = EventSummary & {
   venueName: string | null;
   updatedAtUtc: string;
   calendarSequence: number;
+  registrationEnabled: boolean;
+  checkInEnabled: boolean;
   tickets: Ticket[];
 };
 
@@ -86,6 +88,11 @@ export type CreateEventRequest = {
 };
 
 export type UpdateEventRequest = CreateEventRequest;
+
+export type UpdateEventSettingsRequest = {
+  registrationEnabled: boolean;
+  checkInEnabled: boolean;
+};
 
 export type CreateTicketRequest = {
   name: string;
@@ -183,6 +190,20 @@ export function cancelEvent(eventId: string, accessToken: string): Promise<Event
     headers: {
       Authorization: `Bearer ${accessToken}`
     }
+  });
+}
+
+export function updateEventSettings(
+  eventId: string,
+  payload: UpdateEventSettingsRequest,
+  accessToken: string
+): Promise<EventDetails> {
+  return request<EventDetails>(`/events/${eventId}/settings`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    },
+    body: JSON.stringify(payload)
   });
 }
 

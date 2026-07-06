@@ -53,6 +53,12 @@ Completed:
 - Frontend refreshes event details and event list after editing.
 - Frontend publish/cancel controls call protected event status endpoints.
 - Frontend refreshes event details and event list after publishing or cancelling.
+- Events now have `RegistrationEnabled` and `CheckInEnabled` settings.
+- `PUT /api/events/{id}/settings` updates registration/check-in modes for organizer-owned events.
+- Backend blocks participant registration for draft, cancelled, or registration-disabled events.
+- Backend blocks check-in when check-in is disabled or the event lifecycle status does not allow it.
+- Frontend organizer panel can update registration/check-in modes.
+- Frontend disables public registration and organizer check-in forms when modes are closed.
 - Frontend ticket form calls protected `POST /api/events/{id}/tickets`.
 - Frontend refreshes selected event details after ticket creation.
 - Frontend event details include a `.ics` calendar download button.
@@ -63,21 +69,20 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Registration And Check-In Modes
+## Next Milestone: Participant Account Flow
 
 Goal:
 
 ```text
-Organizer can control whether registration and check-in are available for an event
+Authenticated users can register for events from their own account and later see their registrations
 ```
 
 Tasks:
 
-- add event settings for registration enabled/disabled;
-- add event settings for check-in enabled/disabled;
-- block participant registration for draft, cancelled, or registration-disabled events;
-- keep the first check-in mode as organizer-only;
-- expose these settings in the organizer management panel.
+- decide whether anonymous registration remains available or becomes optional;
+- connect participant registration to the logged-in user when authenticated;
+- add a "My registrations" view;
+- keep organizer ownership and participant visibility separated.
 
 Important product rule:
 
@@ -94,6 +99,7 @@ Important product rule:
 - `GET /api/events/{id}/calendar.ics`
 - `POST /api/events`
 - `PUT /api/events/{id}`
+- `PUT /api/events/{id}/settings`
 - `POST /api/events/{id}/publish`
 - `POST /api/events/{id}/cancel`
 - `POST /api/events/{id}/tickets`
@@ -133,7 +139,7 @@ Completed:
 
 Planned next:
 
-- registration/check-in mode controls;
+- participant account registration flow;
 - broader role policies as workflows grow;
 - external login later, for example Yandex ID.
 

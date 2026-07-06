@@ -72,6 +72,12 @@ internal sealed class EventConfiguration : IEntityTypeConfiguration<Event>
         builder.Property(eventItem => eventItem.CalendarSequence)
             .IsRequired();
 
+        builder.Property(eventItem => eventItem.RegistrationEnabled)
+            .IsRequired();
+
+        builder.Property(eventItem => eventItem.CheckInEnabled)
+            .IsRequired();
+
         builder.HasOne<User>()
             .WithMany()
             .HasForeignKey(eventItem => eventItem.OrganizerId)

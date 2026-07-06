@@ -13,4 +13,6 @@ public sealed record EventDetailsDto(
     string Status,
     DateTime UpdatedAtUtc,
     int CalendarSequence,
+    bool RegistrationEnabled,
+    bool CheckInEnabled,
     IReadOnlyCollection<TicketDto> Tickets);

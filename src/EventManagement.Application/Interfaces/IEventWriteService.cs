@@ -9,6 +9,10 @@ public interface IEventWriteService
 
     Task<EventDetailsDto?> UpdateEventAsync(UpdateEventCommand command, CancellationToken cancellationToken = default);
 
+    Task<EventDetailsDto?> UpdateEventSettingsAsync(
+        UpdateEventSettingsCommand command,
+        CancellationToken cancellationToken = default);
+
     Task<EventDetailsDto?> CreateTicketAsync(CreateTicketCommand command, CancellationToken cancellationToken = default);
 
     Task<EventDetailsDto?> PublishEventAsync(

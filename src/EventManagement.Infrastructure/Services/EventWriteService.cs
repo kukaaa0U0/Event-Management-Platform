@@ -145,6 +145,32 @@ public sealed class EventWriteService : IEventWriteService
         return await _eventReadService.GetEventDetailsAsync(command.EventId, cancellationToken);
     }
 
+    public async Task<EventDetailsDto?> UpdateEventSettingsAsync(
+        UpdateEventSettingsCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var eventItem = await GetTrackedEventAsync(command.EventId, cancellationToken);
+
+        if (eventItem is null)
+        {
+            return null;
+        }
+
+        if (!await _eventAccessService.CanManageEventAsync(
+                command.CurrentUserId,
+                command.CurrentUserRole,
+                command.EventId,
+                cancellationToken))
+        {
+            throw new UnauthorizedAccessException("Only the event organizer or admin can update event settings.");
+        }
+
+        eventItem.UpdateAvailability(command.RegistrationEnabled, command.CheckInEnabled);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return await _eventReadService.GetEventDetailsAsync(command.EventId, cancellationToken);
+    }
+
     public async Task<EventDetailsDto?> PublishEventAsync(
         Guid id,
         Guid currentUserId,

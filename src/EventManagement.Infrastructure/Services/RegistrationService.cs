@@ -56,13 +56,15 @@ public sealed class RegistrationService : IRegistrationService
         var ticketId = new TicketId(command.TicketId);
         var email = Email.Create(command.Email);
 
-        var eventExists = await _dbContext.Events
-            .AnyAsync(eventItem => eventItem.Id == eventId, cancellationToken);
+        var eventItem = await _dbContext.Events
+            .FirstOrDefaultAsync(item => item.Id == eventId, cancellationToken);
 
-        if (!eventExists)
+        if (eventItem is null)
         {
             return null;
         }
+
+        eventItem.EnsureRegistrationIsOpen();
 
         var ticketExists = await _dbContext.Tickets
             .AnyAsync(ticket => ticket.Id == ticketId && ticket.EventId == eventId, cancellationToken);
@@ -115,6 +117,11 @@ public sealed class RegistrationService : IRegistrationService
         {
             return null;
         }
+
+        var eventItem = await _dbContext.Events
+            .FirstAsync(item => item.Id == registration.EventId, cancellationToken);
+
+        eventItem.EnsureCheckInIsOpen();
 
         if (registration.Status == RegistrationStatus.CheckedIn)
         {

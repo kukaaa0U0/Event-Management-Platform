@@ -29,6 +29,8 @@ public sealed class Event
         CreatedAtUtc = DateTime.UtcNow;
         UpdatedAtUtc = CreatedAtUtc;
         CalendarSequence = 0;
+        RegistrationEnabled = true;
+        CheckInEnabled = false;
     }
 
     public EventId Id { get; private set; }
@@ -54,6 +56,10 @@ public sealed class Event
     public DateTime UpdatedAtUtc { get; private set; }
 
     public int CalendarSequence { get; private set; }
+
+    public bool RegistrationEnabled { get; private set; }
+
+    public bool CheckInEnabled { get; private set; }
 
     public IReadOnlyCollection<Ticket> Tickets => _tickets.AsReadOnly();
 
@@ -116,7 +122,42 @@ public sealed class Event
         }
 
         Status = EventStatus.Cancelled;
+        RegistrationEnabled = false;
+        CheckInEnabled = false;
         TouchCalendar();
+    }
+
+    public void UpdateAvailability(bool registrationEnabled, bool checkInEnabled)
+    {
+        RegistrationEnabled = registrationEnabled;
+        CheckInEnabled = checkInEnabled;
+        TouchCalendar();
+    }
+
+    public void EnsureRegistrationIsOpen()
+    {
+        if (Status != EventStatus.Published)
+        {
+            throw new InvalidOperationException("Registration is available only for published events.");
+        }
+
+        if (!RegistrationEnabled)
+        {
+            throw new InvalidOperationException("Registration is disabled for this event.");
+        }
+    }
+
+    public void EnsureCheckInIsOpen()
+    {
+        if (Status is not EventStatus.Published and not EventStatus.Ongoing)
+        {
+            throw new InvalidOperationException("Check-in is available only for published or ongoing events.");
+        }
+
+        if (!CheckInEnabled)
+        {
+            throw new InvalidOperationException("Check-in is disabled for this event.");
+        }
     }
 
     public void AddTicket(Ticket ticket)

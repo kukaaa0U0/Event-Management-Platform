@@ -239,6 +239,37 @@ public sealed class EventsController : ControllerBase
         }
     }
 
+    [HttpPut("{id:guid}/settings")]
+    [Authorize]
+    public async Task<ActionResult<EventDetailsDto>> UpdateEventSettings(
+        Guid id,
+        UpdateEventSettingsRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateEventSettingsCommand(
+            id,
+            User.GetUserId(),
+            User.GetUserRole(),
+            request.RegistrationEnabled,
+            request.CheckInEnabled);
+
+        try
+        {
+            var eventDetails = await _eventWriteService.UpdateEventSettingsAsync(command, cancellationToken);
+
+            if (eventDetails is null)
+            {
+                return NotFound();
+            }
+
+            return Ok(eventDetails);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
+        }
+    }
+
     [HttpPost("{id:guid}/cancel")]
     [Authorize]
     public async Task<ActionResult<EventDetailsDto>> CancelEvent(Guid id, CancellationToken cancellationToken)

@@ -181,6 +181,7 @@ GET http://localhost:5000/api/events/{id}
 GET http://localhost:5000/api/events/{id}/calendar.ics
 POST http://localhost:5000/api/events
 PUT http://localhost:5000/api/events/{id}
+PUT http://localhost:5000/api/events/{id}/settings
 POST http://localhost:5000/api/events/{id}/tickets
 POST http://localhost:5000/api/events/{id}/publish
 POST http://localhost:5000/api/events/{id}/cancel
@@ -200,13 +201,15 @@ panel. After login, the frontend also shows the create event form and sends the
 token to `POST /api/events`. On the selected event screen, it can also add
 tickets through `POST /api/events/{id}/tickets` and edit event details through
 `PUT /api/events/{id}`. For events managed by the current user, the frontend can
-also publish or cancel the event through the protected status endpoints.
+also publish or cancel the event through the protected status endpoints and
+change registration/check-in modes through `PUT /api/events/{id}/settings`.
 
 Currently protected:
 
 - `POST /api/events`
 - `GET /api/events/my`
 - `PUT /api/events/{id}`
+- `PUT /api/events/{id}/settings`
 - `POST /api/events/{id}/tickets`
 - `POST /api/events/{id}/publish`
 - `POST /api/events/{id}/cancel`
