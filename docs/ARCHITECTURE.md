@@ -239,6 +239,11 @@ Current frontend stack:
 - Vite;
 - nginx for container runtime.
 
+Current component extraction:
+
+- `components/MyRegistrationsPanel.tsx`;
+- `components/OrganizerDashboardPanel.tsx`.
+
 Current frontend flow:
 
 ```text

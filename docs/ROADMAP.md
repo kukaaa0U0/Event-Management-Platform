@@ -42,6 +42,7 @@ Completed:
 - Frontend registration form connected to `POST /api/events/{eventId}/registrations`.
 - Frontend registration form uses the logged-in account when JWT is available.
 - Frontend shows "My registrations" for the logged-in account.
+- Frontend "My registrations" panel is extracted from `App.tsx`.
 - Frontend shows generated check-in code after successful registration.
 - Frontend organizer panel shows registrations for the selected event.
 - Frontend refreshes registrations after a new participant is registered.
@@ -51,6 +52,7 @@ Completed:
 - Frontend sends `Authorization: Bearer ...` for protected organizer requests.
 - Frontend sidebar can switch between all events and the current organizer's events.
 - Frontend organizer dashboard shows event, registration, checked-in, and capacity counts.
+- Frontend organizer dashboard panel is extracted from `App.tsx`.
 - Frontend hides edit, ticket, participants, and check-in controls for events not managed by the current user.
 - Frontend create event form loads categories and calls protected `POST /api/events`.
 - Frontend refreshes the event list and selects the newly created draft event.
@@ -74,7 +76,7 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Frontend Structure Cleanup
+## Next Milestone: Continue Frontend Structure Cleanup
 
 Goal:
 
@@ -84,7 +86,7 @@ Split the growing React MVP screen into smaller maintainable components
 
 Tasks:
 
-- extract auth, dashboard, event details, registration, and organizer panels from `App.tsx`;
+- extract auth, create event, event details, registration, and organizer panels from `App.tsx`;
 - keep API behavior unchanged while splitting components;
 - avoid adding React Router until there are real separate pages.
 

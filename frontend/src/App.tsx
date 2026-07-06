@@ -26,6 +26,8 @@ import {
   updateEvent,
   updateEventSettings
 } from "./api/events";
+import { MyRegistrationsPanel } from "./components/MyRegistrationsPanel";
+import { OrganizerDashboardPanel } from "./components/OrganizerDashboardPanel";
 
 type LoadState = "idle" | "loading" | "success" | "error";
 type AuthMode = "login" | "register";
@@ -1271,118 +1273,23 @@ export default function App() {
         </section>
 
         {auth && (
-          <section className="my-registrations-panel" aria-label="Мои регистрации">
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">Participant</p>
-                <h3>Мои регистрации</h3>
-              </div>
-              <span>{myRegistrations.length}</span>
-            </div>
-
-            {myRegistrationsState === "loading" && (
-              <div className="panel-message">Загрузка твоих регистраций...</div>
-            )}
-
-            {myRegistrationsState === "error" && (
-              <div className="form-alert error">
-                {myRegistrationsError ?? "Не удалось загрузить твои регистрации"}
-              </div>
-            )}
-
-            {myRegistrationsState === "success" && myRegistrations.length === 0 && (
-              <div className="panel-message">Ты пока не зарегистрирован на события.</div>
-            )}
-
-            {myRegistrationsState === "success" && myRegistrations.length > 0 && (
-              <div className="my-registration-list">
-                {myRegistrations.map((registration) => (
-                  <button
-                    className="my-registration-row"
-                    key={registration.id}
-                    type="button"
-                    onClick={() => setSelectedEventId(registration.eventId)}
-                  >
-                    <div>
-                      <strong>{registration.eventTitle}</strong>
-                      <span>{registration.city} · {formatDate(registration.startsAtUtc)}</span>
-                    </div>
-                    <div className="my-registration-meta">
-                      <span>{registration.registrationStatus}</span>
-                      <strong>{registration.checkInCode}</strong>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </section>
+          <MyRegistrationsPanel
+            registrations={myRegistrations}
+            state={myRegistrationsState}
+            error={myRegistrationsError}
+            formatDate={formatDate}
+            onSelectEvent={setSelectedEventId}
+          />
         )}
 
         {auth && (
-          <section className="organizer-dashboard-panel" aria-label="Dashboard организатора">
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">Organizer</p>
-                <h3>Dashboard</h3>
-              </div>
-              <span>{dashboardEvents.length}</span>
-            </div>
-
-            <div className="dashboard-metrics">
-              <div className="dashboard-metric">
-                <span>События</span>
-                <strong>{dashboardEvents.length}</strong>
-              </div>
-              <div className="dashboard-metric">
-                <span>Регистрации</span>
-                <strong>{dashboardEvents.reduce((sum, eventItem) => sum + eventItem.registrationsCount, 0)}</strong>
-              </div>
-              <div className="dashboard-metric">
-                <span>Отмечены</span>
-                <strong>{dashboardEvents.reduce((sum, eventItem) => sum + eventItem.checkedInCount, 0)}</strong>
-              </div>
-              <div className="dashboard-metric">
-                <span>Мест</span>
-                <strong>{dashboardEvents.reduce((sum, eventItem) => sum + eventItem.ticketCapacity, 0)}</strong>
-              </div>
-            </div>
-
-            {dashboardState === "loading" && (
-              <div className="panel-message">Загрузка dashboard...</div>
-            )}
-
-            {dashboardState === "error" && (
-              <div className="form-alert error">
-                {dashboardError ?? "Не удалось загрузить dashboard"}
-              </div>
-            )}
-
-            {dashboardState === "success" && dashboardEvents.length === 0 && (
-              <div className="panel-message">У тебя пока нет событий для статистики.</div>
-            )}
-
-            {dashboardState === "success" && dashboardEvents.length > 0 && (
-              <div className="dashboard-event-list">
-                {dashboardEvents.map((eventItem) => (
-                  <button
-                    className="dashboard-event-row"
-                    key={eventItem.eventId}
-                    type="button"
-                    onClick={() => setSelectedEventId(eventItem.eventId)}
-                  >
-                    <div>
-                      <strong>{eventItem.title}</strong>
-                      <span>{eventItem.status} · {formatDate(eventItem.startsAtUtc)}</span>
-                    </div>
-                    <div className="dashboard-event-stats">
-                      <span>{eventItem.registrationsCount}/{eventItem.ticketCapacity} мест</span>
-                      <strong>{eventItem.checkedInCount} check-in</strong>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            )}
-          </section>
+          <OrganizerDashboardPanel
+            events={dashboardEvents}
+            state={dashboardState}
+            error={dashboardError}
+            formatDate={formatDate}
+            onSelectEvent={setSelectedEventId}
+          />
         )}
 
         {auth && (
