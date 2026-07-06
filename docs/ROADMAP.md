@@ -16,6 +16,7 @@ Completed:
 - `GET /api/health`.
 - `GET /api/events` wired to database read service.
 - `GET /api/events/my` returns events managed by the current organizer/admin.
+- `GET /api/events/dashboard` returns organizer dashboard statistics.
 - `GET /api/events/{id}` wired to database read service with ticket details.
 - `GET /api/events/{id}/calendar.ics` downloads an iCalendar file for an event.
 - `GET /api/categories`.
@@ -49,6 +50,7 @@ Completed:
 - Frontend login/register panel stores JWT access token locally.
 - Frontend sends `Authorization: Bearer ...` for protected organizer requests.
 - Frontend sidebar can switch between all events and the current organizer's events.
+- Frontend organizer dashboard shows event, registration, checked-in, and capacity counts.
 - Frontend hides edit, ticket, participants, and check-in controls for events not managed by the current user.
 - Frontend create event form loads categories and calls protected `POST /api/events`.
 - Frontend refreshes the event list and selects the newly created draft event.
@@ -72,19 +74,19 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Organizer Dashboard
+## Next Milestone: Frontend Structure Cleanup
 
 Goal:
 
 ```text
-Organizer can see useful summary information about their events
+Split the growing React MVP screen into smaller maintainable components
 ```
 
 Tasks:
 
-- show counts for registrations and checked-in participants per event;
-- show a compact dashboard for the current organizer;
-- keep detailed participant lists protected by ownership/admin access.
+- extract auth, dashboard, event details, registration, and organizer panels from `App.tsx`;
+- keep API behavior unchanged while splitting components;
+- avoid adding React Router until there are real separate pages.
 
 Important product rule:
 
@@ -97,6 +99,7 @@ Important product rule:
 
 - `GET /api/events`
 - `GET /api/events/my`
+- `GET /api/events/dashboard`
 - `GET /api/events/{id}`
 - `GET /api/events/{id}/calendar.ics`
 - `POST /api/events`
@@ -142,7 +145,7 @@ Completed:
 
 Planned next:
 
-- organizer dashboard statistics;
+- frontend structure cleanup;
 - broader role policies as workflows grow;
 - external login later, for example Yandex ID.
 

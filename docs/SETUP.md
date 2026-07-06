@@ -177,6 +177,7 @@ POST http://localhost:5000/api/auth/login
 GET http://localhost:5000/api/categories
 GET http://localhost:5000/api/events
 GET http://localhost:5000/api/events/my
+GET http://localhost:5000/api/events/dashboard
 GET http://localhost:5000/api/events/{id}
 GET http://localhost:5000/api/events/{id}/calendar.ics
 POST http://localhost:5000/api/events
@@ -209,6 +210,7 @@ Currently protected:
 
 - `POST /api/events`
 - `GET /api/events/my`
+- `GET /api/events/dashboard`
 - `PUT /api/events/{id}`
 - `PUT /api/events/{id}/settings`
 - `POST /api/events/{id}/tickets`

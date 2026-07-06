@@ -5,6 +5,7 @@ import {
   EventDetails,
   EventSummary,
   MyRegistration,
+  OrganizerDashboardEvent,
   Registration,
   cancelEvent,
   checkInParticipant,
@@ -17,6 +18,7 @@ import {
   getEvents,
   getMyRegistrations,
   getMyEvents,
+  getOrganizerDashboard,
   login,
   publishEvent,
   registerForEvent,
@@ -181,6 +183,9 @@ export default function App() {
   const [myRegistrationsState, setMyRegistrationsState] = useState<LoadState>("idle");
   const [myRegistrations, setMyRegistrations] = useState<MyRegistration[]>([]);
   const [myRegistrationsError, setMyRegistrationsError] = useState<string | null>(null);
+  const [dashboardState, setDashboardState] = useState<LoadState>("idle");
+  const [dashboardEvents, setDashboardEvents] = useState<OrganizerDashboardEvent[]>([]);
+  const [dashboardError, setDashboardError] = useState<string | null>(null);
   const [registrationsState, setRegistrationsState] = useState<LoadState>("idle");
   const [registrations, setRegistrations] = useState<Registration[]>([]);
   const [registrationState, setRegistrationState] = useState<LoadState>("idle");
@@ -287,6 +292,9 @@ export default function App() {
       setMyRegistrations([]);
       setMyRegistrationsState("idle");
       setMyRegistrationsError(null);
+      setDashboardEvents([]);
+      setDashboardState("idle");
+      setDashboardError(null);
       return;
     }
 
@@ -339,6 +347,39 @@ export default function App() {
 
         setMyRegistrationsError(error instanceof Error ? error.message : "Не удалось загрузить твои регистрации");
         setMyRegistrationsState("error");
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [auth]);
+
+  useEffect(() => {
+    if (!auth) {
+      return;
+    }
+
+    let isActive = true;
+
+    setDashboardState("loading");
+    setDashboardError(null);
+
+    getOrganizerDashboard(auth.accessToken)
+      .then((items) => {
+        if (!isActive) {
+          return;
+        }
+
+        setDashboardEvents(items);
+        setDashboardState("success");
+      })
+      .catch((error: unknown) => {
+        if (!isActive) {
+          return;
+        }
+
+        setDashboardError(error instanceof Error ? error.message : "Не удалось загрузить dashboard");
+        setDashboardState("error");
       });
 
     return () => {
@@ -512,6 +553,27 @@ export default function App() {
     }
   }
 
+  async function refreshOrganizerDashboard() {
+    if (!auth) {
+      setDashboardEvents([]);
+      setDashboardState("idle");
+      return;
+    }
+
+    setDashboardState("loading");
+    setDashboardError(null);
+
+    try {
+      const items = await getOrganizerDashboard(auth.accessToken);
+
+      setDashboardEvents(items);
+      setDashboardState("success");
+    } catch (error: unknown) {
+      setDashboardError(error instanceof Error ? error.message : "Не удалось загрузить dashboard");
+      setDashboardState("error");
+    }
+  }
+
   function updateRegistrationForm(field: keyof RegistrationFormState, value: string) {
     setRegistrationForm((current) => ({
       ...current,
@@ -579,6 +641,9 @@ export default function App() {
     setMyRegistrations([]);
     setMyRegistrationsState("idle");
     setMyRegistrationsError(null);
+    setDashboardEvents([]);
+    setDashboardState("idle");
+    setDashboardError(null);
     setRegistrations([]);
     setRegistrationsState("idle");
     setCheckInCode("");
@@ -652,6 +717,7 @@ export default function App() {
       );
 
       await refreshEvents(createdEvent.id);
+      await refreshOrganizerDashboard();
       setCreateEventForm({
         ...createDefaultEventForm(),
         categoryId: createEventForm.categoryId
@@ -735,6 +801,7 @@ export default function App() {
       );
 
       await refreshEvents(updatedEvent.id);
+      await refreshOrganizerDashboard();
       setSelectedEvent(updatedEvent);
       setEditEventForm(createEventFormFromDetails(updatedEvent));
       setEditedEventMessage("Событие обновлено.");
@@ -766,6 +833,7 @@ export default function App() {
           : await cancelEvent(selectedEvent.id, auth.accessToken);
 
       await refreshEvents(updatedEvent.id);
+      await refreshOrganizerDashboard();
       setSelectedEvent(updatedEvent);
       setEditEventForm(createEventFormFromDetails(updatedEvent));
       setEventSettingsForm({
@@ -807,6 +875,7 @@ export default function App() {
       );
 
       await refreshEvents(updatedEvent.id);
+      await refreshOrganizerDashboard();
       setSelectedEvent(updatedEvent);
       setEventSettingsForm({
         registrationEnabled: updatedEvent.registrationEnabled,
@@ -873,8 +942,11 @@ export default function App() {
       );
 
       setSelectedEvent(updatedEvent);
+      await refreshOrganizerDashboard();
       setRegistrationForm({
         ...emptyRegistrationForm,
+        fullName: auth?.fullName ?? "",
+        email: auth?.email ?? "",
         ticketId: updatedEvent.tickets[0]?.id ?? ""
       });
       setCreateTicketForm(emptyTicketForm);
@@ -998,6 +1070,7 @@ export default function App() {
       });
       await refreshRegistrations(selectedEvent.id);
       await refreshMyRegistrations();
+      await refreshOrganizerDashboard();
     } catch (error: unknown) {
       setRegistrationError(error instanceof Error ? error.message : "Не удалось зарегистрироваться");
       setRegistrationState("error");
@@ -1037,6 +1110,7 @@ export default function App() {
       setCheckInCode("");
       setCheckInState("success");
       await refreshRegistrations(selectedEvent.id);
+      await refreshOrganizerDashboard();
     } catch (error: unknown) {
       setCheckInError(error instanceof Error ? error.message : "Не удалось отметить участника");
       setCheckInState("error");
@@ -1236,6 +1310,73 @@ export default function App() {
                     <div className="my-registration-meta">
                       <span>{registration.registrationStatus}</span>
                       <strong>{registration.checkInCode}</strong>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
+        {auth && (
+          <section className="organizer-dashboard-panel" aria-label="Dashboard организатора">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Organizer</p>
+                <h3>Dashboard</h3>
+              </div>
+              <span>{dashboardEvents.length}</span>
+            </div>
+
+            <div className="dashboard-metrics">
+              <div className="dashboard-metric">
+                <span>События</span>
+                <strong>{dashboardEvents.length}</strong>
+              </div>
+              <div className="dashboard-metric">
+                <span>Регистрации</span>
+                <strong>{dashboardEvents.reduce((sum, eventItem) => sum + eventItem.registrationsCount, 0)}</strong>
+              </div>
+              <div className="dashboard-metric">
+                <span>Отмечены</span>
+                <strong>{dashboardEvents.reduce((sum, eventItem) => sum + eventItem.checkedInCount, 0)}</strong>
+              </div>
+              <div className="dashboard-metric">
+                <span>Мест</span>
+                <strong>{dashboardEvents.reduce((sum, eventItem) => sum + eventItem.ticketCapacity, 0)}</strong>
+              </div>
+            </div>
+
+            {dashboardState === "loading" && (
+              <div className="panel-message">Загрузка dashboard...</div>
+            )}
+
+            {dashboardState === "error" && (
+              <div className="form-alert error">
+                {dashboardError ?? "Не удалось загрузить dashboard"}
+              </div>
+            )}
+
+            {dashboardState === "success" && dashboardEvents.length === 0 && (
+              <div className="panel-message">У тебя пока нет событий для статистики.</div>
+            )}
+
+            {dashboardState === "success" && dashboardEvents.length > 0 && (
+              <div className="dashboard-event-list">
+                {dashboardEvents.map((eventItem) => (
+                  <button
+                    className="dashboard-event-row"
+                    key={eventItem.eventId}
+                    type="button"
+                    onClick={() => setSelectedEventId(eventItem.eventId)}
+                  >
+                    <div>
+                      <strong>{eventItem.title}</strong>
+                      <span>{eventItem.status} · {formatDate(eventItem.startsAtUtc)}</span>
+                    </div>
+                    <div className="dashboard-event-stats">
+                      <span>{eventItem.registrationsCount}/{eventItem.ticketCapacity} мест</span>
+                      <strong>{eventItem.checkedInCount} check-in</strong>
                     </div>
                   </button>
                 ))}

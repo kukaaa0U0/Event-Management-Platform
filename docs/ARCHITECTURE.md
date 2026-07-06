@@ -133,6 +133,7 @@ POST /api/auth/login
 GET /api/categories
 GET /api/events
 GET /api/events/my
+GET /api/events/dashboard
 GET /api/events/{id}
 GET /api/events/{id}/calendar.ics
 POST /api/events
@@ -160,6 +161,10 @@ Postman/browser
 
 `GET /api/events/my` is protected. It returns events where the current user is
 the organizer; admins can see all managed events.
+
+`GET /api/events/dashboard` is protected. It returns organizer-owned event
+statistics such as ticket capacity, registration count, and checked-in count.
+Admins can see statistics for all events.
 
 `GET /api/events/{id}/calendar.ics` uses the read model and formats the event as
 an iCalendar file. The current MVP supports direct download/import. True
@@ -213,6 +218,7 @@ Purpose:
 - lets a participant register for an event and receive a check-in code;
 - uses the logged-in account for participant registration when a JWT is available;
 - shows the logged-in user's own event registrations;
+- shows dashboard statistics for the logged-in organizer;
 - shows organizer-facing registrations for the selected event;
 - lets an organizer perform check-in by participant code;
 - lets an organizer log in/register and stores JWT for protected requests;

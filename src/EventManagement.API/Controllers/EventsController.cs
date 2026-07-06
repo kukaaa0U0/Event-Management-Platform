@@ -43,6 +43,17 @@ public sealed class EventsController : ControllerBase
             cancellationToken));
     }
 
+    [HttpGet("dashboard")]
+    [Authorize]
+    public async Task<ActionResult<IReadOnlyCollection<OrganizerDashboardEventDto>>> GetOrganizerDashboard(
+        CancellationToken cancellationToken)
+    {
+        return Ok(await _eventReadService.GetOrganizerDashboardAsync(
+            User.GetUserId(),
+            User.GetUserRole(),
+            cancellationToken));
+    }
+
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<EventDetailsDto>> GetEventDetails(Guid id, CancellationToken cancellationToken)
     {

@@ -68,6 +68,7 @@ Planned restrictions:
 
 - `POST /api/events` requires an authenticated user.
 - `GET /api/events/my` requires an authenticated user and returns their managed events.
+- `GET /api/events/dashboard` requires an authenticated user and returns dashboard data for their managed events.
 - `PUT /api/events/{id}` requires organizer ownership or admin role.
 - `PUT /api/events/{id}/settings` requires organizer ownership or admin role.
 - `POST /api/events/{id}/tickets` requires organizer ownership or admin role.

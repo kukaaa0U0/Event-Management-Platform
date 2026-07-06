@@ -52,6 +52,65 @@ public sealed class EventReadService : IEventReadService
             .ToList();
     }
 
+    public async Task<IReadOnlyCollection<OrganizerDashboardEventDto>> GetOrganizerDashboardAsync(
+        Guid currentUserId,
+        string currentUserRole,
+        CancellationToken cancellationToken = default)
+    {
+        IQueryable<Event> query = _dbContext.Events
+            .AsNoTracking()
+            .Include(eventItem => eventItem.Tickets);
+
+        if (!currentUserRole.Equals(UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase))
+        {
+            var organizerId = new UserId(currentUserId);
+            query = query.Where(eventItem => eventItem.OrganizerId == organizerId);
+        }
+
+        var events = await query
+            .OrderBy(eventItem => eventItem.StartsAtUtc)
+            .ToListAsync(cancellationToken);
+
+        var eventIds = events
+            .Select(eventItem => eventItem.Id)
+            .ToList();
+
+        List<Registration> registrations = eventIds.Count == 0
+            ? []
+            : await _dbContext.Registrations
+                .AsNoTracking()
+                .Where(registration => eventIds.Contains(registration.EventId))
+                .ToListAsync(cancellationToken);
+
+        var registrationStats = registrations
+            .GroupBy(registration => registration.EventId)
+            .ToDictionary(
+                group => group.Key,
+                group => new
+                {
+                    Total = group.Count(),
+                    CheckedIn = group.Count(registration => registration.Status == RegistrationStatus.CheckedIn)
+                });
+
+        return events
+            .Select(eventItem =>
+            {
+                registrationStats.TryGetValue(eventItem.Id, out var stats);
+
+                return new OrganizerDashboardEventDto(
+                    eventItem.Id.Value,
+                    eventItem.Title,
+                    eventItem.Status.ToString(),
+                    eventItem.StartsAtUtc,
+                    eventItem.RegistrationEnabled,
+                    eventItem.CheckInEnabled,
+                    eventItem.Tickets.Sum(ticket => ticket.Capacity),
+                    stats?.Total ?? 0,
+                    stats?.CheckedIn ?? 0);
+            })
+            .ToList();
+    }
+
     public async Task<EventDetailsDto?> GetEventDetailsAsync(Guid id, CancellationToken cancellationToken = default)
     {
         var eventId = new EventId(id);

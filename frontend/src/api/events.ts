@@ -61,6 +61,18 @@ export type MyRegistration = {
   checkedInAtUtc: string | null;
 };
 
+export type OrganizerDashboardEvent = {
+  eventId: string;
+  title: string;
+  status: string;
+  startsAtUtc: string;
+  registrationEnabled: boolean;
+  checkInEnabled: boolean;
+  ticketCapacity: number;
+  registrationsCount: number;
+  checkedInCount: number;
+};
+
 export type RegisterForEventRequest = {
   ticketId: string;
   fullName: string;
@@ -148,6 +160,14 @@ export function getEvents(): Promise<EventSummary[]> {
 
 export function getMyEvents(accessToken: string): Promise<EventSummary[]> {
   return request<EventSummary[]>("/events/my", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+}
+
+export function getOrganizerDashboard(accessToken: string): Promise<OrganizerDashboardEvent[]> {
+  return request<OrganizerDashboardEvent[]>("/events/dashboard", {
     headers: {
       Authorization: `Bearer ${accessToken}`
     }

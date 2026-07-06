@@ -11,5 +11,10 @@ public interface IEventReadService
         string currentUserRole,
         CancellationToken cancellationToken = default);
 
+    Task<IReadOnlyCollection<OrganizerDashboardEventDto>> GetOrganizerDashboardAsync(
+        Guid currentUserId,
+        string currentUserRole,
+        CancellationToken cancellationToken = default);
+
     Task<EventDetailsDto?> GetEventDetailsAsync(Guid id, CancellationToken cancellationToken = default);
 }
