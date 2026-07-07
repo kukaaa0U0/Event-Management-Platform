@@ -29,12 +29,12 @@ import {
 import { AuthFormState, AuthMode, AuthPanel } from "./components/AuthPanel";
 import { CreateEventFormState, CreateEventPanel } from "./components/CreateEventPanel";
 import { EventRegistrationPanel, RegistrationFormState } from "./components/EventRegistrationPanel";
+import { EventScope, EventsSidebar } from "./components/EventsSidebar";
 import { MyRegistrationsPanel } from "./components/MyRegistrationsPanel";
 import { OrganizerDashboardPanel } from "./components/OrganizerDashboardPanel";
 import { OrganizerRegistrationsPanel } from "./components/OrganizerRegistrationsPanel";
 
 type LoadState = "idle" | "loading" | "success" | "error";
-type EventScope = "all" | "mine";
 type WorkspaceTab = "overview" | "create" | "account";
 
 type CreateTicketFormState = {
@@ -1125,62 +1125,16 @@ export default function App() {
 
   return (
     <main className="app-shell">
-      <aside className="sidebar" aria-label="Список событий">
-        <div className="sidebar-header">
-          <p className="eyebrow">Event Management</p>
-          <h1>События</h1>
-        </div>
-
-        {auth && (
-          <div className="event-scope-tabs" role="tablist" aria-label="Фильтр событий">
-            <button
-              className={eventScope === "all" ? "event-scope-tab active" : "event-scope-tab"}
-              type="button"
-              onClick={() => setEventScope("all")}
-            >
-              Все
-            </button>
-            <button
-              className={eventScope === "mine" ? "event-scope-tab active" : "event-scope-tab"}
-              type="button"
-              onClick={() => setEventScope("mine")}
-            >
-              Мои
-            </button>
-          </div>
-        )}
-
-        {eventsState === "loading" && <div className="state-message">Загрузка событий...</div>}
-
-        {eventsState === "error" && (
-          <div className="state-message state-message-error">
-            API недоступен. Проверь, что Docker Compose запущен.
-          </div>
-        )}
-
-        {eventsState === "success" && events.length === 0 && (
-          <div className="state-message">
-            {eventScope === "mine" ? "У тебя пока нет своих событий." : "Пока нет событий."}
-          </div>
-        )}
-
-        <div className="event-list">
-          {events.map((eventItem) => (
-            <button
-              className={eventItem.id === selectedEventId ? "event-list-item active" : "event-list-item"}
-              key={eventItem.id}
-              type="button"
-              onClick={() => setSelectedEventId(eventItem.id)}
-            >
-              <span className="event-list-title">{eventItem.title}</span>
-              <span className="event-list-meta">
-                {eventItem.city} · {formatDate(eventItem.startsAtUtc)}
-              </span>
-              <span className="status-pill">{eventItem.status}</span>
-            </button>
-          ))}
-        </div>
-      </aside>
+      <EventsSidebar
+        auth={auth}
+        events={events}
+        eventsState={eventsState}
+        eventScope={eventScope}
+        selectedEventId={selectedEventId}
+        formatDate={formatDate}
+        onScopeChange={setEventScope}
+        onSelectEvent={setSelectedEventId}
+      />
 
       <section className="content" aria-label="Детали события">
         {errorMessage && <div className="top-alert">{errorMessage}</div>}
