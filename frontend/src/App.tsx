@@ -28,6 +28,7 @@ import {
 } from "./api/events";
 import { AuthFormState, AuthMode, AuthPanel } from "./components/AuthPanel";
 import { CreateEventFormState, CreateEventPanel } from "./components/CreateEventPanel";
+import { EventManagementPanel, EventSettingsFormState } from "./components/EventManagementPanel";
 import { EventRegistrationPanel, RegistrationFormState } from "./components/EventRegistrationPanel";
 import { CreateTicketFormState, EventTicketsPanel } from "./components/EventTicketsPanel";
 import { EventScope, EventsSidebar } from "./components/EventsSidebar";
@@ -37,11 +38,6 @@ import { OrganizerRegistrationsPanel } from "./components/OrganizerRegistrations
 import { WorkspacePanel, WorkspaceTab } from "./components/WorkspacePanel";
 
 type LoadState = "idle" | "loading" | "success" | "error";
-
-type EventSettingsFormState = {
-  registrationEnabled: boolean;
-  checkInEnabled: boolean;
-};
 
 const emptyRegistrationForm: RegistrationFormState = {
   fullName: "",
@@ -1236,182 +1232,29 @@ export default function App() {
             </div>
 
             {isSelectedEventManaged && (
-              <section className="event-management-panel" aria-label="Управление статусом события">
-                <div className="section-heading compact">
-                  <h3>Управление событием</h3>
-                  <span>{selectedEvent.status}</span>
-                </div>
-
-                <div className="event-management-actions">
-                  <button
-                    className="secondary-button"
-                    type="button"
-                    onClick={() => setIsEditEventOpen((current) => !current)}
-                  >
-                    {isEditEventOpen ? "Скрыть редактор" : "Редактировать"}
-                  </button>
-                  <button
-                    className="secondary-button"
-                    type="button"
-                    disabled={selectedEvent.status !== "Draft" || eventStatusState === "loading"}
-                    onClick={() => handleEventStatusAction("publish")}
-                  >
-                    {eventStatusState === "loading" ? "Обновляем..." : "Опубликовать"}
-                  </button>
-                  <button
-                    className="danger-button"
-                    type="button"
-                    disabled={
-                      selectedEvent.status === "Cancelled" ||
-                      selectedEvent.status === "Completed" ||
-                      eventStatusState === "loading"
-                    }
-                    onClick={() => handleEventStatusAction("cancel")}
-                  >
-                    Отменить
-                  </button>
-                </div>
-
-                <form className="event-settings-form" onSubmit={handleEventSettingsSubmit}>
-                  <label className="setting-toggle">
-                    <input
-                      type="checkbox"
-                      checked={eventSettingsForm.registrationEnabled}
-                      onChange={(event) => updateEventSettingsForm("registrationEnabled", event.target.checked)}
-                      disabled={eventSettingsState === "loading" || selectedEvent.status === "Cancelled"}
-                    />
-                    <span>Регистрация включена</span>
-                  </label>
-
-                  <label className="setting-toggle">
-                    <input
-                      type="checkbox"
-                      checked={eventSettingsForm.checkInEnabled}
-                      onChange={(event) => updateEventSettingsForm("checkInEnabled", event.target.checked)}
-                      disabled={eventSettingsState === "loading" || selectedEvent.status === "Cancelled"}
-                    />
-                    <span>Check-in включен</span>
-                  </label>
-
-                  <button
-                    className="secondary-button"
-                    type="submit"
-                    disabled={eventSettingsState === "loading" || selectedEvent.status === "Cancelled"}
-                  >
-                    {eventSettingsState === "loading" ? "Сохраняем..." : "Сохранить режимы"}
-                  </button>
-                </form>
-
-                {eventStatusError && <div className="form-alert error">{eventStatusError}</div>}
-                {eventStatusMessage && <div className="form-alert success">{eventStatusMessage}</div>}
-                {eventSettingsError && <div className="form-alert error">{eventSettingsError}</div>}
-                {eventSettingsMessage && <div className="form-alert success">{eventSettingsMessage}</div>}
-              </section>
-            )}
-
-            {isSelectedEventManaged && isEditEventOpen && (
-              <section className="edit-event-panel" aria-label="Редактирование события">
-                <div className="section-heading compact">
-                  <h3>Редактировать событие</h3>
-                  <button className="small-button" type="button" onClick={() => setIsEditEventOpen(false)}>
-                    Закрыть
-                  </button>
-                </div>
-
-                <form className="edit-event-form" onSubmit={handleEditEventSubmit}>
-                  <label>
-                    <span>Категория</span>
-                    <select
-                      value={editEventForm.categoryId}
-                      onChange={(event) => updateEditEventForm("categoryId", event.target.value)}
-                      disabled={categoriesState === "loading" || editEventState === "loading"}
-                    >
-                      {categories.length === 0 && <option value="">Категории не загружены</option>}
-                      {categories.map((category) => (
-                        <option key={category.id} value={category.id}>
-                          {category.name}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <label className="wide-field">
-                    <span>Название</span>
-                    <input
-                      value={editEventForm.title}
-                      onChange={(event) => updateEditEventForm("title", event.target.value)}
-                      disabled={editEventState === "loading"}
-                    />
-                  </label>
-
-                  <label className="wide-field">
-                    <span>Описание</span>
-                    <textarea
-                      value={editEventForm.description}
-                      onChange={(event) => updateEditEventForm("description", event.target.value)}
-                      disabled={editEventState === "loading"}
-                    />
-                  </label>
-
-                  <label>
-                    <span>Город</span>
-                    <input
-                      value={editEventForm.city}
-                      onChange={(event) => updateEditEventForm("city", event.target.value)}
-                      disabled={editEventState === "loading"}
-                    />
-                  </label>
-
-                  <label>
-                    <span>Адрес</span>
-                    <input
-                      value={editEventForm.address}
-                      onChange={(event) => updateEditEventForm("address", event.target.value)}
-                      disabled={editEventState === "loading"}
-                    />
-                  </label>
-
-                  <label>
-                    <span>Площадка</span>
-                    <input
-                      value={editEventForm.venueName}
-                      onChange={(event) => updateEditEventForm("venueName", event.target.value)}
-                      disabled={editEventState === "loading"}
-                    />
-                  </label>
-
-                  <label>
-                    <span>Начало</span>
-                    <input
-                      type="datetime-local"
-                      value={editEventForm.startsAtLocal}
-                      onChange={(event) => updateEditEventForm("startsAtLocal", event.target.value)}
-                      disabled={editEventState === "loading"}
-                    />
-                  </label>
-
-                  <label>
-                    <span>Окончание</span>
-                    <input
-                      type="datetime-local"
-                      value={editEventForm.endsAtLocal}
-                      onChange={(event) => updateEditEventForm("endsAtLocal", event.target.value)}
-                      disabled={editEventState === "loading"}
-                    />
-                  </label>
-
-                  <button
-                    className="secondary-button"
-                    type="submit"
-                    disabled={editEventState === "loading" || categoriesState === "loading"}
-                  >
-                    {editEventState === "loading" ? "Сохраняем..." : "Сохранить изменения"}
-                  </button>
-                </form>
-
-                {editEventError && <div className="form-alert error">{editEventError}</div>}
-                {editedEventMessage && <div className="form-alert success">{editedEventMessage}</div>}
-              </section>
+              <EventManagementPanel
+                status={selectedEvent.status}
+                categories={categories}
+                categoriesState={categoriesState}
+                isEditOpen={isEditEventOpen}
+                editForm={editEventForm}
+                editState={editEventState}
+                editError={editEventError}
+                editSuccessMessage={editedEventMessage}
+                statusState={eventStatusState}
+                statusError={eventStatusError}
+                statusSuccessMessage={eventStatusMessage}
+                settingsForm={eventSettingsForm}
+                settingsState={eventSettingsState}
+                settingsError={eventSettingsError}
+                settingsSuccessMessage={eventSettingsMessage}
+                onEditOpenChange={setIsEditEventOpen}
+                onStatusAction={handleEventStatusAction}
+                onSettingsFieldChange={updateEventSettingsForm}
+                onSettingsSubmit={handleEventSettingsSubmit}
+                onEditFieldChange={updateEditEventForm}
+                onEditSubmit={handleEditEventSubmit}
+              />
             )}
 
             <div className="event-action-grid">
