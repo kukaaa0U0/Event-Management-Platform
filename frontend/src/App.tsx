@@ -12,7 +12,6 @@ import {
   createEvent,
   createTicket,
   getCategories,
-  getEventCalendarUrl,
   getEventDetails,
   getEventRegistrations,
   getEvents,
@@ -28,13 +27,13 @@ import {
 } from "./api/events";
 import { AuthFormState, AuthMode, AuthPanel } from "./components/AuthPanel";
 import { CreateEventFormState, CreateEventPanel } from "./components/CreateEventPanel";
-import { EventManagementPanel, EventSettingsFormState } from "./components/EventManagementPanel";
-import { EventRegistrationPanel, RegistrationFormState } from "./components/EventRegistrationPanel";
-import { CreateTicketFormState, EventTicketsPanel } from "./components/EventTicketsPanel";
+import { EventDetailsPanel } from "./components/EventDetailsPanel";
+import { EventSettingsFormState } from "./components/EventManagementPanel";
+import { RegistrationFormState } from "./components/EventRegistrationPanel";
+import { CreateTicketFormState } from "./components/EventTicketsPanel";
 import { EventScope, EventsSidebar } from "./components/EventsSidebar";
 import { MyRegistrationsPanel } from "./components/MyRegistrationsPanel";
 import { OrganizerDashboardPanel } from "./components/OrganizerDashboardPanel";
-import { OrganizerRegistrationsPanel } from "./components/OrganizerRegistrationsPanel";
 import { WorkspacePanel, WorkspaceTab } from "./components/WorkspacePanel";
 
 type LoadState = "idle" | "loading" | "success" | "error";
@@ -1196,112 +1195,60 @@ export default function App() {
         )}
 
         {selectedEvent && detailsState === "success" && (
-          <article className="event-details">
-            <div className="details-header">
-              <div>
-                <p className="eyebrow">{selectedEvent.city}</p>
-                <h2>{selectedEvent.title}</h2>
-              </div>
-              <div className="details-actions">
-                <span className="status-pill large">{selectedEvent.status}</span>
-                <a className="secondary-button calendar-button" href={getEventCalendarUrl(selectedEvent.id)} download>
-                  Скачать .ics
-                </a>
-              </div>
-            </div>
-
-            <p className="description">{selectedEvent.description}</p>
-
-            <div className="details-grid">
-              <div className="info-block">
-                <span>Начало</span>
-                <strong>{formatDate(selectedEvent.startsAtUtc)}</strong>
-              </div>
-              <div className="info-block">
-                <span>Окончание</span>
-                <strong>{formatDate(selectedEvent.endsAtUtc)}</strong>
-              </div>
-              <div className="info-block">
-                <span>Адрес</span>
-                <strong>{selectedEvent.address}</strong>
-              </div>
-              <div className="info-block">
-                <span>Площадка</span>
-                <strong>{selectedEvent.venueName ?? "Не указана"}</strong>
-              </div>
-            </div>
-
-            {isSelectedEventManaged && (
-              <EventManagementPanel
-                status={selectedEvent.status}
-                categories={categories}
-                categoriesState={categoriesState}
-                isEditOpen={isEditEventOpen}
-                editForm={editEventForm}
-                editState={editEventState}
-                editError={editEventError}
-                editSuccessMessage={editedEventMessage}
-                statusState={eventStatusState}
-                statusError={eventStatusError}
-                statusSuccessMessage={eventStatusMessage}
-                settingsForm={eventSettingsForm}
-                settingsState={eventSettingsState}
-                settingsError={eventSettingsError}
-                settingsSuccessMessage={eventSettingsMessage}
-                onEditOpenChange={setIsEditEventOpen}
-                onStatusAction={handleEventStatusAction}
-                onSettingsFieldChange={updateEventSettingsForm}
-                onSettingsSubmit={handleEventSettingsSubmit}
-                onEditFieldChange={updateEditEventForm}
-                onEditSubmit={handleEditEventSubmit}
-              />
-            )}
-
-            <div className="event-action-grid">
-              <EventTicketsPanel
-                tickets={selectedEvent.tickets}
-                isManaged={isSelectedEventManaged}
-                isCreateOpen={isCreateTicketOpen}
-                form={createTicketForm}
-                state={createTicketState}
-                error={createTicketError}
-                successMessage={createdTicketMessage}
-                formatPrice={formatPrice}
-                onCreateOpenChange={setIsCreateTicketOpen}
-                onFieldChange={updateCreateTicketForm}
-                onSubmit={handleCreateTicketSubmit}
-              />
-
-              <EventRegistrationPanel
-                tickets={selectedEvent.tickets}
-                form={registrationForm}
-                state={registrationState}
-                error={registrationError}
-                result={registrationResult}
-                isOpen={isRegistrationOpen}
-                authEmail={auth?.email ?? null}
-                formatPrice={formatPrice}
-                onFieldChange={updateRegistrationForm}
-                onSubmit={handleRegistrationSubmit}
-              />
-            </div>
-
-            <OrganizerRegistrationsPanel
-              isManaged={isSelectedEventManaged}
-              isAuthenticated={Boolean(auth)}
-              isCheckInOpen={isCheckInOpen}
-              registrations={registrations}
-              registrationsState={registrationsState}
-              registrationsError={registrationsError}
-              checkInCode={checkInCode}
-              checkInState={checkInState}
-              checkInError={checkInError}
-              checkInResult={checkInResult}
-              onCheckInCodeChange={updateCheckInCode}
-              onCheckInSubmit={handleCheckInSubmit}
-              onRegistrationCheckIn={submitCheckIn}
-            />
-          </article>
+          <EventDetailsPanel
+            event={selectedEvent}
+            isManaged={isSelectedEventManaged}
+            isAuthenticated={Boolean(auth)}
+            isRegistrationOpen={isRegistrationOpen}
+            isCheckInOpen={isCheckInOpen}
+            authEmail={auth?.email ?? null}
+            formatDate={formatDate}
+            formatPrice={formatPrice}
+            categories={categories}
+            categoriesState={categoriesState}
+            isEditEventOpen={isEditEventOpen}
+            editEventForm={editEventForm}
+            editEventState={editEventState}
+            editEventError={editEventError}
+            editedEventMessage={editedEventMessage}
+            eventStatusState={eventStatusState}
+            eventStatusError={eventStatusError}
+            eventStatusMessage={eventStatusMessage}
+            eventSettingsForm={eventSettingsForm}
+            eventSettingsState={eventSettingsState}
+            eventSettingsError={eventSettingsError}
+            eventSettingsMessage={eventSettingsMessage}
+            createTicketForm={createTicketForm}
+            createTicketState={createTicketState}
+            createTicketError={createTicketError}
+            createdTicketMessage={createdTicketMessage}
+            isCreateTicketOpen={isCreateTicketOpen}
+            registrationForm={registrationForm}
+            registrationState={registrationState}
+            registrationError={registrationError}
+            registrationResult={registrationResult}
+            registrations={registrations}
+            registrationsState={registrationsState}
+            registrationsError={registrationsError}
+            checkInCode={checkInCode}
+            checkInState={checkInState}
+            checkInError={checkInError}
+            checkInResult={checkInResult}
+            onEditEventOpenChange={setIsEditEventOpen}
+            onEventStatusAction={handleEventStatusAction}
+            onEventSettingsFieldChange={updateEventSettingsForm}
+            onEventSettingsSubmit={handleEventSettingsSubmit}
+            onEditEventFieldChange={updateEditEventForm}
+            onEditEventSubmit={handleEditEventSubmit}
+            onCreateTicketOpenChange={setIsCreateTicketOpen}
+            onCreateTicketFieldChange={updateCreateTicketForm}
+            onCreateTicketSubmit={handleCreateTicketSubmit}
+            onRegistrationFieldChange={updateRegistrationForm}
+            onRegistrationSubmit={handleRegistrationSubmit}
+            onCheckInCodeChange={updateCheckInCode}
+            onCheckInSubmit={handleCheckInSubmit}
+            onRegistrationCheckIn={submitCheckIn}
+          />
         )}
       </section>
     </main>

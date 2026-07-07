@@ -58,9 +58,11 @@ Completed:
 - Frontend event registration panel is extracted from `App.tsx`.
 - Frontend event tickets panel is extracted from `App.tsx`.
 - Frontend event management panel is extracted from `App.tsx`.
+- Frontend event details panel is extracted from `App.tsx`.
 - Frontend events sidebar is extracted from `App.tsx`.
 - Frontend organizer registrations panel is extracted from `App.tsx`.
 - Frontend workspace panel is extracted from `App.tsx`.
+- Frontend structure cleanup milestone is complete for the current MVP screen.
 - Frontend workspace tabs separate overview, event creation, and account panels.
 - Frontend event edit form is hidden behind an explicit edit action to reduce detail-page clutter.
 - Frontend ticket creation form is hidden behind an explicit action to reduce detail-page clutter.
@@ -87,19 +89,20 @@ Known environment note:
 - Docker Desktop requires hardware virtualization enabled in BIOS/UEFI.
 - Docker Compose is now the preferred local full-stack runtime.
 
-## Next Milestone: Continue Frontend Structure Cleanup
+## Next Milestone: Frontend UX And Layout Polish
 
 Goal:
 
 ```text
-Split the growing React MVP screen into smaller maintainable components
+Make the MVP interface clearer and easier to use without changing backend behavior
 ```
 
 Tasks:
 
-- extract auth, create event, event details, registration, and organizer panels from `App.tsx`;
-- keep API behavior unchanged while splitting components;
-- avoid adding React Router until there are real separate pages.
+- review the current screen flow for guest, participant, organizer, and event owner;
+- improve event details layout, workspace panels, and organizer controls;
+- optionally use a Pencil `.pen` layout file as a visual reference;
+- keep React Router postponed until there are real separate pages.
 
 Important product rule:
 
