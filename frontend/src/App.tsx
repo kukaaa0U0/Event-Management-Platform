@@ -26,11 +26,11 @@ import {
   updateEvent,
   updateEventSettings
 } from "./api/events";
+import { AuthFormState, AuthMode, AuthPanel } from "./components/AuthPanel";
 import { MyRegistrationsPanel } from "./components/MyRegistrationsPanel";
 import { OrganizerDashboardPanel } from "./components/OrganizerDashboardPanel";
 
 type LoadState = "idle" | "loading" | "success" | "error";
-type AuthMode = "login" | "register";
 type EventScope = "all" | "mine";
 type WorkspaceTab = "overview" | "create" | "account";
 
@@ -38,12 +38,6 @@ type RegistrationFormState = {
   fullName: string;
   email: string;
   ticketId: string;
-};
-
-type AuthFormState = {
-  fullName: string;
-  email: string;
-  password: string;
 };
 
 type CreateEventFormState = {
@@ -595,6 +589,11 @@ export default function App() {
       ...current,
       [field]: value
     }));
+    setAuthError(null);
+  }
+
+  function changeAuthMode(mode: AuthMode) {
+    setAuthMode(mode);
     setAuthError(null);
   }
 
@@ -1228,91 +1227,17 @@ export default function App() {
         </section>
 
         {activeWorkspaceTab === "account" && (
-        <section className="auth-panel" aria-label="Вход организатора">
-          {auth ? (
-            <div className="auth-summary">
-              <div>
-                <span>Организатор</span>
-                <strong>{auth.fullName}</strong>
-                <p>{auth.email}</p>
-              </div>
-              <button className="secondary-button" type="button" onClick={logout}>
-                Выйти
-              </button>
-            </div>
-          ) : (
-            <form className="auth-form" onSubmit={handleAuthSubmit}>
-              <div className="auth-tabs" role="tablist" aria-label="Режим входа">
-                <button
-                  className={authMode === "login" ? "auth-tab active" : "auth-tab"}
-                  type="button"
-                  onClick={() => {
-                    setAuthMode("login");
-                    setAuthError(null);
-                  }}
-                >
-                  Вход
-                </button>
-                <button
-                  className={authMode === "register" ? "auth-tab active" : "auth-tab"}
-                  type="button"
-                  onClick={() => {
-                    setAuthMode("register");
-                    setAuthError(null);
-                  }}
-                >
-                  Регистрация
-                </button>
-              </div>
-
-              <div className="auth-fields">
-                {authMode === "register" && (
-                  <label>
-                    <span>Имя</span>
-                    <input
-                      value={authForm.fullName}
-                      onChange={(event) => updateAuthForm("fullName", event.target.value)}
-                      placeholder="Имя организатора"
-                      disabled={authState === "loading"}
-                    />
-                  </label>
-                )}
-
-                <label>
-                  <span>Email</span>
-                  <input
-                    type="email"
-                    value={authForm.email}
-                    onChange={(event) => updateAuthForm("email", event.target.value)}
-                    placeholder="organizer@example.com"
-                    disabled={authState === "loading"}
-                  />
-                </label>
-
-                <label>
-                  <span>Пароль</span>
-                  <input
-                    type="password"
-                    value={authForm.password}
-                    onChange={(event) => updateAuthForm("password", event.target.value)}
-                    placeholder="Минимум 8 символов"
-                    disabled={authState === "loading"}
-                  />
-                </label>
-
-                <button className="secondary-button" type="submit" disabled={authState === "loading"}>
-                  {authState === "loading"
-                    ? "Проверяем..."
-                    : authMode === "login"
-                      ? "Войти"
-                      : "Создать аккаунт"}
-                </button>
-              </div>
-
-              {authError && <div className="form-alert error">{authError}</div>}
-            </form>
-          )}
-        </section>
+          <AuthPanel
+            auth={auth}
+            mode={authMode}
+            form={authForm}
+            state={authState}
+            error={authError}
+            onModeChange={changeAuthMode}
+            onFieldChange={updateAuthForm}
+            onSubmit={handleAuthSubmit}
+            onLogout={logout}
+          />
         )}
 
         {auth && activeWorkspaceTab === "overview" && (
