@@ -31,6 +31,7 @@ import { CreateEventFormState, CreateEventPanel } from "./components/CreateEvent
 import { EventRegistrationPanel, RegistrationFormState } from "./components/EventRegistrationPanel";
 import { MyRegistrationsPanel } from "./components/MyRegistrationsPanel";
 import { OrganizerDashboardPanel } from "./components/OrganizerDashboardPanel";
+import { OrganizerRegistrationsPanel } from "./components/OrganizerRegistrationsPanel";
 
 type LoadState = "idle" | "loading" | "success" | "error";
 type EventScope = "all" | "mine";
@@ -616,6 +617,11 @@ export default function App() {
     }));
     setEventSettingsError(null);
     setEventSettingsMessage(null);
+  }
+
+  function updateCheckInCode(value: string) {
+    setCheckInCode(value);
+    setCheckInError(null);
   }
 
   function saveAuth(response: AuthResponse) {
@@ -1612,101 +1618,21 @@ export default function App() {
               />
             </div>
 
-            {isSelectedEventManaged ? (
-              <section className="registrations-panel">
-                <div className="section-heading">
-                  <h3>Участники</h3>
-                  <span>{registrations.length}</span>
-                </div>
-
-                {!isCheckInOpen && (
-                  <div className="panel-message">Check-in для этого события сейчас выключен.</div>
-                )}
-
-                <form className="check-in-form" onSubmit={handleCheckInSubmit}>
-                  <label>
-                    <span>Check-in код</span>
-                    <input
-                      value={checkInCode}
-                      onChange={(event) => {
-                        setCheckInCode(event.target.value);
-                        setCheckInError(null);
-                      }}
-                      placeholder="CHK-..."
-                      disabled={!isCheckInOpen || checkInState === "loading"}
-                    />
-                  </label>
-                  <button className="secondary-button" type="submit" disabled={!isCheckInOpen || checkInState === "loading"}>
-                    {checkInState === "loading" ? "Отмечаем..." : "Отметить"}
-                  </button>
-                </form>
-
-                {checkInError && <div className="form-alert error">{checkInError}</div>}
-
-                {checkInResult && (
-                  <div className="form-alert success">
-                    {checkInResult.participantName} отмечен на событии.
-                  </div>
-                )}
-
-                {registrationsState === "loading" && (
-                  <div className="panel-message">Загрузка участников...</div>
-                )}
-
-                {registrationsState === "error" && (
-                  <div className="form-alert error">
-                    {registrationsError ?? "Не удалось загрузить участников"}
-                  </div>
-                )}
-
-                {registrationsState === "success" && registrations.length === 0 && (
-                  <div className="panel-message">На это событие пока никто не зарегистрирован.</div>
-                )}
-
-                {registrationsState === "success" && registrations.length > 0 && (
-                  <div className="registrations-list">
-                    {registrations.map((registration) => (
-                      <div className="registration-row" key={registration.id}>
-                        <div>
-                          <strong>{registration.participantName}</strong>
-                          <span>{registration.participantEmail}</span>
-                        </div>
-                        <div className="registration-code">
-                          <strong>{registration.checkInCode}</strong>
-                          <span>{registration.status}</span>
-                        </div>
-                        <button
-                          className="small-button"
-                          type="button"
-                          disabled={registration.status === "CheckedIn" || checkInState === "loading"}
-                          onClick={() => submitCheckIn(registration.checkInCode)}
-                        >
-                          {registration.status === "CheckedIn" ? "Отмечен" : "Check-in"}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </section>
-            ) : auth ? (
-              <section className="registrations-panel">
-                <div className="section-heading">
-                  <h3>Управление событием</h3>
-                </div>
-                <div className="panel-message">
-                  Это событие принадлежит другому организатору. Переключись на вкладку "Мои", чтобы управлять своими событиями.
-                </div>
-              </section>
-            ) : (
-              <section className="registrations-panel">
-                <div className="section-heading">
-                  <h3>Участники</h3>
-                </div>
-                <div className="panel-message">
-                  Войди как организатор события, чтобы видеть участников и выполнять check-in.
-                </div>
-              </section>
-            )}
+            <OrganizerRegistrationsPanel
+              isManaged={isSelectedEventManaged}
+              isAuthenticated={Boolean(auth)}
+              isCheckInOpen={isCheckInOpen}
+              registrations={registrations}
+              registrationsState={registrationsState}
+              registrationsError={registrationsError}
+              checkInCode={checkInCode}
+              checkInState={checkInState}
+              checkInError={checkInError}
+              checkInResult={checkInResult}
+              onCheckInCodeChange={updateCheckInCode}
+              onCheckInSubmit={handleCheckInSubmit}
+              onRegistrationCheckIn={submitCheckIn}
+            />
           </article>
         )}
       </section>
