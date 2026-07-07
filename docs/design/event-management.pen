@@ -1,0 +1,3795 @@
+{
+  "version": "2.14",
+  "children": [
+    {
+      "type": "frame",
+      "id": "Y3fypr",
+      "x": 0,
+      "y": 0,
+      "name": "Welcome to Pencil",
+      "clip": true,
+      "width": 1000,
+      "height": 1458,
+      "layout": "none",
+      "children": [
+        {
+          "type": "text",
+          "id": "p5iwM",
+          "x": 0,
+          "y": 256,
+          "name": "Start here",
+          "fill": "#ff8303ff",
+          "textGrowth": "fixed-width-height",
+          "width": 923,
+          "height": 139,
+          "content": "Ask agent to design",
+          "lineHeight": 1.399999976158142,
+          "textAlign": "center",
+          "fontFamily": "Noto Sans",
+          "fontSize": 100,
+          "fontWeight": "500",
+          "letterSpacing": -4
+        }
+      ]
+    },
+    {
+      "type": "path",
+      "id": "pSGLk",
+      "x": 317,
+      "y": 689,
+      "geometry": "M7 0l0 14m7-7l-7 7-7-7",
+      "width": 366,
+      "height": 366,
+      "stroke": "#ff8302ff",
+      "strokeWidth": 50,
+      "strokeLinejoin": "round",
+      "strokeLinecap": "round"
+    },
+    {
+      "type": "frame",
+      "id": "gX1XY",
+      "x": 1120,
+      "y": 0,
+      "name": "Пользовательский экран события",
+      "clip": true,
+      "width": 1480,
+      "height": 1040,
+      "fill": {
+        "type": "gradient",
+        "gradientType": "radial",
+        "enabled": true,
+        "rotation": 0,
+        "size": {
+          "width": 1.25,
+          "height": 1.15
+        },
+        "colors": [
+          {
+            "color": "#1B3E5A",
+            "position": 0
+          },
+          {
+            "color": "#101D31",
+            "position": 0.42
+          },
+          {
+            "color": "#0B1424",
+            "position": 1
+          }
+        ],
+        "center": {
+          "x": 0.62,
+          "y": 0.18
+        }
+      },
+      "children": [
+        {
+          "type": "ellipse",
+          "id": "GdsDw",
+          "layoutPosition": "absolute",
+          "x": 760,
+          "y": 10,
+          "name": "Фоновое сияние поиска",
+          "fill": "#4A9FD833",
+          "width": 420,
+          "height": 260,
+          "effect": {
+            "type": "blur",
+            "radius": 36
+          }
+        },
+        {
+          "type": "ellipse",
+          "id": "i6cUr",
+          "layoutPosition": "absolute",
+          "x": 1040,
+          "y": 690,
+          "name": "Фоновое холодное сияние",
+          "fill": "#B3D9F022",
+          "width": 340,
+          "height": 220,
+          "effect": {
+            "type": "blur",
+            "radius": 42
+          }
+        },
+        {
+          "type": "frame",
+          "id": "f5j1R",
+          "name": "Левый список событий",
+          "width": 310,
+          "height": "fill_container",
+          "fill": "#0D192BEE",
+          "layout": "vertical",
+          "gap": 14,
+          "padding": [
+            24,
+            22
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "pWoIC",
+              "name": "Заголовок списка",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 5,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "wNfr4",
+                  "name": "Метка сервиса",
+                  "fill": "#8FB7D8",
+                  "content": "EVENT MANAGEMENT",
+                  "fontFamily": "Geist Mono",
+                  "fontSize": 10,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "djCwD",
+                  "name": "Название сервиса",
+                  "fill": "#F7FAFC",
+                  "content": "События",
+                  "fontFamily": "Geist",
+                  "fontSize": 30,
+                  "fontWeight": "800"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Fzvjn",
+              "name": "Поиск события",
+              "width": "fill_container",
+              "fill": "#111F33",
+              "cornerRadius": 8,
+              "stroke": "#2A405A",
+              "strokeWidth": 1,
+              "gap": 8,
+              "padding": [
+                10,
+                12
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "F06AHT",
+                  "name": "Лупа",
+                  "fill": "#8FB7D8",
+                  "content": "⌕",
+                  "fontFamily": "Geist Mono",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "L7W0js",
+                  "name": "Плейсхолдер поиска",
+                  "fill": "#9CAFC1",
+                  "content": "Найти событие...",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "fR6Ka",
+              "name": "Фильтр событий",
+              "width": "fill_container",
+              "fill": "#111F33",
+              "cornerRadius": 8,
+              "stroke": "#2A405A",
+              "strokeWidth": 1,
+              "padding": 4,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "dbFGe",
+                  "name": "Фильтр Все",
+                  "width": "fill_container",
+                  "fill": "#DDEBFA",
+                  "cornerRadius": 6,
+                  "padding": [
+                    8,
+                    15
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "QCMzN",
+                      "name": "Текст фильтра Все",
+                      "fill": "#0B1424",
+                      "content": "Все",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "sIzMj",
+                  "name": "Фильтр Мои",
+                  "width": "fill_container",
+                  "fill": "#111F33",
+                  "cornerRadius": 6,
+                  "padding": [
+                    8,
+                    15
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Vosa6",
+                      "name": "Текст фильтра Мои",
+                      "fill": "#AAB8C7",
+                      "content": "Мои",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "BTkWR",
+              "name": "Будущие фильтры",
+              "width": "fill_container",
+              "gap": 7,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "d0uQQ",
+                  "name": "Фильтр Город",
+                  "fill": "#0A1424",
+                  "cornerRadius": 9999,
+                  "stroke": "#253951",
+                  "strokeWidth": 1,
+                  "padding": [
+                    6,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "ovQwZ",
+                      "name": "Текст фильтра Город",
+                      "fill": "#8FB7D8",
+                      "content": "Город",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "AO9FJ",
+                  "name": "Фильтр Дата",
+                  "fill": "#0A1424",
+                  "cornerRadius": 9999,
+                  "stroke": "#253951",
+                  "strokeWidth": 1,
+                  "padding": [
+                    6,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "dWNYw",
+                      "name": "Текст фильтра Дата",
+                      "fill": "#8FB7D8",
+                      "content": "Дата",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "YNjcd",
+                  "name": "Фильтр Тип",
+                  "fill": "#0A1424",
+                  "cornerRadius": 9999,
+                  "stroke": "#253951",
+                  "strokeWidth": 1,
+                  "padding": [
+                    6,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hyACj",
+                      "name": "Текст фильтра Тип",
+                      "fill": "#8FB7D8",
+                      "content": "Тип",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "qoIeW",
+              "name": "Событие Student Tech Meetup",
+              "width": "fill_container",
+              "fill": "#173A5E",
+              "cornerRadius": 8,
+              "stroke": "#4A9FD8",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "qH0Re",
+                  "name": "Название Student Tech Meetup",
+                  "fill": "#F7FAFC",
+                  "content": "Student Tech Meetup",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "EQ8c1",
+                  "name": "Дата Student Tech Meetup",
+                  "fill": "#AAB8C7",
+                  "content": "Moscow · 16 июл. 2026, 16:52",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "T6ndf0",
+                  "name": "Статус Student Tech Meetup",
+                  "fill": "#183526",
+                  "cornerRadius": 9999,
+                  "padding": [
+                    5,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Uno3P",
+                      "name": "Текст статуса Student Tech Meetup",
+                      "fill": "#BDEFD5",
+                      "content": "Published",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "g5Ds5",
+              "name": "Событие Backend Workshop",
+              "width": "fill_container",
+              "fill": "#111F33",
+              "cornerRadius": 8,
+              "stroke": "#263A53",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "acnRN",
+                  "name": "Название Backend Workshop",
+                  "fill": "#F7FAFC",
+                  "content": "Backend Workshop",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "yS6tY",
+                  "name": "Дата Backend Workshop",
+                  "fill": "#AAB8C7",
+                  "content": "Moscow · 01 авг. 2026, 16:52",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "Xn9tq",
+                  "name": "Статус Backend Workshop",
+                  "fill": "#0A1424",
+                  "cornerRadius": 9999,
+                  "padding": [
+                    5,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "F1OAG",
+                      "name": "Текст статуса Backend Workshop",
+                      "fill": "#8FB7D8",
+                      "content": "Draft",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "l9Oj4",
+              "name": "Событие Design Review Night",
+              "width": "fill_container",
+              "fill": "#111F33",
+              "cornerRadius": 8,
+              "stroke": "#263A53",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "padding": 14,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "p597x",
+                  "name": "Название Design Review Night",
+                  "fill": "#F7FAFC",
+                  "content": "Design Review Night",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "hariO",
+                  "name": "Дата Design Review Night",
+                  "fill": "#AAB8C7",
+                  "content": "Online · 08 авг. 2026, 19:00",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "oKYHf",
+                  "name": "Статус Design Review Night",
+                  "fill": "#0A1424",
+                  "cornerRadius": 9999,
+                  "padding": [
+                    5,
+                    9
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "b3uRaI",
+                      "name": "Текст статуса Design Review Night",
+                      "fill": "#8FB7D8",
+                      "content": "Review",
+                      "fontFamily": "Inter",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "E1167X",
+          "name": "Рабочая область",
+          "width": "fill_container",
+          "height": "fill_container",
+          "fill": "#00000000",
+          "layout": "vertical",
+          "gap": 14,
+          "padding": [
+            22,
+            24
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "xriY6",
+              "name": "Верхняя рабочая панель",
+              "width": "fill_container",
+              "fill": "#101E32DD",
+              "cornerRadius": 8,
+              "stroke": "#2A405A",
+              "strokeWidth": 1,
+              "padding": [
+                14,
+                18
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "bwS9M",
+                  "name": "Контекст рабочей панели",
+                  "layout": "vertical",
+                  "gap": 5,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "t6uhk",
+                      "name": "Workspace",
+                      "fill": "#8FB7D8",
+                      "content": "EVENTS",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "T6a6kx",
+                      "name": "Заголовок панели",
+                      "fill": "#F7FAFC",
+                      "content": "Афиша и регистрация",
+                      "fontFamily": "Geist",
+                      "fontSize": 25,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Zc5no",
+                  "name": "Действия рабочей панели",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "NRxni",
+                      "name": "Кнопка Обзор",
+                      "fill": "#111F33",
+                      "cornerRadius": 7,
+                      "stroke": "#2A405A",
+                      "strokeWidth": 1,
+                      "padding": [
+                        11,
+                        24
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "kkz6t",
+                          "name": "Текст кнопки Обзор",
+                          "fill": "#D8E6F4",
+                          "content": "Все события",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "VegBC",
+                      "name": "Кнопка Создать",
+                      "fill": "#4A9FD8",
+                      "cornerRadius": 7,
+                      "stroke": "#4A9FD8",
+                      "strokeWidth": 1,
+                      "padding": [
+                        11,
+                        24
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "F2YkK",
+                          "name": "Текст кнопки Создать",
+                          "fill": "#061020",
+                          "content": "Войти",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "dr4Rp",
+                      "name": "Кнопка Аккаунт",
+                      "fill": "#111F33",
+                      "cornerRadius": 7,
+                      "stroke": "#2A405A",
+                      "strokeWidth": 1,
+                      "padding": [
+                        11,
+                        24
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "A6O9H",
+                          "name": "Текст кнопки Аккаунт",
+                          "fill": "#D8E6F4",
+                          "content": "Аккаунт",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Ptrep",
+              "name": "Основной контент",
+              "width": "fill_container",
+              "height": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "ovdqv",
+                  "name": "Центр - детали и регистрация",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "layout": "vertical",
+                  "gap": 14,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "DF6fG",
+                      "name": "Детали события",
+                      "width": "fill_container",
+                      "fill": "#0E1B2D",
+                      "cornerRadius": 8,
+                      "stroke": "#1D3148",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 15,
+                      "padding": 18,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Mccvk",
+                          "name": "Шапка события",
+                          "width": "fill_container",
+                          "justifyContent": "space_between",
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "psjZd",
+                              "name": "Название и описание события",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "Rgxvt",
+                                  "name": "Город события",
+                                  "fill": "#7FA9CF",
+                                  "content": "MOSCOW",
+                                  "fontFamily": "Geist Mono",
+                                  "fontSize": 12,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "U3nFm",
+                                  "name": "Название выбранного события",
+                                  "fill": "#F7FAFC",
+                                  "content": "Student Tech Meetup",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 29,
+                                  "fontWeight": "800"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "FqD17",
+                                  "name": "Описание события",
+                                  "fill": "#AAB8C7",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Открытая встреча для студентов о веб-разработке. Выбери билет, зарегистрируйся и получи код входа — без лишних админских данных на экране.",
+                                  "lineHeight": 1.35,
+                                  "fontFamily": "Inter",
+                                  "fontSize": 14,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "p34RvS",
+                              "name": "Статус и экспорт",
+                              "gap": 10,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "k7UxC",
+                                  "name": "Статус опубликовано",
+                                  "fill": "#183526",
+                                  "cornerRadius": 9999,
+                                  "padding": [
+                                    8,
+                                    12
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "w3vJzN",
+                                      "name": "Текст опубликовано",
+                                      "fill": "#BDEFD5",
+                                      "content": "Published",
+                                      "fontFamily": "Inter",
+                                      "fontSize": 12,
+                                      "fontWeight": "800"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "nVwz7",
+                                  "name": "Скачать календарь",
+                                  "fill": "#13243A",
+                                  "cornerRadius": 7,
+                                  "stroke": "#263A53",
+                                  "strokeWidth": 1,
+                                  "padding": [
+                                    11,
+                                    14
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "fBgr7",
+                                      "name": "Текст скачать календарь",
+                                      "fill": "#EAF2FA",
+                                      "content": "Скачать .ics",
+                                      "fontFamily": "Inter",
+                                      "fontSize": 13,
+                                      "fontWeight": "800"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "la8Zm",
+                          "name": "Ключевые параметры события",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "TYuHC",
+                              "name": "Параметр Начало",
+                              "width": "fill_container",
+                              "fill": "#111F33",
+                              "cornerRadius": 7,
+                              "stroke": "#263A53",
+                              "strokeWidth": 1,
+                              "layout": "vertical",
+                              "gap": 7,
+                              "padding": 12,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "g8p1Wp",
+                                  "name": "Метка Начало",
+                                  "fill": "#7FA9CF",
+                                  "content": "Начало",
+                                  "fontFamily": "Geist Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "IoDVJ",
+                                  "name": "Значение Начало",
+                                  "fill": "#F7FAFC",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "16 июл. 2026, 16:52",
+                                  "lineHeight": 1.25,
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "800"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "s1OWVO",
+                              "name": "Параметр Окончание",
+                              "width": "fill_container",
+                              "fill": "#111F33",
+                              "cornerRadius": 7,
+                              "stroke": "#263A53",
+                              "strokeWidth": 1,
+                              "layout": "vertical",
+                              "gap": 7,
+                              "padding": 12,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "wX9l4",
+                                  "name": "Метка Окончание",
+                                  "fill": "#7FA9CF",
+                                  "content": "Окончание",
+                                  "fontFamily": "Geist Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "twGXC",
+                                  "name": "Значение Окончание",
+                                  "fill": "#F7FAFC",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "16 июл. 2026, 19:52",
+                                  "lineHeight": 1.25,
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "800"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "fUbIs",
+                              "name": "Параметр Адрес",
+                              "width": "fill_container",
+                              "fill": "#111F33",
+                              "cornerRadius": 7,
+                              "stroke": "#263A53",
+                              "strokeWidth": 1,
+                              "layout": "vertical",
+                              "gap": 7,
+                              "padding": 12,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "YCap8",
+                                  "name": "Метка Адрес",
+                                  "fill": "#7FA9CF",
+                                  "content": "Адрес",
+                                  "fontFamily": "Geist Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "BmWiK",
+                                  "name": "Значение Адрес",
+                                  "fill": "#F7FAFC",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "University campus, building 2",
+                                  "lineHeight": 1.25,
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "800"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "J2CFS2",
+                              "name": "Параметр Площадка",
+                              "width": "fill_container",
+                              "fill": "#111F33",
+                              "cornerRadius": 7,
+                              "stroke": "#263A53",
+                              "strokeWidth": 1,
+                              "layout": "vertical",
+                              "gap": 7,
+                              "padding": 12,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "lwIj0",
+                                  "name": "Метка Площадка",
+                                  "fill": "#7FA9CF",
+                                  "content": "Площадка",
+                                  "fontFamily": "Geist Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "normal"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "tqz9s",
+                                  "name": "Значение Площадка",
+                                  "fill": "#F7FAFC",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Main auditorium",
+                                  "lineHeight": 1.25,
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "800"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "vIENQ",
+                          "name": "Статус готовности",
+                          "width": "fill_container",
+                          "fill": "#102842",
+                          "cornerRadius": 7,
+                          "stroke": "#21496C",
+                          "strokeWidth": 1,
+                          "gap": 12,
+                          "padding": [
+                            11,
+                            13
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "g8xhp8",
+                              "name": "Иконка статуса готовности",
+                              "fill": "#4A9FD8",
+                              "content": "✓",
+                              "fontFamily": "Inter",
+                              "fontSize": 16,
+                              "fontWeight": "800"
+                            },
+                            {
+                              "type": "text",
+                              "id": "kWIQL",
+                              "name": "Текст статуса готовности",
+                              "fill": "#C7D4E2",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "После регистрации здесь появится код входа. Его можно показать на входе или сохранить в аккаунте.",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "O9f9I",
+                      "name": "Нижние блоки события",
+                      "width": "fill_container",
+                      "height": "fill_container",
+                      "gap": 18,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "JLhBb",
+                          "name": "Блок билетов",
+                          "width": "fill_container",
+                          "height": "fill_container",
+                          "fill": "#0E1B2D",
+                          "cornerRadius": 8,
+                          "stroke": "#1D3148",
+                          "strokeWidth": 1,
+                          "layout": "vertical",
+                          "gap": 14,
+                          "padding": 18,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "WF2vB",
+                              "name": "Шапка билетов",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "aciWE",
+                                  "name": "Заголовок билеты",
+                                  "fill": "#F7FAFC",
+                                  "content": "Билеты",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 20,
+                                  "fontWeight": "800"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "pI5bv",
+                                  "name": "Счетчик билетов",
+                                  "fill": "#102842",
+                                  "cornerRadius": 9999,
+                                  "padding": [
+                                    7,
+                                    11
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "eDeIE",
+                                      "name": "Текст счетчика билетов",
+                                      "fill": "#7FA9CF",
+                                      "content": "1 активный",
+                                      "fontFamily": "Geist Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "700"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "in1Ue",
+                              "name": "Regular ticket",
+                              "width": "fill_container",
+                              "fill": "#111F33",
+                              "cornerRadius": 7,
+                              "stroke": "#263A53",
+                              "strokeWidth": 1,
+                              "padding": 14,
+                              "justifyContent": "space_between",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "W7xe8R",
+                                  "name": "Описание regular",
+                                  "width": "fill_container",
+                                  "layout": "vertical",
+                                  "gap": 5,
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "I6BcDu",
+                                      "name": "Название regular",
+                                      "fill": "#F7FAFC",
+                                      "content": "Regular",
+                                      "fontFamily": "Inter",
+                                      "fontSize": 16,
+                                      "fontWeight": "800"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "VjH1a",
+                                      "name": "Детали regular",
+                                      "fill": "#AAB8C7",
+                                      "content": "120 мест · открытая регистрация",
+                                      "fontFamily": "Inter",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "s8UMX",
+                                  "name": "Цена regular",
+                                  "layout": "vertical",
+                                  "gap": 5,
+                                  "alignItems": "end",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "zMYBh",
+                                      "name": "Стоимость regular",
+                                      "fill": "#F7FAFC",
+                                      "content": "0,00 ₽",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 18,
+                                      "fontWeight": "700"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "EQvQ4",
+                                      "name": "Остаток regular",
+                                      "fill": "#7FA9CF",
+                                      "content": "мест: 120",
+                                      "fontFamily": "Geist Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "normal"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "oaSZ9",
+                              "name": "Прогресс продаж",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 8,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "ovJVv",
+                                  "name": "Подписи прогресса",
+                                  "width": "fill_container",
+                                  "justifyContent": "space_between",
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "K3aW5",
+                                      "name": "Продано подпись",
+                                      "fill": "#AAB8C7",
+                                      "content": "Продано 0",
+                                      "fontFamily": "Inter",
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "ZI4nL",
+                                      "name": "Вместимость подпись",
+                                      "fill": "#F7FAFC",
+                                      "content": "0 / 120",
+                                      "fontFamily": "IBM Plex Mono",
+                                      "fontSize": 13,
+                                      "fontWeight": "700"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "o7MKN",
+                                  "name": "Шкала продаж",
+                                  "width": "fill_container",
+                                  "height": 10,
+                                  "fill": "#1A2C43",
+                                  "cornerRadius": 9999,
+                                  "children": [
+                                    {
+                                      "type": "rectangle",
+                                      "cornerRadius": 9999,
+                                      "id": "oW9gm",
+                                      "name": "Заполнение продаж",
+                                      "fill": "#4A9FD8",
+                                      "width": 12,
+                                      "height": 10
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "Y2zk8K",
+                          "name": "Блок регистрации",
+                          "width": "fill_container",
+                          "height": "fill_container",
+                          "fill": "#0E1B2D",
+                          "cornerRadius": 8,
+                          "stroke": "#1D3148",
+                          "strokeWidth": 1,
+                          "layout": "vertical",
+                          "gap": 14,
+                          "padding": 18,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "W9p8CF",
+                              "name": "Шапка регистрации",
+                              "width": "fill_container",
+                              "justifyContent": "space_between",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "I0YmGu",
+                                  "name": "Заголовок регистрация",
+                                  "fill": "#F7FAFC",
+                                  "content": "Регистрация",
+                                  "fontFamily": "Geist",
+                                  "fontSize": 20,
+                                  "fontWeight": "800"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "WCeFv",
+                                  "name": "Счетчик регистраций",
+                                  "fill": "#102842",
+                                  "cornerRadius": 9999,
+                                  "padding": [
+                                    7,
+                                    11
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "zfkBz",
+                                      "name": "Текст счетчика регистраций",
+                                      "fill": "#7FA9CF",
+                                      "content": "0 заявок",
+                                      "fontFamily": "Geist Mono",
+                                      "fontSize": 11,
+                                      "fontWeight": "700"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "EJGu0",
+                              "name": "Привязка аккаунта",
+                              "width": "fill_container",
+                              "fill": "#111F33",
+                              "cornerRadius": 7,
+                              "stroke": "#263A53",
+                              "strokeWidth": 1,
+                              "layout": "vertical",
+                              "gap": 7,
+                              "padding": 14,
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "TEAFc",
+                                  "name": "Метка аккаунта",
+                                  "fill": "#7FA9CF",
+                                  "content": "АККАУНТ УЧАСТНИКА",
+                                  "fontFamily": "Geist Mono",
+                                  "fontSize": 11,
+                                  "fontWeight": "700"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "NcVWt",
+                                  "name": "Текст аккаунта",
+                                  "fill": "#C7D4E2",
+                                  "textGrowth": "fixed-width",
+                                  "width": "fill_container",
+                                  "content": "Регистрация будет привязана к kristiano@yandex.ru. Покажи пользователю, что произойдет после нажатия кнопки.",
+                                  "lineHeight": 1.35,
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "KWkPH",
+                              "name": "Поля регистрации",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 10,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "TeD17",
+                                  "name": "Поле Имя",
+                                  "width": "fill_container",
+                                  "fill": "#0B1626",
+                                  "cornerRadius": 7,
+                                  "stroke": "#263A53",
+                                  "strokeWidth": 1,
+                                  "layout": "vertical",
+                                  "gap": 5,
+                                  "padding": [
+                                    9,
+                                    11
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "Yh6vo",
+                                      "name": "Лейбл Имя",
+                                      "fill": "#7FA9CF",
+                                      "content": "Имя",
+                                      "fontFamily": "Geist Mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "r58lc",
+                                      "name": "Значение Имя",
+                                      "fill": "#F7FAFC",
+                                      "content": "Kristian",
+                                      "fontFamily": "Inter",
+                                      "fontSize": 14,
+                                      "fontWeight": "700"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "fGsqP",
+                                  "name": "Поле Email",
+                                  "width": "fill_container",
+                                  "fill": "#0B1626",
+                                  "cornerRadius": 7,
+                                  "stroke": "#263A53",
+                                  "strokeWidth": 1,
+                                  "layout": "vertical",
+                                  "gap": 5,
+                                  "padding": [
+                                    9,
+                                    11
+                                  ],
+                                  "children": [
+                                    {
+                                      "type": "text",
+                                      "id": "NRL34",
+                                      "name": "Лейбл Email",
+                                      "fill": "#7FA9CF",
+                                      "content": "Email",
+                                      "fontFamily": "Geist Mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "normal"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "X69UT",
+                                      "name": "Значение Email",
+                                      "fill": "#F7FAFC",
+                                      "content": "kristiano@yandex.ru",
+                                      "fontFamily": "Inter",
+                                      "fontSize": 14,
+                                      "fontWeight": "700"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "RqMCT",
+                              "name": "Кнопка зарегистрироваться",
+                              "width": "fill_container",
+                              "fill": "#4A9FD8",
+                              "cornerRadius": 7,
+                              "padding": [
+                                11,
+                                16
+                              ],
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "cE6ei",
+                                  "name": "Текст зарегистрироваться",
+                                  "fill": "#07111F",
+                                  "content": "Зарегистрировать участника",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 14,
+                                  "fontWeight": "800"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "yhObb",
+                  "name": "Покупка и входной код",
+                  "width": 350,
+                  "height": "fill_container",
+                  "fill": "#101E32DD",
+                  "cornerRadius": 8,
+                  "stroke": "#2A405A",
+                  "strokeWidth": 1,
+                  "layout": "vertical",
+                  "gap": 13,
+                  "padding": 18,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hcLBj",
+                      "name": "Заголовок покупки",
+                      "fill": "#F7FAFC",
+                      "content": "Билет и вход",
+                      "fontFamily": "Geist",
+                      "fontSize": 22,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "SZVvK",
+                      "name": "Пояснение покупки",
+                      "fill": "#AAB8C7",
+                      "textGrowth": "fixed-width",
+                      "width": "fill_container",
+                      "content": "Выбери билет, подтверди аккаунт и получи код для входа на мероприятие.",
+                      "lineHeight": 1.35,
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "C6q6x",
+                      "name": "Выбранный билет",
+                      "width": "fill_container",
+                      "height": 118,
+                      "fill": "#111F33",
+                      "cornerRadius": 8,
+                      "stroke": "#263A53",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "qluSf",
+                          "name": "Метка выбранного билета",
+                          "fill": "#8FB7D8",
+                          "content": "ВЫБРАННЫЙ БИЛЕТ",
+                          "fontFamily": "Geist Mono",
+                          "fontSize": 10,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ESSVo",
+                          "name": "Название выбранного билета",
+                          "fill": "#F7FAFC",
+                          "content": "Regular · бесплатно",
+                          "fontFamily": "Inter",
+                          "fontSize": 17,
+                          "fontWeight": "800"
+                        },
+                        {
+                          "type": "text",
+                          "id": "kolCf",
+                          "name": "Описание выбранного билета",
+                          "fill": "#AAB8C7",
+                          "content": "Осталось 120 мест · регистрация открыта",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "gl7ke",
+                      "name": "Аккаунт для входа",
+                      "width": "fill_container",
+                      "height": 108,
+                      "fill": "#111F33",
+                      "cornerRadius": 8,
+                      "stroke": "#263A53",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "VOEG5",
+                          "name": "Метка аккаунта справа",
+                          "fill": "#8FB7D8",
+                          "content": "АККАУНТ",
+                          "fontFamily": "Geist Mono",
+                          "fontSize": 10,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "OW6aK",
+                          "name": "Почта аккаунта справа",
+                          "fill": "#F7FAFC",
+                          "content": "kristiano@yandex.ru",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "800"
+                        },
+                        {
+                          "type": "text",
+                          "id": "OwKca",
+                          "name": "Пояснение аккаунта справа",
+                          "fill": "#AAB8C7",
+                          "content": "Код сохранится в профиле после регистрации",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "WBVrj",
+                      "name": "Код входа",
+                      "width": "fill_container",
+                      "height": 128,
+                      "fill": "#0B1424",
+                      "cornerRadius": 8,
+                      "stroke": "#355A78",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": 14,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "u9AOX9",
+                          "name": "Метка кода",
+                          "fill": "#8FB7D8",
+                          "content": "КОД ВХОДА",
+                          "fontFamily": "Geist Mono",
+                          "fontSize": 10,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Bwdyg",
+                          "name": "Значение кода",
+                          "fill": "#F7FAFC",
+                          "content": "STU-2026-418",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 25,
+                          "fontWeight": "700"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ivofw",
+                          "name": "Подсказка кода",
+                          "fill": "#AAB8C7",
+                          "content": "Появится после подтверждения регистрации",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "FKRZn",
+                      "name": "Кнопка регистрации",
+                      "width": "fill_container",
+                      "height": 46,
+                      "fill": "#4A9FD8",
+                      "cornerRadius": 7,
+                      "padding": [
+                        13,
+                        18
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "o6FevR",
+                          "name": "Текст кнопки регистрации",
+                          "fill": "#061020",
+                          "content": "Зарегистрироваться бесплатно",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "800"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "DByPL",
+              "name": "Админ-дополнения снизу",
+              "clip": true,
+              "width": "fill_container",
+              "height": 92,
+              "fill": {
+                "type": "gradient",
+                "gradientType": "linear",
+                "enabled": true,
+                "rotation": 92,
+                "size": {
+                  "height": 1
+                },
+                "colors": [
+                  {
+                    "color": "#0A1322F2",
+                    "position": 0
+                  },
+                  {
+                    "color": "#111D2FCC",
+                    "position": 0.55
+                  },
+                  {
+                    "color": "#07101CEE",
+                    "position": 1
+                  }
+                ]
+              },
+              "cornerRadius": 8,
+              "stroke": "#2A405D",
+              "strokeWidth": 1,
+              "effect": [
+                {
+                  "type": "shadow",
+                  "shadowType": "outer",
+                  "color": "#4A9FD826",
+                  "blur": 24
+                },
+                {
+                  "type": "shadow",
+                  "shadowType": "outer",
+                  "color": "#B3D9F014",
+                  "offset": {
+                    "x": 0,
+                    "y": 1
+                  },
+                  "blur": 10
+                }
+              ],
+              "gap": 12,
+              "padding": [
+                12,
+                14
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "id": "WossM",
+                  "layoutPosition": "absolute",
+                  "x": 24,
+                  "y": 12,
+                  "name": "Северное мягкое свечение",
+                  "opacity": 0.42,
+                  "rotation": 1,
+                  "fill": "#4A9FD8",
+                  "width": 460,
+                  "height": 4,
+                  "effect": {
+                    "type": "blur",
+                    "radius": 18
+                  }
+                },
+                {
+                  "type": "rectangle",
+                  "id": "Va3v1",
+                  "layoutPosition": "absolute",
+                  "x": 580,
+                  "y": 54,
+                  "name": "Нижний холодный блик",
+                  "opacity": 0.22,
+                  "rotation": -2,
+                  "fill": "#B3D9F0",
+                  "width": 340,
+                  "height": 3,
+                  "effect": {
+                    "type": "blur",
+                    "radius": 20
+                  }
+                },
+                {
+                  "type": "frame",
+                  "id": "TGa9X",
+                  "name": "Краткая статистика админа",
+                  "width": 386,
+                  "height": "fill_container",
+                  "fill": "#0E1A2A99",
+                  "cornerRadius": 6,
+                  "stroke": "#314761",
+                  "strokeWidth": 1,
+                  "gap": 10,
+                  "padding": [
+                    8,
+                    10
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Jg6SB",
+                      "name": "Бейдж админского слоя",
+                      "width": 50,
+                      "height": "fill_container",
+                      "fill": "#15263BCC",
+                      "cornerRadius": 4,
+                      "stroke": "#4A9FD855",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "ptVXq",
+                          "name": "Текст бейджа админ",
+                          "fill": "#B3D9F0",
+                          "content": "АДМИН",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 10,
+                          "fontWeight": "600",
+                          "letterSpacing": 0.6
+                        },
+                        {
+                          "type": "text",
+                          "id": "m1Jlv",
+                          "name": "Текст бейджа слой",
+                          "fill": "#7890AA",
+                          "content": "слой",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 9,
+                          "fontWeight": "normal",
+                          "letterSpacing": 0.4
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "w7t0Mj",
+                      "name": "Показатель: просмотров",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "uCUXQ",
+                          "name": "Значение просмотров",
+                          "fill": "#B3D9F0",
+                          "content": "1 284",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "BavVU",
+                          "name": "Подпись просмотров",
+                          "fill": "#8EA1B8",
+                          "content": "просмотров",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 0.4
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "GOAnb",
+                      "name": "Показатель: заявок",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "tzzur",
+                          "name": "Значение заявок",
+                          "fill": "#9DD8FF",
+                          "content": "37",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "pZHHB",
+                          "name": "Подпись заявок",
+                          "fill": "#8EA1B8",
+                          "content": "заявок",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 0.4
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "hezXJ",
+                      "name": "Показатель: на модерации",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "JLvt3",
+                          "name": "Значение на модерации",
+                          "fill": "#FFB86B",
+                          "content": "4",
+                          "fontFamily": "Geist",
+                          "fontSize": 18,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "mevEg",
+                          "name": "Подпись на модерации",
+                          "fill": "#8EA1B8",
+                          "content": "на модерации",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 0.4
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ogH9u",
+                  "name": "Переход к участникам",
+                  "width": 252,
+                  "height": "fill_container",
+                  "fill": "#142236CC",
+                  "cornerRadius": 6,
+                  "stroke": "#3B5877",
+                  "strokeWidth": 1,
+                  "gap": 9,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon",
+                      "id": "LrY7C",
+                      "name": "Иконка участников",
+                      "width": 18,
+                      "height": 18,
+                      "icon": "users",
+                      "library": "lucide",
+                      "fill": "#B3D9F0"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "T2rsyn",
+                      "name": "Текст перехода к участникам",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "f4lk3z",
+                          "name": "Заголовок перехода",
+                          "fill": "#F4F8FF",
+                          "content": "Участники",
+                          "fontFamily": "Geist",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "YrVuo",
+                          "name": "Описание перехода",
+                          "fill": "#8EA1B8",
+                          "content": "список и роли",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon",
+                      "id": "JUlMu",
+                      "name": "Стрелка перехода",
+                      "width": 16,
+                      "height": 16,
+                      "icon": "arrow-right",
+                      "library": "lucide",
+                      "fill": "#8EC8F0"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "kEvAN",
+                  "name": "Управление публикацией",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "#0B1625AA",
+                  "cornerRadius": 6,
+                  "stroke": "#2B405A",
+                  "strokeWidth": 1,
+                  "gap": 10,
+                  "padding": [
+                    8,
+                    10
+                  ],
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "HfxlZ",
+                      "name": "Статус публикации",
+                      "width": 190,
+                      "layout": "vertical",
+                      "gap": 3,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "Xq7lM",
+                          "name": "Метка статуса",
+                          "fill": "#8EA1B8",
+                          "content": "Публикация",
+                          "fontFamily": "IBM Plex Mono",
+                          "fontSize": 10,
+                          "fontWeight": "normal",
+                          "letterSpacing": 0.4
+                        },
+                        {
+                          "type": "frame",
+                          "id": "K1d7D",
+                          "name": "Текущий статус",
+                          "gap": 7,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "ellipse",
+                              "id": "q3SD0",
+                              "name": "Индикатор черновика",
+                              "fill": "#FFB86B",
+                              "width": 8,
+                              "height": 8,
+                              "effect": {
+                                "type": "shadow",
+                                "shadowType": "outer",
+                                "color": "#FFB86B55",
+                                "blur": 10
+                              }
+                            },
+                            {
+                              "type": "text",
+                              "id": "CoGDD",
+                              "name": "Текст статуса",
+                              "fill": "#F4F8FF",
+                              "content": "Черновик проверен",
+                              "fontFamily": "Geist",
+                              "fontSize": 14,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Ebiyv",
+                      "name": "Действия публикации",
+                      "gap": 8,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "NLcV3",
+                          "name": "Кнопка Предпросмотр",
+                          "height": 36,
+                          "fill": "#0F1D2E",
+                          "cornerRadius": 4,
+                          "stroke": "#314761",
+                          "strokeWidth": 1,
+                          "gap": 6,
+                          "padding": [
+                            9,
+                            11
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "KjY3I",
+                              "name": "Иконка Предпросмотр",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "eye",
+                              "library": "lucide",
+                              "fill": "#B3D9F0"
+                            },
+                            {
+                              "type": "text",
+                              "id": "aC3pA",
+                              "name": "Текст Предпросмотр",
+                              "fill": "#B3D9F0",
+                              "content": "Предпросмотр",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "zRFIa",
+                          "name": "Кнопка Опубликовать",
+                          "height": 36,
+                          "fill": "#4A9FD8",
+                          "cornerRadius": 4,
+                          "stroke": "#4A9FD8",
+                          "strokeWidth": 1,
+                          "gap": 6,
+                          "padding": [
+                            9,
+                            11
+                          ],
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "b3mNv",
+                              "name": "Иконка Опубликовать",
+                              "width": 14,
+                              "height": 14,
+                              "icon": "send",
+                              "library": "lucide",
+                              "fill": "#06111E"
+                            },
+                            {
+                              "type": "text",
+                              "id": "jmOjI",
+                              "name": "Текст Опубликовать",
+                              "fill": "#06111E",
+                              "content": "Опубликовать",
+                              "fontFamily": "Geist",
+                              "fontSize": 12,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "l8q5IF",
+      "x": 2696,
+      "y": 0,
+      "name": "Мобильная версия события",
+      "clip": true,
+      "width": 390,
+      "fill": {
+        "type": "gradient",
+        "gradientType": "radial",
+        "enabled": true,
+        "rotation": 0,
+        "size": {
+          "width": 1.2,
+          "height": 1.1
+        },
+        "colors": [
+          {
+            "color": "#1B3E5A",
+            "position": 0
+          },
+          {
+            "color": "#101D31",
+            "position": 0.46
+          },
+          {
+            "color": "#0B1424",
+            "position": 1
+          }
+        ],
+        "center": {
+          "x": 0.72,
+          "y": 0.06
+        }
+      },
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "ellipse",
+          "id": "Z5XK5T",
+          "layoutPosition": "absolute",
+          "x": 150,
+          "y": 20,
+          "name": "Мобильное верхнее сияние",
+          "fill": "#4A9FD82E",
+          "width": 220,
+          "height": 120,
+          "effect": {
+            "type": "blur",
+            "radius": 30
+          }
+        },
+        {
+          "type": "frame",
+          "id": "KMEGM",
+          "name": "Status Bar",
+          "width": "fill_container",
+          "height": 62,
+          "fill": "#00000000",
+          "padding": [
+            0,
+            22
+          ],
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "pGHig",
+              "name": "Время",
+              "fill": "#F7FAFC",
+              "content": "9:41",
+              "fontFamily": "Inter",
+              "fontSize": 14,
+              "fontWeight": "700"
+            },
+            {
+              "type": "text",
+              "id": "aElcJ",
+              "name": "Индикаторы",
+              "fill": "#F7FAFC",
+              "content": "5G  86%",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "700"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "JhCvr",
+          "name": "Контент мобильного экрана",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            0,
+            18,
+            16,
+            18
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "Io0Kt",
+              "name": "Мобильный верх",
+              "width": "fill_container",
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "r9k7bW",
+                  "name": "Заголовок мобильный",
+                  "layout": "vertical",
+                  "gap": 3,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "LbAVh",
+                      "name": "Метка мобильная",
+                      "fill": "#8FB7D8",
+                      "content": "EVENTS",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 10,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "I14dK",
+                      "name": "Название мобильное",
+                      "fill": "#F7FAFC",
+                      "content": "События",
+                      "fontFamily": "Geist",
+                      "fontSize": 28,
+                      "fontWeight": "800"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "OoC9y",
+                  "name": "Вход мобильный",
+                  "fill": "#111F33",
+                  "cornerRadius": 9999,
+                  "stroke": "#2A405A",
+                  "strokeWidth": 1,
+                  "padding": [
+                    9,
+                    12
+                  ],
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "uei0b",
+                      "name": "Текст вход мобильный",
+                      "fill": "#D8E6F4",
+                      "content": "Войти",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "800"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Vk96x",
+              "name": "Поиск мобильный",
+              "width": "fill_container",
+              "fill": "#111F33",
+              "cornerRadius": 10,
+              "stroke": "#2A405A",
+              "strokeWidth": 1,
+              "gap": 8,
+              "padding": [
+                12,
+                13
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "n1FTJ",
+                  "name": "Лупа мобильная",
+                  "fill": "#8FB7D8",
+                  "content": "⌕",
+                  "fontFamily": "Geist Mono",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "MATyn",
+                  "name": "Плейсхолдер мобильный",
+                  "fill": "#9CAFC1",
+                  "content": "Найти событие...",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "FvI0b",
+              "name": "Фильтры мобильные",
+              "width": "fill_container",
+              "gap": 8,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "iXesU",
+                  "name": "Фильтр мобильный Все",
+                  "fill": "#DDEBFA",
+                  "cornerRadius": 9999,
+                  "stroke": "#253951",
+                  "strokeWidth": 1,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Rjpgi",
+                      "name": "Текст фильтра мобильный Все",
+                      "fill": "#0B1424",
+                      "content": "Все",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Ur0dj",
+                  "name": "Фильтр мобильный Город",
+                  "fill": "#0A1424",
+                  "cornerRadius": 9999,
+                  "stroke": "#253951",
+                  "strokeWidth": 1,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Vj7Hr",
+                      "name": "Текст фильтра мобильный Город",
+                      "fill": "#8FB7D8",
+                      "content": "Город",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JVf89",
+                  "name": "Фильтр мобильный Дата",
+                  "fill": "#0A1424",
+                  "cornerRadius": 9999,
+                  "stroke": "#253951",
+                  "strokeWidth": 1,
+                  "padding": [
+                    8,
+                    12
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Zvvb8",
+                      "name": "Текст фильтра мобильный Дата",
+                      "fill": "#8FB7D8",
+                      "content": "Дата",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 11,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "cKV0Z",
+              "name": "Мобильная карточка события",
+              "width": "fill_container",
+              "height": 500,
+              "fill": "#101E32DD",
+              "cornerRadius": 12,
+              "stroke": "#2A405A",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "y4MOjJ",
+                  "name": "Город мобильный",
+                  "fill": "#8FB7D8",
+                  "content": "MOSCOW",
+                  "fontFamily": "Geist Mono",
+                  "fontSize": 10,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "ven8T",
+                  "name": "Название события мобильное",
+                  "fill": "#F7FAFC",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Student Tech Meetup",
+                  "lineHeight": 1.08,
+                  "fontFamily": "Geist",
+                  "fontSize": 25,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "text",
+                  "id": "OWFg6",
+                  "name": "Описание события мобильное",
+                  "fill": "#AAB8C7",
+                  "textGrowth": "fixed-width",
+                  "width": "fill_container",
+                  "content": "Встреча для студентов о веб-разработке. Выбери билет, зарегистрируйся и получи код входа.",
+                  "lineHeight": 1.35,
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "rjoq2",
+                  "name": "Мобильный параметр Начало",
+                  "width": "fill_container",
+                  "height": 104,
+                  "fill": "#111F33",
+                  "cornerRadius": 8,
+                  "stroke": "#263A53",
+                  "strokeWidth": 1,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "UnphW",
+                      "x": 10,
+                      "y": 10,
+                      "name": "Метка параметра Начало",
+                      "fill": "#8FB7D8",
+                      "content": "Начало",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "gjyQl",
+                      "x": 10,
+                      "y": 29,
+                      "name": "Значение параметра Начало",
+                      "fill": "#F7FAFC",
+                      "textGrowth": "fixed-width",
+                      "width": 302,
+                      "content": "16 июл. 2026, 16:52",
+                      "lineHeight": 1.2,
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "ZTv7f",
+                  "name": "Мобильный параметр Место",
+                  "width": "fill_container",
+                  "height": 104,
+                  "fill": "#111F33",
+                  "cornerRadius": 8,
+                  "stroke": "#263A53",
+                  "strokeWidth": 1,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "iNwuh",
+                      "x": 10,
+                      "y": 10,
+                      "name": "Метка параметра Место",
+                      "fill": "#8FB7D8",
+                      "content": "Место",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 10,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "hcLws",
+                      "x": 10,
+                      "y": 29,
+                      "name": "Значение параметра Место",
+                      "fill": "#F7FAFC",
+                      "textGrowth": "fixed-width",
+                      "width": 302,
+                      "content": "University campus · Main auditorium",
+                      "lineHeight": 1.2,
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "K8uM6O",
+                  "name": "Статус регистрации мобильный",
+                  "width": "fill_container",
+                  "height": 122,
+                  "fill": "#102842",
+                  "cornerRadius": 8,
+                  "stroke": "#21496C",
+                  "strokeWidth": 1,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "k2uv8h",
+                      "x": 11,
+                      "y": 7,
+                      "name": "Точка статуса мобильная",
+                      "fill": "#4A9FD8",
+                      "content": "•",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Lf3W9",
+                      "x": 30,
+                      "y": 13,
+                      "name": "Текст статуса мобильный",
+                      "fill": "#D8E6F4",
+                      "textGrowth": "fixed-width",
+                      "width": 281,
+                      "content": "Регистрация открыта, доступно 120 мест",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "700"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "QdEK9",
+              "name": "Мобильный билет и код",
+              "width": "fill_container",
+              "height": 640,
+              "fill": "#101E32DD",
+              "cornerRadius": 12,
+              "stroke": "#2A405A",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 16,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "MCm0L",
+                  "name": "Заголовок билет мобильный",
+                  "fill": "#F7FAFC",
+                  "content": "Билет и код",
+                  "fontFamily": "Geist",
+                  "fontSize": 21,
+                  "fontWeight": "800"
+                },
+                {
+                  "type": "frame",
+                  "id": "MX3B4",
+                  "name": "Mobile Билет",
+                  "width": "fill_container",
+                  "height": 126,
+                  "fill": "#111F33",
+                  "cornerRadius": 8,
+                  "stroke": "#263A53",
+                  "strokeWidth": 1,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "mnqHj",
+                      "x": 12,
+                      "y": 10,
+                      "name": "Метка Билет",
+                      "fill": "#8FB7D8",
+                      "content": "БИЛЕТ",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 10,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "DP066",
+                      "x": 12,
+                      "y": 30,
+                      "name": "Значение Билет",
+                      "fill": "#F7FAFC",
+                      "content": "Regular · бесплатно",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "j5yBh",
+                      "x": 12,
+                      "y": 53,
+                      "name": "Описание Билет",
+                      "fill": "#AAB8C7",
+                      "content": "Осталось 120 мест",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "JhB5f",
+                  "name": "Mobile Аккаунт",
+                  "width": "fill_container",
+                  "height": 126,
+                  "fill": "#111F33",
+                  "cornerRadius": 8,
+                  "stroke": "#263A53",
+                  "strokeWidth": 1,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "lDNke",
+                      "x": 12,
+                      "y": 10,
+                      "name": "Метка Аккаунт",
+                      "fill": "#8FB7D8",
+                      "content": "АККАУНТ",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 10,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "ioJI1",
+                      "x": 12,
+                      "y": 30,
+                      "name": "Значение Аккаунт",
+                      "fill": "#F7FAFC",
+                      "content": "kristiano@yandex.ru",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "800"
+                    },
+                    {
+                      "type": "text",
+                      "id": "k4IT5J",
+                      "x": 12,
+                      "y": 53,
+                      "name": "Описание Аккаунт",
+                      "fill": "#AAB8C7",
+                      "content": "Код сохранится в профиле",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Q82ZER",
+                  "name": "Код mobile",
+                  "width": "fill_container",
+                  "height": 156,
+                  "fill": "#0B1424",
+                  "cornerRadius": 8,
+                  "stroke": "#355A78",
+                  "strokeWidth": 1,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "N1snl",
+                      "x": 13,
+                      "y": 12,
+                      "name": "Метка кода mobile",
+                      "fill": "#8FB7D8",
+                      "content": "КОД ВХОДА",
+                      "fontFamily": "Geist Mono",
+                      "fontSize": 10,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "j6ZYw",
+                      "x": 13,
+                      "y": 33,
+                      "name": "Значение кода mobile",
+                      "fill": "#F7FAFC",
+                      "content": "STU-2026-418",
+                      "fontFamily": "IBM Plex Mono",
+                      "fontSize": 23,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "text",
+                      "id": "FkxLn",
+                      "x": 13,
+                      "y": 72,
+                      "name": "Подсказка кода mobile",
+                      "fill": "#AAB8C7",
+                      "content": "Покажи на входе после регистрации",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "AKWbp",
+                  "name": "CTA mobile",
+                  "width": "fill_container",
+                  "height": 118,
+                  "fill": "#4A9FD8",
+                  "cornerRadius": 8,
+                  "layout": "none",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Naqzu",
+                      "x": 85,
+                      "y": 13,
+                      "name": "Текст CTA mobile",
+                      "fill": "#061020",
+                      "content": "Зарегистрироваться",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "800"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "RRVmK",
+              "name": "Мобильная нижняя зона",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 10,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Rxoue",
+                  "name": "Компактный админ-доступ",
+                  "width": "fill_container",
+                  "fill": "#0D1A2CE8",
+                  "cornerRadius": 12,
+                  "stroke": "#2D4A66",
+                  "strokeWidth": 1,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#4A9FD81F",
+                    "offset": {
+                      "x": 0,
+                      "y": 10
+                    },
+                    "blur": 30
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "J8dcA6",
+                      "name": "Шапка админ-доступа",
+                      "width": "fill_container",
+                      "gap": 10,
+                      "justifyContent": "space_between",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "lVQik",
+                          "name": "Текст админ-доступа",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 2,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "P28Gf",
+                              "name": "Метка организатора",
+                              "fill": "#8FB7D8",
+                              "content": "ORGANIZER ACCESS",
+                              "fontFamily": "Geist Mono",
+                              "fontSize": 9,
+                              "fontWeight": "700"
+                            },
+                            {
+                              "type": "text",
+                              "id": "T2zU73",
+                              "name": "Заголовок админ-доступа",
+                              "fill": "#F7FAFC",
+                              "content": "Управление входом",
+                              "fontFamily": "Geist",
+                              "fontSize": 17,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "kdo9z",
+                          "name": "Бейдж админа",
+                          "fill": "#DDEBFA",
+                          "cornerRadius": 999,
+                          "stroke": "#5A8CBD",
+                          "strokeWidth": 1,
+                          "padding": [
+                            6,
+                            9
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "IXwbX",
+                              "name": "Текст бейджа админа",
+                              "fill": "#0B1424",
+                              "content": "ADMIN",
+                              "fontFamily": "Geist Mono",
+                              "fontSize": 10,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "C8RrW",
+                      "name": "Статусы входа",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "M5gHS",
+                          "name": "Статус Гости",
+                          "width": "fill_container",
+                          "fill": "#111F33",
+                          "cornerRadius": 8,
+                          "stroke": "#263D55",
+                          "strokeWidth": 1,
+                          "layout": "vertical",
+                          "gap": 2,
+                          "padding": [
+                            8,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "kI17m",
+                              "name": "Значение Гости",
+                              "fill": "#F7FAFC",
+                              "content": "128",
+                              "fontFamily": "Geist Mono",
+                              "fontSize": 15,
+                              "fontWeight": "800"
+                            },
+                            {
+                              "type": "text",
+                              "id": "J3qbj",
+                              "name": "Подпись Гости",
+                              "fill": "#9CAFC1",
+                              "content": "Гости",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "l5QBY",
+                          "name": "Статус Внутри",
+                          "width": "fill_container",
+                          "fill": "#111F33",
+                          "cornerRadius": 8,
+                          "stroke": "#263D55",
+                          "strokeWidth": 1,
+                          "layout": "vertical",
+                          "gap": 2,
+                          "padding": [
+                            8,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "j3eFV",
+                              "name": "Значение Внутри",
+                              "fill": "#F7FAFC",
+                              "content": "74",
+                              "fontFamily": "Geist Mono",
+                              "fontSize": 15,
+                              "fontWeight": "800"
+                            },
+                            {
+                              "type": "text",
+                              "id": "D4ek1",
+                              "name": "Подпись Внутри",
+                              "fill": "#9CAFC1",
+                              "content": "Внутри",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "tzDbl",
+                          "name": "Статус Waitlist",
+                          "width": "fill_container",
+                          "fill": "#111F33",
+                          "cornerRadius": 8,
+                          "stroke": "#263D55",
+                          "strokeWidth": 1,
+                          "layout": "vertical",
+                          "gap": 2,
+                          "padding": [
+                            8,
+                            9
+                          ],
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "rHrxS",
+                              "name": "Значение Waitlist",
+                              "fill": "#F7FAFC",
+                              "content": "12",
+                              "fontFamily": "Geist Mono",
+                              "fontSize": 15,
+                              "fontWeight": "800"
+                            },
+                            {
+                              "type": "text",
+                              "id": "H2WrWV",
+                              "name": "Подпись Waitlist",
+                              "fill": "#9CAFC1",
+                              "content": "Waitlist",
+                              "fontFamily": "Inter",
+                              "fontSize": 10,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "Pt4A3",
+                      "name": "Действия организатора",
+                      "width": "fill_container",
+                      "gap": 8,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "Cf06c",
+                          "name": "Кнопка сканирования",
+                          "width": "fill_container",
+                          "fill": "#DDEBFA",
+                          "cornerRadius": 8,
+                          "stroke": "#6FA9D6",
+                          "strokeWidth": 1,
+                          "gap": 6,
+                          "padding": [
+                            10,
+                            12
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "y7DTWz",
+                              "name": "Иконка сканирования",
+                              "width": 15,
+                              "height": 15,
+                              "icon": "scan-line",
+                              "library": "lucide",
+                              "fill": "#0B1424"
+                            },
+                            {
+                              "type": "text",
+                              "id": "N8uUQ",
+                              "name": "Текст сканирования",
+                              "fill": "#0B1424",
+                              "content": "Сканировать",
+                              "fontFamily": "Inter",
+                              "fontSize": 12,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "f4E4UB",
+                          "name": "Кнопка списка гостей",
+                          "width": "fill_container",
+                          "fill": "#0A1424",
+                          "cornerRadius": 8,
+                          "stroke": "#2D4A66",
+                          "strokeWidth": 1,
+                          "gap": 6,
+                          "padding": [
+                            10,
+                            12
+                          ],
+                          "justifyContent": "center",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "icon",
+                              "id": "WSHXU",
+                              "name": "Иконка списка гостей",
+                              "width": 15,
+                              "height": 15,
+                              "icon": "list-checks",
+                              "library": "lucide",
+                              "fill": "#B3D9F0"
+                            },
+                            {
+                              "type": "text",
+                              "id": "SLzl0",
+                              "name": "Текст списка гостей",
+                              "fill": "#D8E6F4",
+                              "content": "Гости",
+                              "fontFamily": "Inter",
+                              "fontSize": 12,
+                              "fontWeight": "800"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "o1zF28",
+                  "name": "Нижний mobile tab bar",
+                  "width": "fill_container",
+                  "fill": "#101E32CC",
+                  "cornerRadius": 999,
+                  "stroke": "#365875",
+                  "strokeWidth": 1,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#00000066",
+                    "offset": {
+                      "x": 0,
+                      "y": 14
+                    },
+                    "blur": 34
+                  },
+                  "gap": 4,
+                  "padding": 6,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "eogaA",
+                      "name": "Таб События",
+                      "width": "fill_container",
+                      "height": 46,
+                      "fill": "#DDEBFA",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        5,
+                        8
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "WR1lX",
+                          "name": "Иконка таба События",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "calendar-days",
+                          "library": "lucide",
+                          "fill": "#0B1424"
+                        },
+                        {
+                          "type": "text",
+                          "id": "lzBYr",
+                          "name": "Подпись таба События",
+                          "fill": "#0B1424",
+                          "content": "События",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "LsQdz",
+                      "name": "Таб Билет",
+                      "width": "fill_container",
+                      "height": 46,
+                      "fill": "#00000000",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        5,
+                        8
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "Elz4K",
+                          "name": "Иконка таба Билет",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "ticket",
+                          "library": "lucide",
+                          "fill": "#8FB7D8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "ueVOV",
+                          "name": "Подпись таба Билет",
+                          "fill": "#9CAFC1",
+                          "content": "Билет",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "hoSPM",
+                      "name": "Таб Вход",
+                      "width": "fill_container",
+                      "height": 46,
+                      "fill": "#00000000",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        5,
+                        8
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "ENO5g",
+                          "name": "Иконка таба Вход",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "scan-line",
+                          "library": "lucide",
+                          "fill": "#8FB7D8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "GUWlh",
+                          "name": "Подпись таба Вход",
+                          "fill": "#9CAFC1",
+                          "content": "Вход",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "C3UG2U",
+                      "name": "Таб Настр.",
+                      "width": "fill_container",
+                      "height": 46,
+                      "fill": "#00000000",
+                      "cornerRadius": 999,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        5,
+                        8
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "o1tvl9",
+                          "name": "Иконка таба Настр.",
+                          "width": 18,
+                          "height": 18,
+                          "icon": "sliders-horizontal",
+                          "library": "lucide",
+                          "fill": "#8FB7D8"
+                        },
+                        {
+                          "type": "text",
+                          "id": "qFLpJ",
+                          "name": "Подпись таба Настр.",
+                          "fill": "#9CAFC1",
+                          "content": "Настр.",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "themes": {
+    "Mode": [
+      "Light",
+      "Dark"
+    ]
+  },
+  "variables": {
+    "--sidebar": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#E7E8E5"
+        },
+        {
+          "value": "#18181b",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#666666"
+        },
+        {
+          "value": "#fafafa",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-primary": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#18181b"
+        },
+        {
+          "value": "#18181b",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-primary-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#fafafa"
+        },
+        {
+          "value": "#fafafa",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-border": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#CBCCC9"
+        },
+        {
+          "value": "#ffffff1a",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-accent": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#CBCCC9"
+        },
+        {
+          "value": "#2a2a30",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-accent-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#18181b"
+        },
+        {
+          "value": "#fafafa",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--sidebar-ring": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#71717a"
+        },
+        {
+          "value": "#71717a",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--background": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#F2F3F0"
+        },
+        {
+          "value": "#111111",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--card": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#FFFFFF"
+        },
+        {
+          "value": "#1A1A1A",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--card-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--popover": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#FFFFFF"
+        },
+        {
+          "value": "#1A1A1A",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--popover-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--primary": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#FF8400"
+        },
+        {
+          "value": "#FF8400",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--primary-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#111111",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--secondary": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#E7E8E5"
+        },
+        {
+          "value": "#2E2E2E",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--secondary-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#FFFFFF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--muted": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#F2F3F0"
+        },
+        {
+          "value": "#2E2E2E",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--muted-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#666666"
+        },
+        {
+          "value": "#B8B9B6",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--accent": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#F2F3F0"
+        },
+        {
+          "value": "#111111",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--accent-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#111111"
+        },
+        {
+          "value": "#F2F3F0",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--destructive": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#D93C15"
+        },
+        {
+          "value": "#FF5C33",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--border": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#CBCCC9"
+        },
+        {
+          "value": "#2E2E2E",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--input": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#CBCCC9"
+        },
+        {
+          "value": "#2E2E2E",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--ring": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#666666"
+        },
+        {
+          "value": "#666666",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--white": {
+      "type": "color",
+      "value": "#FFFFFF"
+    },
+    "--black": {
+      "type": "color",
+      "value": "#000000"
+    },
+    "--font-primary": {
+      "type": "string",
+      "value": "JetBrains Mono"
+    },
+    "--font-secondary": {
+      "type": "string",
+      "value": "Geist"
+    },
+    "--radius-none": {
+      "type": "number",
+      "value": 0
+    },
+    "--radius-pill": {
+      "type": "number",
+      "value": 999
+    },
+    "--color-success": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#DFE6E1"
+        },
+        {
+          "value": "#222924",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-success-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#004D1A"
+        },
+        {
+          "value": "#B6FFCE",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-warning": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#E9E3D8"
+        },
+        {
+          "value": "#291C0F",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-warning-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#804200"
+        },
+        {
+          "value": "#FF8400",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-error": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#E5DCDA"
+        },
+        {
+          "value": "#24100B",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-error-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#8C1C00"
+        },
+        {
+          "value": "#FF5C33",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-info": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#DFDFE6"
+        },
+        {
+          "value": "#222229",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--color-info-foreground": {
+      "type": "color",
+      "value": [
+        {
+          "value": "#000066"
+        },
+        {
+          "value": "#B2B2FF",
+          "theme": {
+            "Mode": "Dark"
+          }
+        }
+      ]
+    },
+    "--radius-m": {
+      "type": "number",
+      "value": 16
+    }
+  },
+  "fileToken": "ec67dfb3-91c0-4fec-8f13-30428c298568"
+}
