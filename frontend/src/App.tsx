@@ -27,6 +27,7 @@ import {
   updateEventSettings
 } from "./api/events";
 import { AuthFormState, AuthMode, AuthPanel } from "./components/AuthPanel";
+import { CreateEventFormState, CreateEventPanel } from "./components/CreateEventPanel";
 import { MyRegistrationsPanel } from "./components/MyRegistrationsPanel";
 import { OrganizerDashboardPanel } from "./components/OrganizerDashboardPanel";
 
@@ -38,17 +39,6 @@ type RegistrationFormState = {
   fullName: string;
   email: string;
   ticketId: string;
-};
-
-type CreateEventFormState = {
-  categoryId: string;
-  title: string;
-  description: string;
-  city: string;
-  address: string;
-  venueName: string;
-  startsAtLocal: string;
-  endsAtLocal: string;
 };
 
 type CreateTicketFormState = {
@@ -1261,122 +1251,16 @@ export default function App() {
         )}
 
         {auth && activeWorkspaceTab === "create" && (
-          <section className="create-event-panel" aria-label="Создание события">
-            <div className="section-heading">
-              <div>
-                <p className="eyebrow">Organizer</p>
-                <h3>Создать событие</h3>
-              </div>
-            </div>
-
-            <form className="create-event-form" onSubmit={handleCreateEventSubmit}>
-              <label>
-                <span>Категория</span>
-                <select
-                  value={createEventForm.categoryId}
-                  onChange={(event) => updateCreateEventForm("categoryId", event.target.value)}
-                  disabled={categoriesState === "loading" || createEventState === "loading"}
-                >
-                  {categories.length === 0 && <option value="">Категории не загружены</option>}
-                  {categories.map((category) => (
-                    <option key={category.id} value={category.id}>
-                      {category.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              <label className="wide-field">
-                <span>Название</span>
-                <input
-                  value={createEventForm.title}
-                  onChange={(event) => updateCreateEventForm("title", event.target.value)}
-                  placeholder="Например, День карьеры"
-                  disabled={createEventState === "loading"}
-                />
-              </label>
-
-              <label className="wide-field">
-                <span>Описание</span>
-                <textarea
-                  value={createEventForm.description}
-                  onChange={(event) => updateCreateEventForm("description", event.target.value)}
-                  placeholder="Кратко опиши, для кого событие и что там будет"
-                  disabled={createEventState === "loading"}
-                />
-              </label>
-
-              <label>
-                <span>Город</span>
-                <input
-                  value={createEventForm.city}
-                  onChange={(event) => updateCreateEventForm("city", event.target.value)}
-                  placeholder="Москва"
-                  disabled={createEventState === "loading"}
-                />
-              </label>
-
-              <label>
-                <span>Адрес</span>
-                <input
-                  value={createEventForm.address}
-                  onChange={(event) => updateCreateEventForm("address", event.target.value)}
-                  placeholder="ул. Примерная, 1"
-                  disabled={createEventState === "loading"}
-                />
-              </label>
-
-              <label>
-                <span>Площадка</span>
-                <input
-                  value={createEventForm.venueName}
-                  onChange={(event) => updateCreateEventForm("venueName", event.target.value)}
-                  placeholder="Корпус А, аудитория 101"
-                  disabled={createEventState === "loading"}
-                />
-              </label>
-
-              <label>
-                <span>Начало</span>
-                <input
-                  type="datetime-local"
-                  value={createEventForm.startsAtLocal}
-                  onChange={(event) => updateCreateEventForm("startsAtLocal", event.target.value)}
-                  disabled={createEventState === "loading"}
-                />
-              </label>
-
-              <label>
-                <span>Окончание</span>
-                <input
-                  type="datetime-local"
-                  value={createEventForm.endsAtLocal}
-                  onChange={(event) => updateCreateEventForm("endsAtLocal", event.target.value)}
-                  disabled={createEventState === "loading"}
-                />
-              </label>
-
-              <div className="create-event-actions">
-                <button
-                  className="primary-button"
-                  type="submit"
-                  disabled={
-                    createEventState === "loading" ||
-                    categoriesState === "loading" ||
-                    categories.length === 0
-                  }
-                >
-                  {createEventState === "loading" ? "Создаем..." : "Создать событие"}
-                </button>
-              </div>
-            </form>
-
-            {categoriesState === "error" && (
-              <div className="form-alert error">Не удалось загрузить категории для формы.</div>
-            )}
-            {createEventError && <div className="form-alert error">{createEventError}</div>}
-            {createdEventMessage && <div className="form-alert success">{createdEventMessage}</div>}
-          </section>
+          <CreateEventPanel
+            categories={categories}
+            categoriesState={categoriesState}
+            form={createEventForm}
+            state={createEventState}
+            error={createEventError}
+            successMessage={createdEventMessage}
+            onFieldChange={updateCreateEventForm}
+            onSubmit={handleCreateEventSubmit}
+          />
         )}
 
         {!selectedEventId && eventsState !== "loading" && (

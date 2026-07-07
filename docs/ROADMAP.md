@@ -54,6 +54,7 @@ Completed:
 - Frontend organizer dashboard shows event, registration, checked-in, and capacity counts.
 - Frontend organizer dashboard panel is extracted from `App.tsx`.
 - Frontend auth panel is extracted from `App.tsx`.
+- Frontend create event panel is extracted from `App.tsx`.
 - Frontend workspace tabs separate overview, event creation, and account panels.
 - Frontend event edit form is hidden behind an explicit edit action to reduce detail-page clutter.
 - Frontend ticket creation form is hidden behind an explicit action to reduce detail-page clutter.
