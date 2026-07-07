@@ -28,18 +28,13 @@ import {
 } from "./api/events";
 import { AuthFormState, AuthMode, AuthPanel } from "./components/AuthPanel";
 import { CreateEventFormState, CreateEventPanel } from "./components/CreateEventPanel";
+import { EventRegistrationPanel, RegistrationFormState } from "./components/EventRegistrationPanel";
 import { MyRegistrationsPanel } from "./components/MyRegistrationsPanel";
 import { OrganizerDashboardPanel } from "./components/OrganizerDashboardPanel";
 
 type LoadState = "idle" | "loading" | "success" | "error";
 type EventScope = "all" | "mine";
 type WorkspaceTab = "overview" | "create" | "account";
-
-type RegistrationFormState = {
-  fullName: string;
-  email: string;
-  ticketId: string;
-};
 
 type CreateTicketFormState = {
   name: string;
@@ -1603,75 +1598,18 @@ export default function App() {
                 )}
               </section>
 
-              <section className="registration-section">
-                <div className="section-heading">
-                  <h3>Регистрация</h3>
-                </div>
-
-                {!isRegistrationOpen && (
-                  <div className="panel-message">Регистрация на это событие сейчас закрыта.</div>
-                )}
-
-                {auth && isRegistrationOpen && (
-                  <div className="panel-message">Регистрация будет привязана к аккаунту {auth.email}.</div>
-                )}
-
-                <form className="registration-form" onSubmit={handleRegistrationSubmit}>
-                  <label>
-                    <span>Билет</span>
-                    <select
-                      value={registrationForm.ticketId}
-                      onChange={(event) => updateRegistrationForm("ticketId", event.target.value)}
-                      disabled={!isRegistrationOpen || selectedEvent.tickets.length === 0 || registrationState === "loading"}
-                    >
-                      {selectedEvent.tickets.map((ticket) => (
-                        <option key={ticket.id} value={ticket.id}>
-                          {ticket.name} · {formatPrice(ticket.priceAmount, ticket.priceCurrency)}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-
-                  <label>
-                    <span>Имя участника</span>
-                    <input
-                      value={registrationForm.fullName}
-                      onChange={(event) => updateRegistrationForm("fullName", event.target.value)}
-                      placeholder="Например, Иван Петров"
-                      disabled={Boolean(auth) || !isRegistrationOpen || registrationState === "loading"}
-                    />
-                  </label>
-
-                  <label>
-                    <span>Email</span>
-                    <input
-                      type="email"
-                      value={registrationForm.email}
-                      onChange={(event) => updateRegistrationForm("email", event.target.value)}
-                      placeholder="ivan@example.com"
-                      disabled={Boolean(auth) || !isRegistrationOpen || registrationState === "loading"}
-                    />
-                  </label>
-
-                  {registrationError && <div className="form-alert error">{registrationError}</div>}
-
-                  <button
-                    className="primary-button"
-                    type="submit"
-                    disabled={!isRegistrationOpen || selectedEvent.tickets.length === 0 || registrationState === "loading"}
-                  >
-                    {registrationState === "loading" ? "Регистрируем..." : "Зарегистрироваться"}
-                  </button>
-                </form>
-
-                {registrationResult && (
-                  <div className="registration-result">
-                    <span>Код для входа</span>
-                    <strong>{registrationResult.checkInCode}</strong>
-                    <p>{registrationResult.participantName} зарегистрирован на событие.</p>
-                  </div>
-                )}
-              </section>
+              <EventRegistrationPanel
+                tickets={selectedEvent.tickets}
+                form={registrationForm}
+                state={registrationState}
+                error={registrationError}
+                result={registrationResult}
+                isOpen={isRegistrationOpen}
+                authEmail={auth?.email ?? null}
+                formatPrice={formatPrice}
+                onFieldChange={updateRegistrationForm}
+                onSubmit={handleRegistrationSubmit}
+              />
             </div>
 
             {isSelectedEventManaged ? (
