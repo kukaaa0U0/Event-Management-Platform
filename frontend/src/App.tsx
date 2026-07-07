@@ -33,9 +33,9 @@ import { EventScope, EventsSidebar } from "./components/EventsSidebar";
 import { MyRegistrationsPanel } from "./components/MyRegistrationsPanel";
 import { OrganizerDashboardPanel } from "./components/OrganizerDashboardPanel";
 import { OrganizerRegistrationsPanel } from "./components/OrganizerRegistrationsPanel";
+import { WorkspacePanel, WorkspaceTab } from "./components/WorkspacePanel";
 
 type LoadState = "idle" | "loading" | "success" | "error";
-type WorkspaceTab = "overview" | "create" | "account";
 
 type CreateTicketFormState = {
   name: string;
@@ -1139,37 +1139,11 @@ export default function App() {
       <section className="content" aria-label="Детали события">
         {errorMessage && <div className="top-alert">{errorMessage}</div>}
 
-        <section className="workspace-panel" aria-label="Рабочая область">
-          <div>
-            <p className="eyebrow">Workspace</p>
-            <h2>{auth ? "Панель управления" : "Вход в систему"}</h2>
-          </div>
-          <div className="workspace-tabs" role="tablist" aria-label="Разделы рабочей области">
-            <button
-              className={activeWorkspaceTab === "overview" ? "workspace-tab active" : "workspace-tab"}
-              type="button"
-              onClick={() => setActiveWorkspaceTab("overview")}
-              disabled={!auth}
-            >
-              Обзор
-            </button>
-            <button
-              className={activeWorkspaceTab === "create" ? "workspace-tab active" : "workspace-tab"}
-              type="button"
-              onClick={() => setActiveWorkspaceTab("create")}
-              disabled={!auth}
-            >
-              Создать
-            </button>
-            <button
-              className={activeWorkspaceTab === "account" ? "workspace-tab active" : "workspace-tab"}
-              type="button"
-              onClick={() => setActiveWorkspaceTab("account")}
-            >
-              Аккаунт
-            </button>
-          </div>
-        </section>
+        <WorkspacePanel
+          authExists={Boolean(auth)}
+          activeTab={activeWorkspaceTab}
+          onTabChange={setActiveWorkspaceTab}
+        />
 
         {activeWorkspaceTab === "account" && (
           <AuthPanel
