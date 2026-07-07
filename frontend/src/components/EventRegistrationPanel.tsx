@@ -39,15 +39,15 @@ export function EventRegistrationPanel({
   return (
     <section className="registration-section">
       <div className="section-heading">
-        <h3>Регистрация</h3>
+        <h3>Запись на событие</h3>
       </div>
 
       {!isOpen && (
-        <div className="panel-message">Регистрация на это событие сейчас закрыта.</div>
+        <div className="panel-message">Запись на это событие сейчас закрыта.</div>
       )}
 
       {authEmail && isOpen && (
-        <div className="panel-message">Регистрация будет привязана к аккаунту {authEmail}.</div>
+        <div className="panel-message">Запись будет привязана к аккаунту {authEmail}.</div>
       )}
 
       <form className="registration-form" onSubmit={onSubmit}>
@@ -94,7 +94,7 @@ export function EventRegistrationPanel({
           type="submit"
           disabled={!isOpen || tickets.length === 0 || state === "loading"}
         >
-          {state === "loading" ? "Регистрируем..." : "Зарегистрироваться"}
+          {state === "loading" ? "Записываем..." : "Записаться на событие"}
         </button>
       </form>
 
@@ -102,7 +102,7 @@ export function EventRegistrationPanel({
         <div className="registration-result">
           <span>Код для входа</span>
           <strong>{result.checkInCode}</strong>
-          <p>{result.participantName} зарегистрирован на событие.</p>
+          <p>{result.participantName} записан на событие.</p>
         </div>
       )}
     </section>

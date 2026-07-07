@@ -8,9 +8,11 @@ type EventsSidebarProps = {
   events: EventSummary[];
   eventsState: LoadState;
   eventScope: EventScope;
+  searchValue: string;
   selectedEventId: string | null;
   formatDate: (value: string) => string;
   onScopeChange: (scope: EventScope) => void;
+  onSearchChange: (value: string) => void;
   onSelectEvent: (eventId: string) => void;
 };
 
@@ -19,9 +21,11 @@ export function EventsSidebar({
   events,
   eventsState,
   eventScope,
+  searchValue,
   selectedEventId,
   formatDate,
   onScopeChange,
+  onSearchChange,
   onSelectEvent
 }: EventsSidebarProps) {
   return (
@@ -50,6 +54,21 @@ export function EventsSidebar({
         </div>
       )}
 
+      <label className="event-search">
+        <span>⌕</span>
+        <input
+          value={searchValue}
+          onChange={(event) => onSearchChange(event.target.value)}
+          placeholder="Найти событие..."
+        />
+      </label>
+
+      <div className="event-filter-chips" aria-label="Быстрые фильтры">
+        <span>Город</span>
+        <span>Дата</span>
+        <span>Тип</span>
+      </div>
+
       {eventsState === "loading" && <div className="state-message">Загрузка событий...</div>}
 
       {eventsState === "error" && (
@@ -60,7 +79,11 @@ export function EventsSidebar({
 
       {eventsState === "success" && events.length === 0 && (
         <div className="state-message">
-          {eventScope === "mine" ? "У тебя пока нет своих событий." : "Пока нет событий."}
+          {searchValue.trim()
+            ? "По этому поиску событий нет."
+            : eventScope === "mine"
+              ? "У тебя пока нет своих событий."
+              : "Пока нет событий."}
         </div>
       )}
 

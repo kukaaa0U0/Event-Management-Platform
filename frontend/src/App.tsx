@@ -144,6 +144,7 @@ export default function App() {
   const [authError, setAuthError] = useState<string | null>(null);
   const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<WorkspaceTab>(() => auth ? "overview" : "account");
   const [eventScope, setEventScope] = useState<EventScope>("all");
+  const [eventSearch, setEventSearch] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesState, setCategoriesState] = useState<LoadState>("idle");
   const [events, setEvents] = useState<EventSummary[]>([]);
@@ -433,6 +434,19 @@ export default function App() {
     () => events.find((eventItem) => eventItem.id === selectedEventId) ?? null,
     [events, selectedEventId]
   );
+
+  const visibleEvents = useMemo(() => {
+    const searchValue = eventSearch.trim().toLowerCase();
+
+    if (!searchValue) {
+      return events;
+    }
+
+    return events.filter((eventItem) =>
+      [eventItem.title, eventItem.description, eventItem.city, eventItem.address, eventItem.status]
+        .some((value) => value.toLowerCase().includes(searchValue))
+    );
+  }, [events, eventSearch]);
 
   const isSelectedEventManaged = useMemo(
     () => Boolean(auth && selectedEventId && managedEventIds.includes(selectedEventId)),
@@ -1115,12 +1129,14 @@ export default function App() {
     <main className="app-shell">
       <EventsSidebar
         auth={auth}
-        events={events}
+        events={visibleEvents}
         eventsState={eventsState}
         eventScope={eventScope}
+        searchValue={eventSearch}
         selectedEventId={selectedEventId}
         formatDate={formatDate}
         onScopeChange={setEventScope}
+        onSearchChange={setEventSearch}
         onSelectEvent={setSelectedEventId}
       />
 
