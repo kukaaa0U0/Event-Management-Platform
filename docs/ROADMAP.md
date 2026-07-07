@@ -56,6 +56,7 @@ Completed:
 - Frontend auth panel is extracted from `App.tsx`.
 - Frontend create event panel is extracted from `App.tsx`.
 - Frontend event registration panel is extracted from `App.tsx`.
+- Frontend event tickets panel is extracted from `App.tsx`.
 - Frontend events sidebar is extracted from `App.tsx`.
 - Frontend organizer registrations panel is extracted from `App.tsx`.
 - Frontend workspace panel is extracted from `App.tsx`.

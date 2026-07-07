@@ -29,6 +29,7 @@ import {
 import { AuthFormState, AuthMode, AuthPanel } from "./components/AuthPanel";
 import { CreateEventFormState, CreateEventPanel } from "./components/CreateEventPanel";
 import { EventRegistrationPanel, RegistrationFormState } from "./components/EventRegistrationPanel";
+import { CreateTicketFormState, EventTicketsPanel } from "./components/EventTicketsPanel";
 import { EventScope, EventsSidebar } from "./components/EventsSidebar";
 import { MyRegistrationsPanel } from "./components/MyRegistrationsPanel";
 import { OrganizerDashboardPanel } from "./components/OrganizerDashboardPanel";
@@ -36,14 +37,6 @@ import { OrganizerRegistrationsPanel } from "./components/OrganizerRegistrations
 import { WorkspacePanel, WorkspaceTab } from "./components/WorkspacePanel";
 
 type LoadState = "idle" | "loading" | "success" | "error";
-
-type CreateTicketFormState = {
-  name: string;
-  type: string;
-  priceAmount: string;
-  priceCurrency: string;
-  capacity: string;
-};
 
 type EventSettingsFormState = {
   registrationEnabled: boolean;
@@ -1422,115 +1415,19 @@ export default function App() {
             )}
 
             <div className="event-action-grid">
-              <section className="tickets-section">
-                <div className="section-heading">
-                  <h3>Билеты</h3>
-                  <span>{selectedEvent.tickets.length}</span>
-                </div>
-
-                <div className="ticket-list">
-                  {selectedEvent.tickets.map((ticket) => (
-                    <div className="ticket-row" key={ticket.id}>
-                      <div>
-                        <strong>{ticket.name}</strong>
-                        <span>{ticket.type}</span>
-                      </div>
-                      <div className="ticket-meta">
-                        <strong>{formatPrice(ticket.priceAmount, ticket.priceCurrency)}</strong>
-                        <span>мест: {ticket.capacity}</span>
-                      </div>
-                    </div>
-                  ))}
-                  {selectedEvent.tickets.length === 0 && (
-                    <div className="panel-message inside-list">Билеты для этого события пока не созданы.</div>
-                  )}
-                </div>
-
-                {isSelectedEventManaged && (
-                  <button
-                    className="secondary-button ticket-toggle-button"
-                    type="button"
-                    onClick={() => setIsCreateTicketOpen((current) => !current)}
-                  >
-                    {isCreateTicketOpen ? "Скрыть форму билета" : "Добавить билет"}
-                  </button>
-                )}
-
-                {isSelectedEventManaged && isCreateTicketOpen && (
-                  <form className="ticket-form" onSubmit={handleCreateTicketSubmit}>
-                    <div className="section-heading compact">
-                      <h3>Добавить билет</h3>
-                      <button className="small-button" type="button" onClick={() => setIsCreateTicketOpen(false)}>
-                        Закрыть
-                      </button>
-                    </div>
-
-                    <label className="wide-field">
-                      <span>Название</span>
-                      <input
-                        value={createTicketForm.name}
-                        onChange={(event) => updateCreateTicketForm("name", event.target.value)}
-                        placeholder="Regular"
-                        disabled={createTicketState === "loading"}
-                      />
-                    </label>
-
-                    <label>
-                      <span>Тип</span>
-                      <select
-                        value={createTicketForm.type}
-                        onChange={(event) => updateCreateTicketForm("type", event.target.value)}
-                        disabled={createTicketState === "loading"}
-                      >
-                        <option value="Regular">Regular</option>
-                        <option value="EarlyBird">Early Bird</option>
-                        <option value="Vip">VIP</option>
-                      </select>
-                    </label>
-
-                    <label>
-                      <span>Цена</span>
-                      <input
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        value={createTicketForm.priceAmount}
-                        onChange={(event) => updateCreateTicketForm("priceAmount", event.target.value)}
-                        disabled={createTicketState === "loading"}
-                      />
-                    </label>
-
-                    <label>
-                      <span>Валюта</span>
-                      <input
-                        value={createTicketForm.priceCurrency}
-                        onChange={(event) => updateCreateTicketForm("priceCurrency", event.target.value)}
-                        maxLength={3}
-                        disabled={createTicketState === "loading"}
-                      />
-                    </label>
-
-                    <label>
-                      <span>Мест</span>
-                      <input
-                        type="number"
-                        min="1"
-                        step="1"
-                        value={createTicketForm.capacity}
-                        onChange={(event) => updateCreateTicketForm("capacity", event.target.value)}
-                        disabled={createTicketState === "loading"}
-                      />
-                    </label>
-
-                    <button className="secondary-button" type="submit" disabled={createTicketState === "loading"}>
-                      {createTicketState === "loading" ? "Добавляем..." : "Добавить билет"}
-                    </button>
-
-                    {createTicketError && <div className="form-alert error wide-field">{createTicketError}</div>}
-                    {createdTicketMessage && <div className="form-alert success wide-field">{createdTicketMessage}</div>}
-                  </form>
-                )}
-              </section>
+              <EventTicketsPanel
+                tickets={selectedEvent.tickets}
+                isManaged={isSelectedEventManaged}
+                isCreateOpen={isCreateTicketOpen}
+                form={createTicketForm}
+                state={createTicketState}
+                error={createTicketError}
+                successMessage={createdTicketMessage}
+                formatPrice={formatPrice}
+                onCreateOpenChange={setIsCreateTicketOpen}
+                onFieldChange={updateCreateTicketForm}
+                onSubmit={handleCreateTicketSubmit}
+              />
 
               <EventRegistrationPanel
                 tickets={selectedEvent.tickets}
