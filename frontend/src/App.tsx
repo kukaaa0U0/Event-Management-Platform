@@ -1146,6 +1146,7 @@ export default function App() {
       <EventsSidebar
         auth={auth}
         events={visibleEvents}
+        totalEventsCount={events.length}
         eventsState={eventsState}
         eventScope={eventScope}
         statusFilter={eventStatusFilter}

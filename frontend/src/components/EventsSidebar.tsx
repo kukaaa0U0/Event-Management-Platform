@@ -14,6 +14,7 @@ const statusFilters: { value: EventStatusFilter; label: string }[] = [
 type EventsSidebarProps = {
   auth: AuthResponse | null;
   events: EventSummary[];
+  totalEventsCount: number;
   eventsState: LoadState;
   eventScope: EventScope;
   statusFilter: EventStatusFilter;
@@ -29,6 +30,7 @@ type EventsSidebarProps = {
 export function EventsSidebar({
   auth,
   events,
+  totalEventsCount,
   eventsState,
   eventScope,
   statusFilter,
@@ -86,6 +88,11 @@ export function EventsSidebar({
             {filter.label}
           </button>
         ))}
+      </div>
+
+      <div className="event-list-summary">
+        <span>{eventScope === "mine" ? "Мои события" : "Все события"}</span>
+        <strong>{events.length} из {totalEventsCount}</strong>
       </div>
 
       {eventsState === "loading" && <div className="state-message">Загрузка событий...</div>}

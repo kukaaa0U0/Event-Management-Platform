@@ -140,6 +140,29 @@ button {
   border-color: #ddebfa;
 }
 
+.event-list-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  color: #b8c8d9;
+  background: #111f33;
+  border: 1px solid #2a405a;
+  border-radius: 8px;
+}
+
+.event-list-summary span {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.event-list-summary strong {
+  color: #f5f9ff;
+  font-size: 14px;
+}
+
 .eyebrow {
   margin: 0;
   color: #5f768f;
