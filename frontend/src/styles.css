@@ -992,9 +992,16 @@ h3 {
 }
 
 .ticket-form .wide-field,
+.ticket-form-grid,
 .ticket-form .section-heading,
 .ticket-form button {
   grid-column: 1 / -1;
+}
+
+.ticket-form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 13px;
 }
 
 .ticket-toggle-button {
@@ -1693,6 +1700,10 @@ h3 {
   }
 
   .ticket-form {
+    grid-template-columns: 1fr;
+  }
+
+  .ticket-form-grid {
     grid-template-columns: 1fr;
   }
 

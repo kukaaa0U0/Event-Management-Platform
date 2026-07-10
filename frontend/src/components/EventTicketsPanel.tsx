@@ -128,52 +128,54 @@ export function EventTicketsPanel({
             />
           </label>
 
-          <label>
-            <span>Тип</span>
-            <select
-              value={form.type}
-              onChange={(event) => onFieldChange("type", event.target.value)}
-              disabled={state === "loading"}
-            >
-              <option value="Regular">Regular</option>
-              <option value="EarlyBird">Early Bird</option>
-              <option value="Vip">VIP</option>
-            </select>
-          </label>
+          <div className="ticket-form-grid">
+            <label>
+              <span>Тип</span>
+              <select
+                value={form.type}
+                onChange={(event) => onFieldChange("type", event.target.value)}
+                disabled={state === "loading"}
+              >
+                <option value="Regular">Regular</option>
+                <option value="EarlyBird">Early Bird</option>
+                <option value="Vip">VIP</option>
+              </select>
+            </label>
 
-          <label>
-            <span>Цена</span>
-            <input
-              type="number"
-              min="0"
-              step="0.01"
-              value={form.priceAmount}
-              onChange={(event) => onFieldChange("priceAmount", event.target.value)}
-              disabled={state === "loading"}
-            />
-          </label>
+            <label>
+              <span>Цена</span>
+              <input
+                type="number"
+                min="0"
+                step="0.01"
+                value={form.priceAmount}
+                onChange={(event) => onFieldChange("priceAmount", event.target.value)}
+                disabled={state === "loading"}
+              />
+            </label>
 
-          <label>
-            <span>Валюта</span>
-            <input
-              value={form.priceCurrency}
-              onChange={(event) => onFieldChange("priceCurrency", event.target.value)}
-              maxLength={3}
-              disabled={state === "loading"}
-            />
-          </label>
+            <label>
+              <span>Валюта</span>
+              <input
+                value={form.priceCurrency}
+                onChange={(event) => onFieldChange("priceCurrency", event.target.value)}
+                maxLength={3}
+                disabled={state === "loading"}
+              />
+            </label>
 
-          <label>
-            <span>Мест</span>
-            <input
-              type="number"
-              min="1"
-              step="1"
-              value={form.capacity}
-              onChange={(event) => onFieldChange("capacity", event.target.value)}
-              disabled={state === "loading"}
-            />
-          </label>
+            <label>
+              <span>Мест</span>
+              <input
+                type="number"
+                min="1"
+                step="1"
+                value={form.capacity}
+                onChange={(event) => onFieldChange("capacity", event.target.value)}
+                disabled={state === "loading"}
+              />
+            </label>
+          </div>
 
           <button className="secondary-button" type="submit" disabled={state === "loading"}>
             {state === "loading" ? "Добавляем..." : "Добавить билет"}

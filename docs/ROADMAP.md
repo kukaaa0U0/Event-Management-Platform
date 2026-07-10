@@ -98,6 +98,7 @@ Completed:
 - Frontend event details show a dedicated calendar `.ics` panel with version and update data.
 - Frontend event details show public registration and check-in mode states.
 - Frontend ticket rows show ticket type, price, and seat data in clearer structured fields.
+- Frontend ticket creation form groups ticket type, price, currency, and capacity fields.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:
