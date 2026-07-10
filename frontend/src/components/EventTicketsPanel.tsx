@@ -79,15 +79,17 @@ export function EventTicketsPanel({
             <div className="ticket-row" key={ticket.id}>
               <div>
                 <strong>{ticket.name}</strong>
-                <span>{ticket.type}</span>
+                <span className="ticket-type-pill">{ticket.type}</span>
               </div>
               <div className="ticket-meta">
-                <strong>{formatPrice(ticket.priceAmount, ticket.priceCurrency)}</strong>
-                <span>
-                  {occupiedForTicket === null
-                    ? `мест: ${ticket.capacity}`
-                    : `занято: ${occupiedForTicket}/${ticket.capacity}`}
-                </span>
+                <div>
+                  <span>Цена</span>
+                  <strong>{formatPrice(ticket.priceAmount, ticket.priceCurrency)}</strong>
+                </div>
+                <div>
+                  <span>{occupiedForTicket === null ? "Мест" : "Занято"}</span>
+                  <strong>{occupiedForTicket === null ? ticket.capacity : `${occupiedForTicket}/${ticket.capacity}`}</strong>
+                </div>
               </div>
             </div>
           );

@@ -789,7 +789,8 @@ h3 {
 }
 
 .ticket-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, auto);
   align-items: center;
   justify-content: space-between;
   gap: 16px;
@@ -806,8 +807,42 @@ h3 {
   gap: 5px;
 }
 
+.ticket-type-pill {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 4px 9px;
+  color: #ddebfa;
+  background: #173452;
+  border: 1px solid #2a5f88;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .ticket-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(84px, auto));
+  gap: 10px;
   text-align: right;
+}
+
+.ticket-meta > div {
+  display: grid;
+  gap: 4px;
+}
+
+.ticket-meta span {
+  color: #9fb4ca;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.ticket-meta strong {
+  color: #f5f9ff;
+  white-space: nowrap;
 }
 
 .registration-section {
@@ -1634,7 +1669,7 @@ h3 {
 
   .details-header,
   .ticket-row {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
 
   .details-actions {
@@ -1670,6 +1705,7 @@ h3 {
   }
 
   .ticket-meta {
+    grid-template-columns: 1fr;
     text-align: left;
   }
 
