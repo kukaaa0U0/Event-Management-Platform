@@ -183,6 +183,7 @@ export function EventDetailsPanel({
       <div className="event-action-grid">
         <EventTicketsPanel
           tickets={event.tickets}
+          registrations={registrations}
           isManaged={isManaged}
           isCreateOpen={isCreateTicketOpen}
           form={createTicketForm}
