@@ -159,86 +159,95 @@ export function EventManagementPanel({
           </div>
 
           <form className="edit-event-form" onSubmit={onEditSubmit}>
-            <label>
-              <span>Категория</span>
-              <select
-                value={editForm.categoryId}
-                onChange={(event) => onEditFieldChange("categoryId", event.target.value)}
-                disabled={categoriesState === "loading" || editState === "loading"}
-              >
-                {categories.length === 0 && <option value="">Категории не загружены</option>}
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <div className="edit-event-group edit-event-group-main">
+              <h4>Основное</h4>
+              <label>
+                <span>Категория</span>
+                <select
+                  value={editForm.categoryId}
+                  onChange={(event) => onEditFieldChange("categoryId", event.target.value)}
+                  disabled={categoriesState === "loading" || editState === "loading"}
+                >
+                  {categories.length === 0 && <option value="">Категории не загружены</option>}
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
 
-            <label className="wide-field">
-              <span>Название</span>
-              <input
-                value={editForm.title}
-                onChange={(event) => onEditFieldChange("title", event.target.value)}
-                disabled={editState === "loading"}
-              />
-            </label>
+              <label>
+                <span>Название</span>
+                <input
+                  value={editForm.title}
+                  onChange={(event) => onEditFieldChange("title", event.target.value)}
+                  disabled={editState === "loading"}
+                />
+              </label>
 
-            <label className="wide-field">
-              <span>Описание</span>
-              <textarea
-                value={editForm.description}
-                onChange={(event) => onEditFieldChange("description", event.target.value)}
-                disabled={editState === "loading"}
-              />
-            </label>
+              <label className="wide-field">
+                <span>Описание</span>
+                <textarea
+                  value={editForm.description}
+                  onChange={(event) => onEditFieldChange("description", event.target.value)}
+                  disabled={editState === "loading"}
+                />
+              </label>
+            </div>
 
-            <label>
-              <span>Город</span>
-              <input
-                value={editForm.city}
-                onChange={(event) => onEditFieldChange("city", event.target.value)}
-                disabled={editState === "loading"}
-              />
-            </label>
+            <div className="edit-event-group">
+              <h4>Место</h4>
+              <label>
+                <span>Город</span>
+                <input
+                  value={editForm.city}
+                  onChange={(event) => onEditFieldChange("city", event.target.value)}
+                  disabled={editState === "loading"}
+                />
+              </label>
 
-            <label>
-              <span>Адрес</span>
-              <input
-                value={editForm.address}
-                onChange={(event) => onEditFieldChange("address", event.target.value)}
-                disabled={editState === "loading"}
-              />
-            </label>
+              <label>
+                <span>Адрес</span>
+                <input
+                  value={editForm.address}
+                  onChange={(event) => onEditFieldChange("address", event.target.value)}
+                  disabled={editState === "loading"}
+                />
+              </label>
 
-            <label>
-              <span>Площадка</span>
-              <input
-                value={editForm.venueName}
-                onChange={(event) => onEditFieldChange("venueName", event.target.value)}
-                disabled={editState === "loading"}
-              />
-            </label>
+              <label>
+                <span>Площадка</span>
+                <input
+                  value={editForm.venueName}
+                  onChange={(event) => onEditFieldChange("venueName", event.target.value)}
+                  disabled={editState === "loading"}
+                />
+              </label>
+            </div>
 
-            <label>
-              <span>Начало</span>
-              <input
-                type="datetime-local"
-                value={editForm.startsAtLocal}
-                onChange={(event) => onEditFieldChange("startsAtLocal", event.target.value)}
-                disabled={editState === "loading"}
-              />
-            </label>
+            <div className="edit-event-group">
+              <h4>Время</h4>
+              <label>
+                <span>Начало</span>
+                <input
+                  type="datetime-local"
+                  value={editForm.startsAtLocal}
+                  onChange={(event) => onEditFieldChange("startsAtLocal", event.target.value)}
+                  disabled={editState === "loading"}
+                />
+              </label>
 
-            <label>
-              <span>Окончание</span>
-              <input
-                type="datetime-local"
-                value={editForm.endsAtLocal}
-                onChange={(event) => onEditFieldChange("endsAtLocal", event.target.value)}
-                disabled={editState === "loading"}
-              />
-            </label>
+              <label>
+                <span>Окончание</span>
+                <input
+                  type="datetime-local"
+                  value={editForm.endsAtLocal}
+                  onChange={(event) => onEditFieldChange("endsAtLocal", event.target.value)}
+                  disabled={editState === "loading"}
+                />
+              </label>
+            </div>
 
             <button
               className="secondary-button"

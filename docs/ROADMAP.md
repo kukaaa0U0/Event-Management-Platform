@@ -90,6 +90,7 @@ Completed:
 - Frontend my registrations panel shows participant summary counts and clearer registration statuses.
 - Frontend create event form is grouped into main, location, and time sections.
 - Frontend event management panel shows status, registration, and check-in mode summary.
+- Frontend edit event form is grouped into main, location, and time sections.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:
