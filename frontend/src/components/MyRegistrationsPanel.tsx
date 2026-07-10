@@ -1,4 +1,5 @@
 import { MyRegistration } from "../api/events";
+import { formatRegistrationStatus, getRegistrationStatusClassName } from "../utils/statusLabels";
 
 type LoadState = "idle" | "loading" | "success" | "error";
 
@@ -76,7 +77,9 @@ export function MyRegistrationsPanel({
                 <span>{registration.city} · {formatDate(registration.startsAtUtc)}</span>
               </div>
               <div className="my-registration-meta">
-                <span className="my-registration-status">{registration.registrationStatus}</span>
+                <span className={getRegistrationStatusClassName(registration.registrationStatus, "my-registration-status")}>
+                  {formatRegistrationStatus(registration.registrationStatus)}
+                </span>
                 <strong>{registration.checkInCode}</strong>
               </div>
             </button>

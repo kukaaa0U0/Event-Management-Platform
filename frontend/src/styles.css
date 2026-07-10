@@ -1211,6 +1211,11 @@ h3 {
 
 .my-registration-status {
   justify-self: end;
+}
+
+.registration-status-pill {
+  display: inline-flex;
+  align-items: center;
   min-height: 24px;
   padding: 4px 9px;
   color: #ddebfa;
@@ -1219,6 +1224,24 @@ h3 {
   border-radius: 999px;
   font-size: 12px;
   font-weight: 800;
+}
+
+.registration-status-confirmed {
+  color: #ddebfa;
+  background: #173452;
+  border-color: #2a5f88;
+}
+
+.registration-status-checked-in {
+  color: #064e3b;
+  background: #d1fae5;
+  border-color: #a7f3d0;
+}
+
+.registration-status-cancelled {
+  color: #7f1d1d;
+  background: #fee2e2;
+  border-color: #fecaca;
 }
 
 .organizer-dashboard-panel {

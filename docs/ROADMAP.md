@@ -94,6 +94,7 @@ Completed:
 - Frontend account panel shows profile, role, active session, and token expiration summary.
 - Frontend events sidebar shows visible and total event counts for the current filters.
 - Frontend event statuses use Russian labels and distinct visual states.
+- Frontend registration statuses use Russian labels and distinct visual states.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:

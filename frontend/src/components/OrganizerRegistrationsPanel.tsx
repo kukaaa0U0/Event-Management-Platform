@@ -1,5 +1,6 @@
 import { FormEvent } from "react";
 import { Registration } from "../api/events";
+import { formatRegistrationStatus, getRegistrationStatusClassName } from "../utils/statusLabels";
 
 type LoadState = "idle" | "loading" | "success" | "error";
 
@@ -125,7 +126,9 @@ export function OrganizerRegistrationsPanel({
               </div>
               <div className="registration-code">
                 <strong>{registration.checkInCode}</strong>
-                <span>{registration.status}</span>
+                <span className={getRegistrationStatusClassName(registration.status)}>
+                  {formatRegistrationStatus(registration.status)}
+                </span>
               </div>
               <button
                 className="small-button"
