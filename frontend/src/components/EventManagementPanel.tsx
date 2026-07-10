@@ -57,12 +57,34 @@ export function EventManagementPanel({
   onEditFieldChange,
   onEditSubmit
 }: EventManagementPanelProps) {
+  const registrationModeLabel = settingsForm.registrationEnabled ? "Включена" : "Выключена";
+  const checkInModeLabel = settingsForm.checkInEnabled ? "Включен" : "Выключен";
+
   return (
     <>
       <section className="event-management-panel" aria-label="Управление статусом события">
         <div className="section-heading compact">
           <h3>Управление событием</h3>
           <span>{status}</span>
+        </div>
+
+        <div className="event-management-summary">
+          <div>
+            <span>Статус</span>
+            <strong>{status}</strong>
+          </div>
+          <div>
+            <span>Регистрация</span>
+            <strong className={settingsForm.registrationEnabled ? "mode-enabled" : "mode-disabled"}>
+              {registrationModeLabel}
+            </strong>
+          </div>
+          <div>
+            <span>Check-in</span>
+            <strong className={settingsForm.checkInEnabled ? "mode-enabled" : "mode-disabled"}>
+              {checkInModeLabel}
+            </strong>
+          </div>
         </div>
 
         <div className="event-management-actions">

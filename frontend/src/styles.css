@@ -841,6 +841,41 @@ h3 {
   border-radius: 8px;
 }
 
+.event-management-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.event-management-summary > div {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  background: #0f2034;
+  border: 1px solid #2a405a;
+  border-radius: 8px;
+}
+
+.event-management-summary span {
+  color: #9fb4ca;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.event-management-summary strong {
+  color: #f5f9ff;
+  overflow-wrap: anywhere;
+}
+
+.event-management-summary .mode-enabled {
+  color: #8ee0b6;
+}
+
+.event-management-summary .mode-disabled {
+  color: #fca5a5;
+}
+
 .event-management-actions {
   display: flex;
   flex-wrap: wrap;
@@ -1333,6 +1368,10 @@ h3 {
   }
 
   .registration-context {
+    grid-template-columns: 1fr;
+  }
+
+  .event-management-summary {
     grid-template-columns: 1fr;
   }
 
