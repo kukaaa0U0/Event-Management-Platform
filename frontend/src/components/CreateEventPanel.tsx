@@ -45,91 +45,100 @@ export function CreateEventPanel({
       </div>
 
       <form className="create-event-form" onSubmit={onSubmit}>
-        <label>
-          <span>Категория</span>
-          <select
-            value={form.categoryId}
-            onChange={(event) => onFieldChange("categoryId", event.target.value)}
-            disabled={categoriesState === "loading" || state === "loading"}
-          >
-            {categories.length === 0 && <option value="">Категории не загружены</option>}
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="create-event-group create-event-group-main">
+          <h4>Основное</h4>
+          <label>
+            <span>Категория</span>
+            <select
+              value={form.categoryId}
+              onChange={(event) => onFieldChange("categoryId", event.target.value)}
+              disabled={categoriesState === "loading" || state === "loading"}
+            >
+              {categories.length === 0 && <option value="">Категории не загружены</option>}
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </label>
 
-        <label className="wide-field">
-          <span>Название</span>
-          <input
-            value={form.title}
-            onChange={(event) => onFieldChange("title", event.target.value)}
-            placeholder="Например, День карьеры"
-            disabled={state === "loading"}
-          />
-        </label>
+          <label>
+            <span>Название</span>
+            <input
+              value={form.title}
+              onChange={(event) => onFieldChange("title", event.target.value)}
+              placeholder="Например, День карьеры"
+              disabled={state === "loading"}
+            />
+          </label>
 
-        <label className="wide-field">
-          <span>Описание</span>
-          <textarea
-            value={form.description}
-            onChange={(event) => onFieldChange("description", event.target.value)}
-            placeholder="Кратко опиши, для кого событие и что там будет"
-            disabled={state === "loading"}
-          />
-        </label>
+          <label className="wide-field">
+            <span>Описание</span>
+            <textarea
+              value={form.description}
+              onChange={(event) => onFieldChange("description", event.target.value)}
+              placeholder="Кратко опиши, для кого событие и что там будет"
+              disabled={state === "loading"}
+            />
+          </label>
+        </div>
 
-        <label>
-          <span>Город</span>
-          <input
-            value={form.city}
-            onChange={(event) => onFieldChange("city", event.target.value)}
-            placeholder="Москва"
-            disabled={state === "loading"}
-          />
-        </label>
+        <div className="create-event-group">
+          <h4>Место</h4>
+          <label>
+            <span>Город</span>
+            <input
+              value={form.city}
+              onChange={(event) => onFieldChange("city", event.target.value)}
+              placeholder="Москва"
+              disabled={state === "loading"}
+            />
+          </label>
 
-        <label>
-          <span>Адрес</span>
-          <input
-            value={form.address}
-            onChange={(event) => onFieldChange("address", event.target.value)}
-            placeholder="ул. Примерная, 1"
-            disabled={state === "loading"}
-          />
-        </label>
+          <label>
+            <span>Адрес</span>
+            <input
+              value={form.address}
+              onChange={(event) => onFieldChange("address", event.target.value)}
+              placeholder="ул. Примерная, 1"
+              disabled={state === "loading"}
+            />
+          </label>
 
-        <label>
-          <span>Площадка</span>
-          <input
-            value={form.venueName}
-            onChange={(event) => onFieldChange("venueName", event.target.value)}
-            placeholder="Корпус А, аудитория 101"
-            disabled={state === "loading"}
-          />
-        </label>
+          <label>
+            <span>Площадка</span>
+            <input
+              value={form.venueName}
+              onChange={(event) => onFieldChange("venueName", event.target.value)}
+              placeholder="Корпус А, аудитория 101"
+              disabled={state === "loading"}
+            />
+          </label>
+        </div>
 
-        <label>
-          <span>Начало</span>
-          <input
-            type="datetime-local"
-            value={form.startsAtLocal}
-            onChange={(event) => onFieldChange("startsAtLocal", event.target.value)}
-            disabled={state === "loading"}
-          />
-        </label>
+        <div className="create-event-group">
+          <h4>Время</h4>
+          <label>
+            <span>Начало</span>
+            <input
+              type="datetime-local"
+              value={form.startsAtLocal}
+              onChange={(event) => onFieldChange("startsAtLocal", event.target.value)}
+              disabled={state === "loading"}
+            />
+          </label>
 
-        <label>
-          <span>Окончание</span>
-          <input
-            type="datetime-local"
-            value={form.endsAtLocal}
-            onChange={(event) => onFieldChange("endsAtLocal", event.target.value)}
-            disabled={state === "loading"}
-          />
-        </label>
+          <label>
+            <span>Окончание</span>
+            <input
+              type="datetime-local"
+              value={form.endsAtLocal}
+              onChange={(event) => onFieldChange("endsAtLocal", event.target.value)}
+              disabled={state === "loading"}
+            />
+          </label>
+        </div>
 
         <div className="create-event-actions">
           <button
