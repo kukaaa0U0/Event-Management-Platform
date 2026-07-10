@@ -130,9 +130,6 @@ export function EventDetailsPanel({
           <span className={getEventStatusPillClassName(event.status, "large")}>
             {formatEventStatus(event.status)}
           </span>
-          <a className="secondary-button calendar-button" href={getEventCalendarUrl(event.id)} download>
-            Скачать .ics
-          </a>
         </div>
       </div>
 
@@ -155,6 +152,17 @@ export function EventDetailsPanel({
           <span>Площадка</span>
           <strong>{event.venueName ?? "Не указана"}</strong>
         </div>
+      </div>
+
+      <div className="calendar-sync-panel">
+        <div>
+          <span>Календарь</span>
+          <strong>Файл события .ics</strong>
+          <p>Версия {event.calendarSequence} · обновлено {formatDate(event.updatedAtUtc)}</p>
+        </div>
+        <a className="secondary-button calendar-button" href={getEventCalendarUrl(event.id)} download>
+          Скачать .ics
+        </a>
       </div>
 
       {isManaged && (
