@@ -647,6 +647,40 @@ h3 {
   gap: 14px;
 }
 
+.registration-context {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.registration-context > div {
+  display: grid;
+  gap: 4px;
+  padding: 12px;
+  background: #13263d;
+  border: 1px solid #27425f;
+  border-radius: 8px;
+}
+
+.registration-context span {
+  color: #9fb4ca;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.registration-context strong {
+  color: #f5f9ff;
+  overflow-wrap: anywhere;
+}
+
+.registration-context p {
+  margin-bottom: 0;
+  color: #b8c8d9;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .registration-form,
 .ticket-form,
 .event-management-panel,
@@ -1205,6 +1239,10 @@ h3 {
   }
 
   .auth-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .registration-context {
     grid-template-columns: 1fr;
   }
 

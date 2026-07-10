@@ -35,6 +35,7 @@ export function EventRegistrationPanel({
   onSubmit
 }: EventRegistrationPanelProps) {
   const isAuthenticated = Boolean(authEmail);
+  const selectedTicket = tickets.find((ticket) => ticket.id === form.ticketId) ?? tickets[0] ?? null;
 
   return (
     <section className="registration-section">
@@ -49,6 +50,23 @@ export function EventRegistrationPanel({
       {authEmail && isOpen && (
         <div className="panel-message">Запись будет привязана к аккаунту {authEmail}.</div>
       )}
+
+      <div className="registration-context">
+        <div>
+          <span>Выбранный билет</span>
+          <strong>{selectedTicket ? selectedTicket.name : "Билет не выбран"}</strong>
+          <p>
+            {selectedTicket
+              ? `${selectedTicket.type} · ${formatPrice(selectedTicket.priceAmount, selectedTicket.priceCurrency)}`
+              : "Создай билет, чтобы открыть запись на событие."}
+          </p>
+        </div>
+        <div>
+          <span>{authEmail ? "Аккаунт" : "Участник"}</span>
+          <strong>{authEmail ?? "Ручной ввод"}</strong>
+          <p>{authEmail ? "Имя и email подтянутся из аккаунта." : "Укажи имя и email участника."}</p>
+        </div>
+      </div>
 
       <form className="registration-form" onSubmit={onSubmit}>
         <label>
