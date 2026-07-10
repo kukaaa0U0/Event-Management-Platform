@@ -83,6 +83,7 @@ Completed:
 - Frontend refreshes selected event details after ticket creation.
 - Frontend event details include a `.ics` calendar download button.
 - Frontend event sidebar search and clearer event participation wording are added from the Pencil layout direction.
+- Frontend event sidebar status filters replace placeholder filter chips.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:

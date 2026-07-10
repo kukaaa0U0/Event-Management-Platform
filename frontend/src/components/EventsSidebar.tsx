@@ -2,16 +2,26 @@ import { AuthResponse, EventSummary } from "../api/events";
 
 type LoadState = "idle" | "loading" | "success" | "error";
 export type EventScope = "all" | "mine";
+export type EventStatusFilter = "all" | "Published" | "Draft" | "Cancelled";
+
+const statusFilters: { value: EventStatusFilter; label: string }[] = [
+  { value: "all", label: "Все статусы" },
+  { value: "Published", label: "Опубликованы" },
+  { value: "Draft", label: "Черновики" },
+  { value: "Cancelled", label: "Отменены" }
+];
 
 type EventsSidebarProps = {
   auth: AuthResponse | null;
   events: EventSummary[];
   eventsState: LoadState;
   eventScope: EventScope;
+  statusFilter: EventStatusFilter;
   searchValue: string;
   selectedEventId: string | null;
   formatDate: (value: string) => string;
   onScopeChange: (scope: EventScope) => void;
+  onStatusFilterChange: (filter: EventStatusFilter) => void;
   onSearchChange: (value: string) => void;
   onSelectEvent: (eventId: string) => void;
 };
@@ -21,10 +31,12 @@ export function EventsSidebar({
   events,
   eventsState,
   eventScope,
+  statusFilter,
   searchValue,
   selectedEventId,
   formatDate,
   onScopeChange,
+  onStatusFilterChange,
   onSearchChange,
   onSelectEvent
 }: EventsSidebarProps) {
@@ -63,10 +75,17 @@ export function EventsSidebar({
         />
       </label>
 
-      <div className="event-filter-chips" aria-label="Быстрые фильтры">
-        <span>Город</span>
-        <span>Дата</span>
-        <span>Тип</span>
+      <div className="event-filter-chips" aria-label="Фильтр по статусу">
+        {statusFilters.map((filter) => (
+          <button
+            className={statusFilter === filter.value ? "event-filter-chip active" : "event-filter-chip"}
+            key={filter.value}
+            type="button"
+            onClick={() => onStatusFilterChange(filter.value)}
+          >
+            {filter.label}
+          </button>
+        ))}
       </div>
 
       {eventsState === "loading" && <div className="state-message">Загрузка событий...</div>}
@@ -79,8 +98,8 @@ export function EventsSidebar({
 
       {eventsState === "success" && events.length === 0 && (
         <div className="state-message">
-          {searchValue.trim()
-            ? "По этому поиску событий нет."
+          {searchValue.trim() || statusFilter !== "all"
+            ? "По текущим фильтрам событий нет."
             : eventScope === "mine"
               ? "У тебя пока нет своих событий."
               : "Пока нет событий."}

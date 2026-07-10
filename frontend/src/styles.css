@@ -120,7 +120,7 @@ button {
   gap: 7px;
 }
 
-.event-filter-chips span {
+.event-filter-chip {
   display: inline-flex;
   align-items: center;
   min-height: 26px;
@@ -131,6 +131,13 @@ button {
   border-radius: 999px;
   font-size: 12px;
   font-weight: 800;
+}
+
+.event-filter-chip:hover,
+.event-filter-chip.active {
+  color: #0b1424;
+  background: #ddebfa;
+  border-color: #ddebfa;
 }
 
 .eyebrow {

@@ -31,7 +31,7 @@ import { EventDetailsPanel } from "./components/EventDetailsPanel";
 import { EventSettingsFormState } from "./components/EventManagementPanel";
 import { RegistrationFormState } from "./components/EventRegistrationPanel";
 import { CreateTicketFormState } from "./components/EventTicketsPanel";
-import { EventScope, EventsSidebar } from "./components/EventsSidebar";
+import { EventScope, EventStatusFilter, EventsSidebar } from "./components/EventsSidebar";
 import { MyRegistrationsPanel } from "./components/MyRegistrationsPanel";
 import { OrganizerDashboardPanel } from "./components/OrganizerDashboardPanel";
 import { WorkspacePanel, WorkspaceTab } from "./components/WorkspacePanel";
@@ -144,6 +144,7 @@ export default function App() {
   const [authError, setAuthError] = useState<string | null>(null);
   const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<WorkspaceTab>(() => auth ? "overview" : "account");
   const [eventScope, setEventScope] = useState<EventScope>("all");
+  const [eventStatusFilter, setEventStatusFilter] = useState<EventStatusFilter>("all");
   const [eventSearch, setEventSearch] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesState, setCategoriesState] = useState<LoadState>("idle");
@@ -437,16 +438,31 @@ export default function App() {
 
   const visibleEvents = useMemo(() => {
     const searchValue = eventSearch.trim().toLowerCase();
+    const filteredByStatus = eventStatusFilter === "all"
+      ? events
+      : events.filter((eventItem) => eventItem.status === eventStatusFilter);
 
     if (!searchValue) {
-      return events;
+      return filteredByStatus;
     }
 
-    return events.filter((eventItem) =>
+    return filteredByStatus.filter((eventItem) =>
       [eventItem.title, eventItem.description, eventItem.city, eventItem.address, eventItem.status]
         .some((value) => value.toLowerCase().includes(searchValue))
     );
-  }, [events, eventSearch]);
+  }, [events, eventSearch, eventStatusFilter]);
+
+  useEffect(() => {
+    if (eventsState !== "success") {
+      return;
+    }
+
+    setSelectedEventId((current) =>
+      current && visibleEvents.some((eventItem) => eventItem.id === current)
+        ? current
+        : visibleEvents[0]?.id ?? null
+    );
+  }, [eventsState, visibleEvents]);
 
   const isSelectedEventManaged = useMemo(
     () => Boolean(auth && selectedEventId && managedEventIds.includes(selectedEventId)),
@@ -1132,10 +1148,12 @@ export default function App() {
         events={visibleEvents}
         eventsState={eventsState}
         eventScope={eventScope}
+        statusFilter={eventStatusFilter}
         searchValue={eventSearch}
         selectedEventId={selectedEventId}
         formatDate={formatDate}
         onScopeChange={setEventScope}
+        onStatusFilterChange={setEventStatusFilter}
         onSearchChange={setEventSearch}
         onSelectEvent={setSelectedEventId}
       />
