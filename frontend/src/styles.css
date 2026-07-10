@@ -638,6 +638,40 @@ h3 {
   font-size: 13px;
 }
 
+.event-mode-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.event-mode-panel > div {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  background: #13263d;
+  border: 1px solid #27425f;
+  border-radius: 8px;
+}
+
+.event-mode-panel span {
+  color: #9fb4ca;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.event-mode-panel strong {
+  color: #f5f9ff;
+}
+
+.event-mode-panel .mode-enabled {
+  color: #8ee0b6;
+}
+
+.event-mode-panel .mode-disabled {
+  color: #fca5a5;
+}
+
 .description {
   max-width: 780px;
   margin-bottom: 0;
@@ -1526,6 +1560,10 @@ h3 {
 
   .calendar-sync-panel .calendar-button {
     width: 100%;
+  }
+
+  .event-mode-panel {
+    grid-template-columns: 1fr;
   }
 
   .auth-fields {

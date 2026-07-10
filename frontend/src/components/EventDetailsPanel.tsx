@@ -165,6 +165,21 @@ export function EventDetailsPanel({
         </a>
       </div>
 
+      <div className="event-mode-panel">
+        <div>
+          <span>Запись</span>
+          <strong className={isRegistrationOpen ? "mode-enabled" : "mode-disabled"}>
+            {isRegistrationOpen ? "Открыта" : "Закрыта"}
+          </strong>
+        </div>
+        <div>
+          <span>Check-in</span>
+          <strong className={isCheckInOpen ? "mode-enabled" : "mode-disabled"}>
+            {isCheckInOpen ? "Открыт" : "Закрыт"}
+          </strong>
+        </div>
+      </div>
+
       {isManaged && (
         <EventManagementPanel
           status={event.status}
