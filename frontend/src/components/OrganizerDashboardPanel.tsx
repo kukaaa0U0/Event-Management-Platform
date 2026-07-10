@@ -1,4 +1,5 @@
 import { OrganizerDashboardEvent } from "../api/events";
+import { formatEventStatus } from "../utils/statusLabels";
 
 type LoadState = "idle" | "loading" | "success" | "error";
 
@@ -75,7 +76,7 @@ export function OrganizerDashboardPanel({
             >
               <div>
                 <strong>{eventItem.title}</strong>
-                <span>{eventItem.status} · {formatDate(eventItem.startsAtUtc)}</span>
+                <span>{formatEventStatus(eventItem.status)} · {formatDate(eventItem.startsAtUtc)}</span>
               </div>
               <div className="dashboard-event-stats">
                 <span>{eventItem.registrationsCount}/{eventItem.ticketCapacity} мест</span>

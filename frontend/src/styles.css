@@ -251,6 +251,27 @@ h3 {
   font-weight: 750;
 }
 
+.status-pill.status-draft {
+  color: #ddebfa;
+  background: #173452;
+}
+
+.status-pill.status-published,
+.status-pill.status-ongoing {
+  color: #064e3b;
+  background: #d1fae5;
+}
+
+.status-pill.status-completed {
+  color: #1e3a8a;
+  background: #dbeafe;
+}
+
+.status-pill.status-cancelled {
+  color: #7f1d1d;
+  background: #fee2e2;
+}
+
 .status-pill.large {
   min-height: 32px;
   padding-inline: 12px;

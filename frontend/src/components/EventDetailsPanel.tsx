@@ -5,6 +5,7 @@ import { EventManagementPanel, EventSettingsFormState } from "./EventManagementP
 import { EventRegistrationPanel, RegistrationFormState } from "./EventRegistrationPanel";
 import { CreateTicketFormState, EventTicketsPanel } from "./EventTicketsPanel";
 import { OrganizerRegistrationsPanel } from "./OrganizerRegistrationsPanel";
+import { formatEventStatus, getEventStatusPillClassName } from "../utils/statusLabels";
 
 type LoadState = "idle" | "loading" | "success" | "error";
 type EventStatusAction = "publish" | "cancel";
@@ -126,7 +127,9 @@ export function EventDetailsPanel({
           <h2>{event.title}</h2>
         </div>
         <div className="details-actions">
-          <span className="status-pill large">{event.status}</span>
+          <span className={getEventStatusPillClassName(event.status, "large")}>
+            {formatEventStatus(event.status)}
+          </span>
           <a className="secondary-button calendar-button" href={getEventCalendarUrl(event.id)} download>
             Скачать .ics
           </a>

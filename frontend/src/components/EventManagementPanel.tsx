@@ -1,5 +1,6 @@
 import { FormEvent } from "react";
 import { Category } from "../api/events";
+import { formatEventStatus } from "../utils/statusLabels";
 import { CreateEventFormState } from "./CreateEventPanel";
 
 type LoadState = "idle" | "loading" | "success" | "error";
@@ -65,13 +66,13 @@ export function EventManagementPanel({
       <section className="event-management-panel" aria-label="Управление статусом события">
         <div className="section-heading compact">
           <h3>Управление событием</h3>
-          <span>{status}</span>
+          <span>{formatEventStatus(status)}</span>
         </div>
 
         <div className="event-management-summary">
           <div>
             <span>Статус</span>
-            <strong>{status}</strong>
+            <strong>{formatEventStatus(status)}</strong>
           </div>
           <div>
             <span>Регистрация</span>

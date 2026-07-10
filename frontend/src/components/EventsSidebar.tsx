@@ -1,4 +1,5 @@
 import { AuthResponse, EventSummary } from "../api/events";
+import { formatEventStatus, getEventStatusPillClassName } from "../utils/statusLabels";
 
 type LoadState = "idle" | "loading" | "success" | "error";
 export type EventScope = "all" | "mine";
@@ -125,7 +126,9 @@ export function EventsSidebar({
             <span className="event-list-meta">
               {eventItem.city} · {formatDate(eventItem.startsAtUtc)}
             </span>
-            <span className="status-pill">{eventItem.status}</span>
+            <span className={getEventStatusPillClassName(eventItem.status)}>
+              {formatEventStatus(eventItem.status)}
+            </span>
           </button>
         ))}
       </div>
