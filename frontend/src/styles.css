@@ -978,6 +978,33 @@ h3 {
   overflow: hidden;
 }
 
+.my-registration-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.my-registration-summary > div {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  background: #13263d;
+  border: 1px solid #27425f;
+  border-radius: 8px;
+}
+
+.my-registration-summary span {
+  color: #9fb4ca;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.my-registration-summary strong {
+  color: #f5f9ff;
+  font-size: 22px;
+}
+
 .my-registration-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(160px, auto);
@@ -1022,6 +1049,18 @@ h3 {
 .my-registration-meta strong {
   color: #8fc7ef;
   font-size: 14px;
+}
+
+.my-registration-status {
+  justify-self: end;
+  min-height: 24px;
+  padding: 4px 9px;
+  color: #ddebfa;
+  background: #173452;
+  border: 1px solid #2a5f88;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .organizer-dashboard-panel {
@@ -1274,6 +1313,10 @@ h3 {
   }
 
   .registrations-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .my-registration-summary {
     grid-template-columns: 1fr;
   }
 

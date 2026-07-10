@@ -17,6 +17,12 @@ export function MyRegistrationsPanel({
   formatDate,
   onSelectEvent
 }: MyRegistrationsPanelProps) {
+  const now = Date.now();
+  const upcomingCount = registrations.filter((registration) => (
+    registration.eventStatus !== "Cancelled" && new Date(registration.startsAtUtc).getTime() >= now
+  )).length;
+  const checkedInCount = registrations.filter((registration) => registration.registrationStatus === "CheckedIn").length;
+
   return (
     <section className="my-registrations-panel" aria-label="Мои регистрации">
       <div className="section-heading">
@@ -25,6 +31,21 @@ export function MyRegistrationsPanel({
           <h3>Мои регистрации</h3>
         </div>
         <span>{registrations.length}</span>
+      </div>
+
+      <div className="my-registration-summary">
+        <div>
+          <span>Записей</span>
+          <strong>{registrations.length}</strong>
+        </div>
+        <div>
+          <span>Предстоит</span>
+          <strong>{upcomingCount}</strong>
+        </div>
+        <div>
+          <span>Check-in</span>
+          <strong>{checkedInCount}</strong>
+        </div>
       </div>
 
       {state === "loading" && (
@@ -55,7 +76,7 @@ export function MyRegistrationsPanel({
                 <span>{registration.city} · {formatDate(registration.startsAtUtc)}</span>
               </div>
               <div className="my-registration-meta">
-                <span>{registration.registrationStatus}</span>
+                <span className="my-registration-status">{registration.registrationStatus}</span>
                 <strong>{registration.checkInCode}</strong>
               </div>
             </button>
