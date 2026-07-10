@@ -34,6 +34,9 @@ export function OrganizerRegistrationsPanel({
   onCheckInSubmit,
   onRegistrationCheckIn
 }: OrganizerRegistrationsPanelProps) {
+  const checkedInCount = registrations.filter((registration) => registration.status === "CheckedIn").length;
+  const waitingCount = Math.max(registrations.length - checkedInCount, 0);
+
   if (!isManaged) {
     return (
       <section className="registrations-panel">
@@ -54,6 +57,21 @@ export function OrganizerRegistrationsPanel({
       <div className="section-heading">
         <h3>Участники</h3>
         <span>{registrations.length}</span>
+      </div>
+
+      <div className="registrations-summary">
+        <div>
+          <span>Всего записей</span>
+          <strong>{registrations.length}</strong>
+        </div>
+        <div>
+          <span>Отмечены</span>
+          <strong>{checkedInCount}</strong>
+        </div>
+        <div>
+          <span>Ожидают вход</span>
+          <strong>{waitingCount}</strong>
+        </div>
       </div>
 
       {!isCheckInOpen && (

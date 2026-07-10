@@ -1124,6 +1124,33 @@ h3 {
   border-radius: 8px;
 }
 
+.registrations-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.registrations-summary > div {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  background: #13263d;
+  border: 1px solid #27425f;
+  border-radius: 8px;
+}
+
+.registrations-summary span {
+  color: #9fb4ca;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.registrations-summary strong {
+  color: #f5f9ff;
+  font-size: 22px;
+}
+
 .panel-message {
   padding: 16px;
   color: #b8c8d9;
@@ -1243,6 +1270,10 @@ h3 {
   }
 
   .registration-context {
+    grid-template-columns: 1fr;
+  }
+
+  .registrations-summary {
     grid-template-columns: 1fr;
   }
 
