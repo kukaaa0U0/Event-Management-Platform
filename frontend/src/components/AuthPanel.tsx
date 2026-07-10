@@ -36,15 +36,32 @@ export function AuthPanel({
   return (
     <section className="auth-panel" aria-label="Вход организатора">
       {auth ? (
-        <div className="auth-summary">
-          <div>
-            <span>Организатор</span>
-            <strong>{auth.fullName}</strong>
-            <p>{auth.email}</p>
+        <div className="auth-account">
+          <div className="auth-summary">
+            <div>
+              <span>Аккаунт</span>
+              <strong>{auth.fullName}</strong>
+              <p>{auth.email}</p>
+            </div>
+            <button className="secondary-button" type="button" onClick={onLogout}>
+              Выйти
+            </button>
           </div>
-          <button className="secondary-button" type="button" onClick={onLogout}>
-            Выйти
-          </button>
+
+          <div className="auth-account-grid">
+            <div>
+              <span>Роль</span>
+              <strong>{auth.role}</strong>
+            </div>
+            <div>
+              <span>Сессия</span>
+              <strong>Активна</strong>
+            </div>
+            <div>
+              <span>Истекает</span>
+              <strong>{new Date(auth.expiresAtUtc).toLocaleString("ru-RU")}</strong>
+            </div>
+          </div>
         </div>
       ) : (
         <form className="auth-form" onSubmit={onSubmit}>

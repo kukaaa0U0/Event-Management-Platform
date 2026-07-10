@@ -484,6 +484,11 @@ h3 {
   gap: 16px;
 }
 
+.auth-account {
+  display: grid;
+  gap: 12px;
+}
+
 .auth-summary > div {
   display: grid;
   gap: 4px;
@@ -492,6 +497,33 @@ h3 {
 .auth-summary p {
   margin-bottom: 0;
   color: #aab8c7;
+}
+
+.auth-account-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.auth-account-grid > div {
+  display: grid;
+  gap: 5px;
+  padding: 12px;
+  background: #13263d;
+  border: 1px solid #27425f;
+  border-radius: 8px;
+}
+
+.auth-account-grid span {
+  color: #9fb4ca;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.auth-account-grid strong {
+  color: #f5f9ff;
+  overflow-wrap: anywhere;
 }
 
 .empty-panel p {
@@ -1387,6 +1419,10 @@ h3 {
   }
 
   .auth-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-account-grid {
     grid-template-columns: 1fr;
   }
 
