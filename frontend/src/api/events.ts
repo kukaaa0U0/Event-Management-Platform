@@ -154,6 +154,7 @@ const apiErrorMessages: Record<string, string> = {
   "TicketId is required.": "Выбери билет.",
   "Event or ticket was not found.": "Событие или билет не найден.",
   "Participant is already registered for this event.": "Участник уже записан на это событие.",
+  "Ticket capacity has been reached.": "Места по выбранному билету закончились.",
   "Registration is available only for published events.": "Запись доступна только для опубликованных событий.",
   "Registration is disabled for this event.": "Запись на это событие выключена.",
   "CheckInCode is required.": "Укажи check-in код.",

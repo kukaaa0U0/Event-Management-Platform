@@ -25,6 +25,8 @@ Date: 2026-07-12
 - Verified `GET /api/registrations/my` returns the registration.
 - Verified duplicate registration returns a clear API error.
 - Verified draft-event registration is blocked by API.
+- Verified invalid ticket registration is blocked by API.
+- Verified a capacity-1 ticket accepts the first registration and blocks the second registration.
 
 ### Organizer
 
@@ -47,7 +49,8 @@ Date: 2026-07-12
 
 - Common backend API messages are mapped to Russian frontend messages.
 - This avoids showing raw English errors such as duplicate registration or draft registration errors.
+- Full ticket capacity now maps to a clear Russian frontend message.
 
-## Known Gap For Next Step
+## Remaining Test Gap
 
-- Ticket capacity is displayed in the UI, but backend capacity enforcement still needs to be implemented and tested.
+- Registration guard scenarios are manually checked through API, but they still need automated integration tests.

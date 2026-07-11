@@ -101,6 +101,8 @@ Completed:
 - Frontend ticket creation form groups ticket type, price, currency, and capacity fields.
 - Main guest, participant, organizer, and check-in MVP scenarios were manually verified.
 - Frontend maps common backend API errors to Russian user-facing messages.
+- Backend blocks registration when the selected ticket capacity is full.
+- Registration guard scenarios for draft events, invalid tickets, duplicates, and full tickets were manually verified through API.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:
@@ -155,7 +157,7 @@ Important product rule:
 - create ticket types for an event;
 - expose ticket data in event details;
 - validate ticket capacity;
-- enforce ticket capacity during registration.
+- enforce ticket capacity during registration; completed.
 
 ### Registrations
 

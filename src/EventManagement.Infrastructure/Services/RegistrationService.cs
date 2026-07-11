@@ -99,10 +99,10 @@ public sealed class RegistrationService : IRegistrationService
 
         eventItem.EnsureRegistrationIsOpen();
 
-        var ticketExists = await _dbContext.Tickets
-            .AnyAsync(ticket => ticket.Id == ticketId && ticket.EventId == eventId, cancellationToken);
+        var ticket = await _dbContext.Tickets
+            .FirstOrDefaultAsync(ticket => ticket.Id == ticketId && ticket.EventId == eventId, cancellationToken);
 
-        if (!ticketExists)
+        if (ticket is null)
         {
             return null;
         }
@@ -117,6 +117,18 @@ public sealed class RegistrationService : IRegistrationService
         if (alreadyRegistered)
         {
             throw new InvalidOperationException("Participant is already registered for this event.");
+        }
+
+        var ticketRegistrationsCount = await _dbContext.Registrations
+            .CountAsync(registration =>
+                registration.EventId == eventId &&
+                registration.TicketId == ticketId &&
+                registration.Status != RegistrationStatus.Cancelled,
+                cancellationToken);
+
+        if (ticketRegistrationsCount >= ticket.Capacity)
+        {
+            throw new InvalidOperationException("Ticket capacity has been reached.");
         }
 
         var registration = new Registration(
