@@ -1,9 +1,10 @@
-import { AuthResponse, EventSummary } from "../api/events";
+import { AuthResponse, Category, EventSummary } from "../api/events";
 import { formatEventStatus, getEventStatusPillClassName } from "../utils/statusLabels";
 
 type LoadState = "idle" | "loading" | "success" | "error";
 export type EventScope = "all" | "mine";
 export type EventStatusFilter = "all" | "Published" | "Draft" | "Cancelled";
+export type EventCategoryFilter = "all" | string;
 
 const statusFilters: { value: EventStatusFilter; label: string }[] = [
   { value: "all", label: "Все статусы" },
@@ -15,15 +16,18 @@ const statusFilters: { value: EventStatusFilter; label: string }[] = [
 type EventsSidebarProps = {
   auth: AuthResponse | null;
   events: EventSummary[];
+  categories: Category[];
   totalEventsCount: number;
   eventsState: LoadState;
   eventScope: EventScope;
   statusFilter: EventStatusFilter;
+  categoryFilter: EventCategoryFilter;
   searchValue: string;
   selectedEventId: string | null;
   formatDate: (value: string) => string;
   onScopeChange: (scope: EventScope) => void;
   onStatusFilterChange: (filter: EventStatusFilter) => void;
+  onCategoryFilterChange: (filter: EventCategoryFilter) => void;
   onSearchChange: (value: string) => void;
   onSelectEvent: (eventId: string) => void;
 };
@@ -31,15 +35,18 @@ type EventsSidebarProps = {
 export function EventsSidebar({
   auth,
   events,
+  categories,
   totalEventsCount,
   eventsState,
   eventScope,
   statusFilter,
+  categoryFilter,
   searchValue,
   selectedEventId,
   formatDate,
   onScopeChange,
   onStatusFilterChange,
+  onCategoryFilterChange,
   onSearchChange,
   onSelectEvent
 }: EventsSidebarProps) {
@@ -91,6 +98,22 @@ export function EventsSidebar({
         ))}
       </div>
 
+      <label className="event-category-filter">
+        <span>Категория</span>
+        <select
+          value={categoryFilter}
+          onChange={(event) => onCategoryFilterChange(event.target.value)}
+          aria-label="Фильтр по категории"
+        >
+          <option value="all">Все категории</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+      </label>
+
       <div className="event-list-summary">
         <span>{eventScope === "mine" ? "Мои события" : "Все события"}</span>
         <strong>{events.length} из {totalEventsCount}</strong>
@@ -106,7 +129,7 @@ export function EventsSidebar({
 
       {eventsState === "success" && events.length === 0 && (
         <div className="state-message">
-          {searchValue.trim() || statusFilter !== "all"
+          {searchValue.trim() || statusFilter !== "all" || categoryFilter !== "all"
             ? "По текущим фильтрам событий нет."
             : eventScope === "mine"
               ? "У тебя пока нет своих событий."
@@ -126,6 +149,7 @@ export function EventsSidebar({
             <span className="event-list-meta">
               {eventItem.city} · {formatDate(eventItem.startsAtUtc)}
             </span>
+            <span className="event-list-category">{eventItem.categoryName}</span>
             <span className={getEventStatusPillClassName(eventItem.status)}>
               {formatEventStatus(eventItem.status)}
             </span>

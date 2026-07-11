@@ -24,8 +24,10 @@ public sealed class EventReadService : IEventReadService
             .OrderBy(eventItem => eventItem.StartsAtUtc)
             .ToListAsync(cancellationToken);
 
+        var categoryNames = await GetCategoryNamesAsync(events, cancellationToken);
+
         return events
-            .Select(ToSummaryDto)
+            .Select(eventItem => ToSummaryDto(eventItem, categoryNames))
             .ToList();
     }
 
@@ -47,8 +49,10 @@ public sealed class EventReadService : IEventReadService
             .OrderBy(eventItem => eventItem.StartsAtUtc)
             .ToListAsync(cancellationToken);
 
+        var categoryNames = await GetCategoryNamesAsync(events, cancellationToken);
+
         return events
-            .Select(ToSummaryDto)
+            .Select(eventItem => ToSummaryDto(eventItem, categoryNames))
             .ToList();
     }
 
@@ -125,6 +129,12 @@ public sealed class EventReadService : IEventReadService
             return null;
         }
 
+        var categoryName = await _dbContext.EventCategories
+            .AsNoTracking()
+            .Where(category => category.Id == eventItem.CategoryId)
+            .Select(category => category.Name)
+            .FirstOrDefaultAsync(cancellationToken) ?? "Uncategorized";
+
         var tickets = eventItem.Tickets
             .OrderBy(ticket => ticket.Type)
             .ThenBy(ticket => ticket.Name)
@@ -140,6 +150,7 @@ public sealed class EventReadService : IEventReadService
         return new EventDetailsDto(
             eventItem.Id.Value,
             eventItem.CategoryId.Value,
+            categoryName,
             eventItem.Title,
             eventItem.Description.Value,
             eventItem.Location.City,
@@ -155,10 +166,38 @@ public sealed class EventReadService : IEventReadService
             tickets);
     }
 
-    private static EventSummaryDto ToSummaryDto(Event eventItem)
+    private async Task<Dictionary<EventCategoryId, string>> GetCategoryNamesAsync(
+        IReadOnlyCollection<Event> events,
+        CancellationToken cancellationToken)
     {
+        var categoryIds = events
+            .Select(eventItem => eventItem.CategoryId)
+            .Distinct()
+            .ToList();
+
+        if (categoryIds.Count == 0)
+        {
+            return [];
+        }
+
+        return await _dbContext.EventCategories
+            .AsNoTracking()
+            .Where(category => categoryIds.Contains(category.Id))
+            .ToDictionaryAsync(category => category.Id, category => category.Name, cancellationToken);
+    }
+
+    private static EventSummaryDto ToSummaryDto(
+        Event eventItem,
+        IReadOnlyDictionary<EventCategoryId, string> categoryNames)
+    {
+        var categoryName = categoryNames.TryGetValue(eventItem.CategoryId, out var name)
+            ? name
+            : "Uncategorized";
+
         return new EventSummaryDto(
             eventItem.Id.Value,
+            eventItem.CategoryId.Value,
+            categoryName,
             eventItem.Title,
             eventItem.Description.Value,
             eventItem.Location.City,

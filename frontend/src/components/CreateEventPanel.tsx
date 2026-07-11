@@ -44,6 +44,25 @@ export function CreateEventPanel({
         </div>
       </div>
 
+      <div className="create-event-flow" aria-label="Порядок подготовки события">
+        <div className="create-event-step active">
+          <span>1</span>
+          <strong>Черновик</strong>
+        </div>
+        <div className="create-event-step">
+          <span>2</span>
+          <strong>Билет</strong>
+        </div>
+        <div className="create-event-step">
+          <span>3</span>
+          <strong>Публикация</strong>
+        </div>
+      </div>
+
+      <div className="form-note">
+        Новое событие создаётся как черновик. После сохранения выбери его в списке, добавь билет и опубликуй.
+      </div>
+
       <form className="create-event-form" onSubmit={onSubmit}>
         <div className="create-event-group create-event-group-main">
           <h4>Основное</h4>

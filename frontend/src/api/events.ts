@@ -1,5 +1,7 @@
 export type EventSummary = {
   id: string;
+  categoryId: string;
+  categoryName: string;
   title: string;
   description: string;
   city: string;
@@ -24,7 +26,6 @@ export type Ticket = {
 };
 
 export type EventDetails = EventSummary & {
-  categoryId: string;
   venueName: string | null;
   updatedAtUtc: string;
   calendarSequence: number;

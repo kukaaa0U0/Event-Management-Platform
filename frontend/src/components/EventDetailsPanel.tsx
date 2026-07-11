@@ -137,6 +137,10 @@ export function EventDetailsPanel({
 
       <div className="details-grid">
         <div className="info-block">
+          <span>Категория</span>
+          <strong>{event.categoryName}</strong>
+        </div>
+        <div className="info-block">
           <span>Начало</span>
           <strong>{formatDate(event.startsAtUtc)}</strong>
         </div>

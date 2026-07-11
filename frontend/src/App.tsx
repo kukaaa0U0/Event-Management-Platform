@@ -31,7 +31,7 @@ import { EventDetailsPanel } from "./components/EventDetailsPanel";
 import { EventSettingsFormState } from "./components/EventManagementPanel";
 import { RegistrationFormState } from "./components/EventRegistrationPanel";
 import { CreateTicketFormState } from "./components/EventTicketsPanel";
-import { EventScope, EventStatusFilter, EventsSidebar } from "./components/EventsSidebar";
+import { EventCategoryFilter, EventScope, EventStatusFilter, EventsSidebar } from "./components/EventsSidebar";
 import { MyRegistrationsPanel } from "./components/MyRegistrationsPanel";
 import { OrganizerDashboardPanel } from "./components/OrganizerDashboardPanel";
 import { WorkspacePanel, WorkspaceTab } from "./components/WorkspacePanel";
@@ -145,6 +145,7 @@ export default function App() {
   const [activeWorkspaceTab, setActiveWorkspaceTab] = useState<WorkspaceTab>(() => auth ? "overview" : "account");
   const [eventScope, setEventScope] = useState<EventScope>("all");
   const [eventStatusFilter, setEventStatusFilter] = useState<EventStatusFilter>("all");
+  const [eventCategoryFilter, setEventCategoryFilter] = useState<EventCategoryFilter>("all");
   const [eventSearch, setEventSearch] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesState, setCategoriesState] = useState<LoadState>("idle");
@@ -441,16 +442,19 @@ export default function App() {
     const filteredByStatus = eventStatusFilter === "all"
       ? events
       : events.filter((eventItem) => eventItem.status === eventStatusFilter);
+    const filteredByCategory = eventCategoryFilter === "all"
+      ? filteredByStatus
+      : filteredByStatus.filter((eventItem) => eventItem.categoryId === eventCategoryFilter);
 
     if (!searchValue) {
-      return filteredByStatus;
+      return filteredByCategory;
     }
 
-    return filteredByStatus.filter((eventItem) =>
-      [eventItem.title, eventItem.description, eventItem.city, eventItem.address, eventItem.status]
+    return filteredByCategory.filter((eventItem) =>
+      [eventItem.title, eventItem.description, eventItem.city, eventItem.address, eventItem.status, eventItem.categoryName]
         .some((value) => value.toLowerCase().includes(searchValue))
     );
-  }, [events, eventSearch, eventStatusFilter]);
+  }, [events, eventCategoryFilter, eventSearch, eventStatusFilter]);
 
   useEffect(() => {
     if (eventsState !== "success") {
@@ -655,6 +659,7 @@ export default function App() {
     setAuth(null);
     setActiveWorkspaceTab("account");
     setEventScope("all");
+    setEventCategoryFilter("all");
     setManagedEventIds([]);
     setMyRegistrations([]);
     setMyRegistrationsState("idle");
@@ -736,11 +741,14 @@ export default function App() {
 
       await refreshEvents(createdEvent.id);
       await refreshOrganizerDashboard();
+      setEventScope("mine");
+      setEventStatusFilter("Draft");
+      setEventCategoryFilter(createdEvent.categoryId);
       setCreateEventForm({
         ...createDefaultEventForm(),
         categoryId: createEventForm.categoryId
       });
-      setCreatedEventMessage("Событие создано в статусе Draft.");
+      setCreatedEventMessage("Событие создано как черновик. Следующий шаг: добавь билет в карточке события и опубликуй его.");
       setCreateEventState("success");
     } catch (error: unknown) {
       setCreateEventError(error instanceof Error ? error.message : "Не удалось создать событие");
@@ -1146,15 +1154,18 @@ export default function App() {
       <EventsSidebar
         auth={auth}
         events={visibleEvents}
+        categories={categories}
         totalEventsCount={events.length}
         eventsState={eventsState}
         eventScope={eventScope}
         statusFilter={eventStatusFilter}
+        categoryFilter={eventCategoryFilter}
         searchValue={eventSearch}
         selectedEventId={selectedEventId}
         formatDate={formatDate}
         onScopeChange={setEventScope}
         onStatusFilterChange={setEventStatusFilter}
+        onCategoryFilterChange={setEventCategoryFilter}
         onSearchChange={setEventSearch}
         onSelectEvent={setSelectedEventId}
       />

@@ -11,6 +11,24 @@ public static class DatabaseInitializer
     private static readonly UserId OrganizerId = new(Guid.Parse("5c5b13f0-b64c-4b40-9bfd-6b2e0dbe39a1"));
     private static readonly EventCategoryId TechCategoryId = new(Guid.Parse("a4e4ac80-313c-4ca0-a6f5-3646eac50766"));
     private static readonly EventCategoryId EducationCategoryId = new(Guid.Parse("4e9c390f-48d7-446f-9804-b5ad55d84f6d"));
+    private static readonly EventCategoryId CareerCategoryId = new(Guid.Parse("2f60b61a-0f8d-4f2c-bf6a-bfe821ffcb0a"));
+    private static readonly EventCategoryId BusinessCategoryId = new(Guid.Parse("d8b1a09d-8802-4dd0-846e-3f11f8a2d740"));
+    private static readonly EventCategoryId CultureCategoryId = new(Guid.Parse("7cc08b68-3505-4b03-92f8-749e837bdeaa"));
+    private static readonly EventCategoryId SportsCategoryId = new(Guid.Parse("b5ed6357-2c40-4e62-b3cb-35f098ed18a5"));
+    private static readonly EventCategoryId ScienceCategoryId = new(Guid.Parse("f3ec8cb7-a92c-46a7-9832-89f5ff3d1320"));
+    private static readonly EventCategoryId CommunityCategoryId = new(Guid.Parse("cdc66f4e-0bcb-4f3a-b17f-b6f50ea87f3f"));
+
+    private static readonly (EventCategoryId Id, string Name)[] CategorySeeds =
+    [
+        (TechCategoryId, "Technology"),
+        (EducationCategoryId, "Education"),
+        (CareerCategoryId, "Career"),
+        (BusinessCategoryId, "Business"),
+        (CultureCategoryId, "Culture"),
+        (SportsCategoryId, "Sports"),
+        (ScienceCategoryId, "Science"),
+        (CommunityCategoryId, "Community")
+    ];
 
     public static async Task MigrateAndSeedDatabaseAsync(this IServiceProvider serviceProvider)
     {
@@ -23,6 +41,8 @@ public static class DatabaseInitializer
 
     private static async Task SeedAsync(ApplicationDbContext dbContext)
     {
+        await SeedCategoriesAsync(dbContext);
+
         if (await dbContext.Events.AnyAsync())
         {
             return;
@@ -33,9 +53,6 @@ public static class DatabaseInitializer
             "Kirill Organizer",
             Email.Create("organizer@example.com"),
             UserRole.Organizer);
-
-        var techCategory = new EventCategory(TechCategoryId, "Technology");
-        var educationCategory = new EventCategory(EducationCategoryId, "Education");
 
         var meetup = new Event(
             new EventId(Guid.Parse("9bcf9c70-6ab3-4f71-a3d1-a53d9718eb63")),
@@ -75,8 +92,27 @@ public static class DatabaseInitializer
             40));
 
         await dbContext.Users.AddAsync(organizer);
-        await dbContext.EventCategories.AddRangeAsync(techCategory, educationCategory);
         await dbContext.Events.AddRangeAsync(meetup, workshop);
+        await dbContext.SaveChangesAsync();
+    }
+
+    private static async Task SeedCategoriesAsync(ApplicationDbContext dbContext)
+    {
+        var existingCategoryIds = await dbContext.EventCategories
+            .Select(category => category.Id)
+            .ToListAsync();
+
+        var missingCategories = CategorySeeds
+            .Where(seed => !existingCategoryIds.Contains(seed.Id))
+            .Select(seed => new EventCategory(seed.Id, seed.Name))
+            .ToList();
+
+        if (missingCategories.Count == 0)
+        {
+            return;
+        }
+
+        await dbContext.EventCategories.AddRangeAsync(missingCategories);
         await dbContext.SaveChangesAsync();
     }
 }

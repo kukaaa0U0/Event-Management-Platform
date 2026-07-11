@@ -3,6 +3,7 @@ namespace EventManagement.Application.DTOs;
 public sealed record EventDetailsDto(
     Guid Id,
     Guid CategoryId,
+    string CategoryName,
     string Title,
     string Description,
     string City,

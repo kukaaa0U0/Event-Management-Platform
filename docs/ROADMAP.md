@@ -84,11 +84,14 @@ Completed:
 - Frontend event details include a `.ics` calendar download button.
 - Frontend event sidebar search and clearer event participation wording are added from the Pencil layout direction.
 - Frontend event sidebar status filters replace placeholder filter chips.
+- Frontend event sidebar category filter is connected to backend categories.
+- Event list and event details now expose category names.
 - Frontend ticket panel shows event capacity and organizer-only occupied seats.
 - Frontend registration panel shows selected ticket and account/manual participant context.
 - Frontend organizer participants panel shows total, checked-in, and waiting counts.
 - Frontend my registrations panel shows participant summary counts and clearer registration statuses.
 - Frontend create event form is grouped into main, location, and time sections.
+- Frontend create event flow explains draft, ticket, and publish steps.
 - Frontend event management panel shows status, registration, and check-in mode summary.
 - Frontend edit event form is grouped into main, location, and time sections.
 - Frontend account panel shows profile, role, active session, and token expiration summary.
@@ -103,6 +106,7 @@ Completed:
 - Frontend maps common backend API errors to Russian user-facing messages.
 - Backend blocks registration when the selected ticket capacity is full.
 - Registration guard scenarios for draft events, invalid tickets, duplicates, and full tickets were manually verified through API.
+- Seed data now includes broader event categories: Technology, Education, Career, Business, Culture, Sports, Science, and Community.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:
