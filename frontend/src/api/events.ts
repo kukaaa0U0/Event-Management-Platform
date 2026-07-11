@@ -171,12 +171,14 @@ function localizeApiErrorMessage(message: string) {
 }
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const { headers, ...requestOptions } = options ?? {};
+
   const response = await fetch(`${apiBaseUrl}${path}`, {
+    ...requestOptions,
     headers: {
       "Content-Type": "application/json",
-      ...options?.headers
-    },
-    ...options
+      ...headers
+    }
   });
   const responseText = await response.text();
   const responseBody = responseText ? JSON.parse(responseText) : null;
