@@ -131,6 +131,44 @@ export type CreateTicketRequest = {
 
 const apiBaseUrl = (import.meta.env.VITE_API_BASE_URL ?? "/api").replace(/\/$/, "");
 
+const apiErrorMessages: Record<string, string> = {
+  "Email and password are required.": "Укажи email и пароль.",
+  "FullName is required.": "Укажи имя.",
+  "Email is required.": "Укажи email.",
+  "Password is required.": "Укажи пароль.",
+  "Password must be at least 8 characters long.": "Пароль должен быть не короче 8 символов.",
+  "User with this email is already registered.": "Пользователь с таким email уже зарегистрирован.",
+  "CategoryId is required.": "Выбери категорию.",
+  "Category was not found.": "Категория не найдена.",
+  "Title is required.": "Укажи название события.",
+  "Description is required.": "Добавь описание события.",
+  "City is required.": "Укажи город.",
+  "Address is required.": "Укажи адрес.",
+  "EndsAtUtc must be later than StartsAtUtc.": "Окончание должно быть позже начала.",
+  "Name is required.": "Укажи название.",
+  "Type is required.": "Выбери тип.",
+  "PriceAmount cannot be negative.": "Цена не может быть отрицательной.",
+  "PriceCurrency is required.": "Укажи валюту.",
+  "Capacity must be greater than zero.": "Количество мест должно быть больше нуля.",
+  "Ticket type is invalid.": "Некорректный тип билета.",
+  "TicketId is required.": "Выбери билет.",
+  "Event or ticket was not found.": "Событие или билет не найден.",
+  "Participant is already registered for this event.": "Участник уже записан на это событие.",
+  "Registration is available only for published events.": "Запись доступна только для опубликованных событий.",
+  "Registration is disabled for this event.": "Запись на это событие выключена.",
+  "CheckInCode is required.": "Укажи check-in код.",
+  "Check-in code was not found.": "Check-in код не найден.",
+  "Participant is already checked in.": "Участник уже отмечен.",
+  "Check-in is available only for published or ongoing events.": "Check-in доступен только для опубликованных или идущих событий.",
+  "Check-in is disabled for this event.": "Check-in для этого события выключен.",
+  "Only draft events can be published.": "Опубликовать можно только черновик.",
+  "Completed events cannot be cancelled.": "Завершенное событие нельзя отменить."
+};
+
+function localizeApiErrorMessage(message: string) {
+  return apiErrorMessages[message] ?? message;
+}
+
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${apiBaseUrl}${path}`, {
     headers: {
@@ -148,7 +186,7 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
         ? String(responseBody.message)
         : `API request failed with status ${response.status}`;
 
-    throw new Error(message);
+    throw new Error(localizeApiErrorMessage(message));
   }
 
   return responseBody as T;

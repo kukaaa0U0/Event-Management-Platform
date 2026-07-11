@@ -99,6 +99,8 @@ Completed:
 - Frontend event details show public registration and check-in mode states.
 - Frontend ticket rows show ticket type, price, and seat data in clearer structured fields.
 - Frontend ticket creation form groups ticket type, price, currency, and capacity fields.
+- Main guest, participant, organizer, and check-in MVP scenarios were manually verified.
+- Frontend maps common backend API errors to Russian user-facing messages.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
 Known environment note:
@@ -116,8 +118,8 @@ Make the MVP interface clearer and easier to use without changing backend behavi
 
 Tasks:
 
-- review the current screen flow for guest, participant, organizer, and event owner;
-- improve event details layout, workspace panels, and organizer controls;
+- review the current screen flow for guest, participant, organizer, and event owner; completed in [MVP Manual Test Pass](MVP_MANUAL_TEST.md);
+- improve event details layout, workspace panels, and organizer controls; mostly complete for the current MVP screen;
 - optionally use a Pencil `.pen` layout file as a visual reference;
 - keep React Router postponed until there are real separate pages.
 
@@ -152,7 +154,8 @@ Important product rule:
 
 - create ticket types for an event;
 - expose ticket data in event details;
-- validate ticket capacity.
+- validate ticket capacity;
+- enforce ticket capacity during registration.
 
 ### Registrations
 
