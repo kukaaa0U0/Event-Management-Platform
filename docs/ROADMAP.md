@@ -98,6 +98,7 @@ Completed:
 - Frontend event management panel shows status, registration, and check-in mode summary.
 - Frontend edit event form is grouped into main, location, and time sections.
 - Frontend account panel shows profile, role, active session, and token expiration summary.
+- Frontend visual polish improves panel depth, sidebar states, dashboard accents, form focus, and button feedback.
 - Frontend events sidebar shows visible and total event counts for the current filters.
 - Frontend event statuses use Russian labels and distinct visual states.
 - Frontend registration statuses use Russian labels and distinct visual states.
