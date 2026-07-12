@@ -1,7 +1,7 @@
 # Authorization And Access Rules
 
-This document captures the intended platform rules before the full
-authentication system is implemented.
+This document captures the current platform authorization rules and the next
+planned access-control improvements.
 
 ## User Roles
 
@@ -15,9 +15,9 @@ The domain already has these roles:
 
 Each event belongs to one organizer through `Event.OrganizerId`.
 
-Planned access rules:
+Current access rules:
 
-- any authenticated user may create an event and become its organizer;
+- only `Organizer` and `Admin` accounts may create events;
 - only the event organizer or an admin may update, publish, cancel, complete it, change event modes, or add tickets;
 - only the event organizer or an admin may view the full registrations list;
 - participants can see their own registration data through `GET /api/registrations/my`.
@@ -57,16 +57,18 @@ Implementation order:
 3. JWT access tokens. Done.
 4. API authorization policies by role and event ownership. Initial backend enforcement is done.
 5. Frontend login screen and authenticated API client. Done.
-6. External OAuth login later, for example Yandex ID.
+6. Self-registration role selection for `Participant` or `Organizer`. Done.
+7. Seed admin account for local MVP checks. Done.
+8. External OAuth login later, for example Yandex ID.
 
 External OAuth should not be the first auth step because it adds provider
 configuration, callback URLs, client secrets, and deployment-specific setup.
 
 ## API Policy Direction
 
-Planned restrictions:
+Current restrictions:
 
-- `POST /api/events` requires an authenticated user.
+- `POST /api/events` requires an authenticated `Organizer` or `Admin`.
 - `GET /api/events/my` requires an authenticated user and returns their managed events.
 - `GET /api/events/dashboard` requires an authenticated user and returns dashboard data for their managed events.
 - `PUT /api/events/{id}` requires organizer ownership or admin role.

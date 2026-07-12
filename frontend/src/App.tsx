@@ -47,7 +47,8 @@ const emptyRegistrationForm: RegistrationFormState = {
 const emptyAuthForm: AuthFormState = {
   fullName: "",
   email: "",
-  password: ""
+  password: "",
+  role: "Participant"
 };
 
 const emptyTicketForm: CreateTicketFormState = {
@@ -121,6 +122,10 @@ function formatPrice(amount: number, currency: string): string {
     style: "currency",
     currency
   }).format(amount);
+}
+
+function canCreateEvents(role: string | null | undefined): boolean {
+  return role === "Organizer" || role === "Admin";
 }
 
 export default function App() {
@@ -482,6 +487,7 @@ export default function App() {
       (selectedEvent.status === "Published" || selectedEvent.status === "Ongoing") &&
       selectedEvent.checkInEnabled
   );
+  const canCurrentUserCreateEvents = canCreateEvents(auth?.role);
 
   useEffect(() => {
     if (!selectedEventId || !auth || !isSelectedEventManaged) {
@@ -679,6 +685,11 @@ export default function App() {
 
     if (!auth) {
       setCreateEventError("Войди как организатор, чтобы создать событие.");
+      return;
+    }
+
+    if (!canCurrentUserCreateEvents) {
+      setCreateEventError("Создавать события могут только организаторы и администраторы.");
       return;
     }
 
@@ -1016,7 +1027,8 @@ export default function App() {
           : await registerUser({
               fullName: authForm.fullName.trim(),
               email: authForm.email.trim(),
-              password: authForm.password
+              password: authForm.password,
+              role: authForm.role
             });
 
       saveAuth(response);
@@ -1175,6 +1187,7 @@ export default function App() {
 
         <WorkspacePanel
           authExists={Boolean(auth)}
+          canCreateEvents={canCurrentUserCreateEvents}
           activeTab={activeWorkspaceTab}
           onTabChange={setActiveWorkspaceTab}
         />
@@ -1213,7 +1226,7 @@ export default function App() {
           />
         )}
 
-        {auth && activeWorkspaceTab === "create" && (
+        {auth && canCurrentUserCreateEvents && activeWorkspaceTab === "create" && (
           <CreateEventPanel
             categories={categories}
             categoriesState={categoriesState}

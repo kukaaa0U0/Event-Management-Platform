@@ -29,6 +29,11 @@ public sealed class EventWriteService : IEventWriteService
         CreateEventCommand command,
         CancellationToken cancellationToken = default)
     {
+        if (!CanCreateEvents(command.CurrentUserRole))
+        {
+            throw new UnauthorizedAccessException("Only organizers and admins can create events.");
+        }
+
         var organizerId = new UserId(command.OrganizerId);
         var categoryId = new EventCategoryId(command.CategoryId);
 
@@ -235,5 +240,11 @@ public sealed class EventWriteService : IEventWriteService
             DateTimeKind.Local => value.ToUniversalTime(),
             _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
         };
+    }
+
+    private static bool CanCreateEvents(string role)
+    {
+        return string.Equals(role, UserRole.Organizer.ToString(), StringComparison.OrdinalIgnoreCase)
+            || string.Equals(role, UserRole.Admin.ToString(), StringComparison.OrdinalIgnoreCase);
     }
 }

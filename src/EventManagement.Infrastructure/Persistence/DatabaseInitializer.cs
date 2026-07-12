@@ -1,6 +1,7 @@
 using EventManagement.Domain.Entities;
 using EventManagement.Domain.Enums;
 using EventManagement.Domain.ValueObjects;
+using EventManagement.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,7 @@ namespace EventManagement.Infrastructure.Persistence;
 public static class DatabaseInitializer
 {
     private static readonly UserId OrganizerId = new(Guid.Parse("5c5b13f0-b64c-4b40-9bfd-6b2e0dbe39a1"));
+    private static readonly UserId AdminId = new(Guid.Parse("6b91b133-b2a5-47e9-b6d3-570037f4f8e6"));
     private static readonly EventCategoryId TechCategoryId = new(Guid.Parse("a4e4ac80-313c-4ca0-a6f5-3646eac50766"));
     private static readonly EventCategoryId EducationCategoryId = new(Guid.Parse("4e9c390f-48d7-446f-9804-b5ad55d84f6d"));
     private static readonly EventCategoryId CareerCategoryId = new(Guid.Parse("2f60b61a-0f8d-4f2c-bf6a-bfe821ffcb0a"));
@@ -42,17 +44,12 @@ public static class DatabaseInitializer
     private static async Task SeedAsync(ApplicationDbContext dbContext)
     {
         await SeedCategoriesAsync(dbContext);
+        await SeedUsersAsync(dbContext);
 
         if (await dbContext.Events.AnyAsync())
         {
             return;
         }
-
-        var organizer = new User(
-            OrganizerId,
-            "Kirill Organizer",
-            Email.Create("organizer@example.com"),
-            UserRole.Organizer);
 
         var meetup = new Event(
             new EventId(Guid.Parse("9bcf9c70-6ab3-4f71-a3d1-a53d9718eb63")),
@@ -91,8 +88,39 @@ public static class DatabaseInitializer
             Money.Create(1500),
             40));
 
-        await dbContext.Users.AddAsync(organizer);
         await dbContext.Events.AddRangeAsync(meetup, workshop);
+        await dbContext.SaveChangesAsync();
+    }
+
+    private static async Task SeedUsersAsync(ApplicationDbContext dbContext)
+    {
+        var organizerEmail = Email.Create("organizer@example.com");
+        var organizerExists = await dbContext.Users
+            .AnyAsync(user => user.Id == OrganizerId || user.Email == organizerEmail);
+
+        if (!organizerExists)
+        {
+            await dbContext.Users.AddAsync(new User(
+                OrganizerId,
+                "Kirill Organizer",
+                organizerEmail,
+                UserRole.Organizer));
+        }
+
+        var adminEmail = Email.Create("admin@example.com");
+        var adminExists = await dbContext.Users
+            .AnyAsync(user => user.Id == AdminId || user.Email == adminEmail);
+
+        if (!adminExists)
+        {
+            await dbContext.Users.AddAsync(new User(
+                AdminId,
+                "Platform Admin",
+                adminEmail,
+                UserRole.Admin,
+                PasswordHashingService.Hash("Admin123!")));
+        }
+
         await dbContext.SaveChangesAsync();
     }
 

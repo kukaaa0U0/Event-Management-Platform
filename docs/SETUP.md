@@ -148,6 +148,16 @@ For local Visual Studio runs it is currently disabled:
 
 In Docker Compose it is enabled through environment variables.
 
+Seed accounts:
+
+```text
+admin@example.com / Admin123! / Admin
+organizer@example.com / no password by default / Organizer
+```
+
+New users can self-register as `Participant` or `Organizer`. The `Admin` role
+cannot be self-assigned through public registration.
+
 ## Docker
 
 Docker Desktop on Windows requires hardware virtualization enabled in BIOS/UEFI.
@@ -233,7 +243,7 @@ change registration/check-in modes through `PUT /api/events/{id}/settings`.
 
 Currently protected:
 
-- `POST /api/events`
+- `POST /api/events` for `Organizer` and `Admin`
 - `GET /api/events/my`
 - `GET /api/events/dashboard`
 - `PUT /api/events/{id}`

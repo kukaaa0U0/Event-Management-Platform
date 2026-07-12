@@ -98,6 +98,7 @@ public sealed class EventsController : ControllerBase
 
         var command = new CreateEventCommand(
             User.GetUserId(),
+            User.GetUserRole(),
             request.CategoryId,
             request.Title,
             request.Description,
@@ -121,6 +122,10 @@ public sealed class EventsController : ControllerBase
         catch (ArgumentException exception)
         {
             return BadRequest(new { message = exception.Message });
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Forbid();
         }
     }
 

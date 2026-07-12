@@ -2,11 +2,12 @@ export type WorkspaceTab = "overview" | "create" | "account";
 
 type WorkspacePanelProps = {
   authExists: boolean;
+  canCreateEvents: boolean;
   activeTab: WorkspaceTab;
   onTabChange: (tab: WorkspaceTab) => void;
 };
 
-export function WorkspacePanel({ authExists, activeTab, onTabChange }: WorkspacePanelProps) {
+export function WorkspacePanel({ authExists, canCreateEvents, activeTab, onTabChange }: WorkspacePanelProps) {
   return (
     <section className="workspace-panel" aria-label="Рабочая область">
       <div>
@@ -26,7 +27,8 @@ export function WorkspacePanel({ authExists, activeTab, onTabChange }: Workspace
           className={activeTab === "create" ? "workspace-tab active" : "workspace-tab"}
           type="button"
           onClick={() => onTabChange("create")}
-          disabled={!authExists}
+          disabled={!authExists || !canCreateEvents}
+          title={authExists && !canCreateEvents ? "Создание событий доступно организаторам и администраторам" : undefined}
         >
           Создать
         </button>

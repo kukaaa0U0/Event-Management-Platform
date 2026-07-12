@@ -8,6 +8,7 @@ export type AuthFormState = {
   fullName: string;
   email: string;
   password: string;
+  role: string;
 };
 
 type AuthPanelProps = {
@@ -21,6 +22,16 @@ type AuthPanelProps = {
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onLogout: () => void;
 };
+
+function formatUserRole(role: string): string {
+  const roleLabels: Record<string, string> = {
+    Participant: "Участник",
+    Organizer: "Организатор",
+    Admin: "Администратор"
+  };
+
+  return roleLabels[role] ?? role;
+}
 
 export function AuthPanel({
   auth,
@@ -51,7 +62,7 @@ export function AuthPanel({
           <div className="auth-account-grid">
             <div>
               <span>Роль</span>
-              <strong>{auth.role}</strong>
+              <strong>{formatUserRole(auth.role)}</strong>
             </div>
             <div>
               <span>Сессия</span>
@@ -92,6 +103,20 @@ export function AuthPanel({
                   placeholder="Имя организатора"
                   disabled={state === "loading"}
                 />
+              </label>
+            )}
+
+            {mode === "register" && (
+              <label className="auth-role-field">
+                <span>Роль</span>
+                <select
+                  value={form.role}
+                  onChange={(event) => onFieldChange("role", event.target.value)}
+                  disabled={state === "loading"}
+                >
+                  <option value="Participant">Участник</option>
+                  <option value="Organizer">Организатор</option>
+                </select>
               </label>
             )}
 

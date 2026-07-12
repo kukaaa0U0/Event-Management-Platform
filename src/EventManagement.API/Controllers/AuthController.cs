@@ -32,7 +32,7 @@ public sealed class AuthController : ControllerBase
         try
         {
             var response = await _authService.RegisterAsync(
-                new RegisterUserCommand(request.FullName, request.Email, request.Password),
+                new RegisterUserCommand(request.FullName, request.Email, request.Password, request.Role),
                 cancellationToken);
 
             return Created(string.Empty, response);
@@ -98,6 +98,11 @@ public sealed class AuthController : ControllerBase
         if (request.Password.Length < 8)
         {
             return "Password must be at least 8 characters long.";
+        }
+
+        if (string.IsNullOrWhiteSpace(request.Role))
+        {
+            return "Role is required.";
         }
 
         return null;

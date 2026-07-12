@@ -24,6 +24,7 @@ public sealed class AuthService : IAuthService
         RegisterUserCommand command,
         CancellationToken cancellationToken = default)
     {
+        var role = ParseSelfRegistrationRole(command.Role);
         var email = Email.Create(command.Email);
         var existingUser = await _dbContext.Users
             .FirstOrDefaultAsync(user => user.Email == email, cancellationToken);
@@ -42,7 +43,7 @@ public sealed class AuthService : IAuthService
                 UserId.New(),
                 command.FullName,
                 email,
-                UserRole.Organizer,
+                role,
                 passwordHash);
 
             await _dbContext.Users.AddAsync(user, cancellationToken);
@@ -50,13 +51,28 @@ public sealed class AuthService : IAuthService
         else
         {
             user.ChangeName(command.FullName);
-            user.ChangeRole(UserRole.Organizer);
+            user.ChangeRole(role);
             user.SetPasswordHash(passwordHash);
         }
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return CreateResponse(user);
+    }
+
+    private static UserRole ParseSelfRegistrationRole(string role)
+    {
+        if (!Enum.TryParse<UserRole>(role, ignoreCase: true, out var parsedRole))
+        {
+            throw new ArgumentException("Role must be Participant or Organizer.");
+        }
+
+        if (parsedRole == UserRole.Admin)
+        {
+            throw new ArgumentException("Role must be Participant or Organizer.");
+        }
+
+        return parsedRole;
     }
 
     public async Task<AuthResponseDto?> LoginAsync(

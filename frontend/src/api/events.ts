@@ -102,6 +102,7 @@ export type RegisterUserRequest = {
   fullName: string;
   email: string;
   password: string;
+  role: string;
 };
 
 export type CreateEventRequest = {
@@ -139,6 +140,9 @@ const apiErrorMessages: Record<string, string> = {
   "Password is required.": "Укажи пароль.",
   "Password must be at least 8 characters long.": "Пароль должен быть не короче 8 символов.",
   "User with this email is already registered.": "Пользователь с таким email уже зарегистрирован.",
+  "Role is required.": "Выбери роль аккаунта.",
+  "Role must be Participant or Organizer.": "Можно выбрать только роль участника или организатора.",
+  "Only organizers and admins can create events.": "Создавать события могут только организаторы и администраторы.",
   "CategoryId is required.": "Выбери категорию.",
   "Category was not found.": "Категория не найдена.",
   "Title is required.": "Укажи название события.",
@@ -188,6 +192,8 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
     const message =
       responseBody && typeof responseBody === "object" && "message" in responseBody
         ? String(responseBody.message)
+        : response.status === 403
+          ? "Недостаточно прав для этого действия."
         : `API request failed with status ${response.status}`;
 
     throw new Error(localizeApiErrorMessage(message));

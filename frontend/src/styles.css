@@ -540,6 +540,7 @@ h3 {
 }
 
 .auth-fields input,
+.auth-fields select,
 .create-event-form input,
 .create-event-form select,
 .create-event-form textarea {
@@ -558,6 +559,7 @@ h3 {
 }
 
 .auth-fields input:focus,
+.auth-fields select:focus,
 .create-event-form input:focus,
 .create-event-form select:focus,
 .create-event-form textarea:focus {
@@ -566,6 +568,7 @@ h3 {
 }
 
 .auth-fields input:disabled,
+.auth-fields select:disabled,
 .create-event-form input:disabled,
 .create-event-form select:disabled,
 .create-event-form textarea:disabled {
