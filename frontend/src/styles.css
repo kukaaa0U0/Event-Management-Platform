@@ -914,7 +914,8 @@ h3 {
   gap: 12px;
 }
 
-.section-heading span {
+.section-heading > span,
+.section-heading-actions > span {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -924,6 +925,14 @@ h3 {
   background: #1b3e5a;
   border-radius: 999px;
   font-weight: 750;
+}
+
+.section-heading-actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .ticket-list {

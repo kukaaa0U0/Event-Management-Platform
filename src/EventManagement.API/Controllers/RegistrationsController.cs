@@ -6,6 +6,7 @@ using EventManagement.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace EventManagement.API.Controllers;
 
@@ -47,6 +48,49 @@ public sealed class RegistrationsController : ControllerBase
         }
 
         return Ok(registrations);
+    }
+
+    [HttpGet("export.csv")]
+    [Authorize]
+    public async Task<IActionResult> ExportEventRegistrations(
+        Guid eventId,
+        CancellationToken cancellationToken)
+    {
+        if (!await _eventAccessService.CanManageEventAsync(
+                User.GetUserId(),
+                User.GetUserRole(),
+                eventId,
+                cancellationToken))
+        {
+            return Forbid();
+        }
+
+        var registrations = await _registrationService.GetEventRegistrationsAsync(eventId, cancellationToken);
+
+        if (registrations is null)
+        {
+            return NotFound();
+        }
+
+        var builder = new StringBuilder();
+        builder.AppendLine("ParticipantName,ParticipantEmail,Status,CheckInCode,RegisteredAtUtc,CheckedInAtUtc");
+
+        foreach (var registration in registrations)
+        {
+            builder
+                .Append(CsvEscape(registration.ParticipantName)).Append(',')
+                .Append(CsvEscape(registration.ParticipantEmail)).Append(',')
+                .Append(CsvEscape(registration.Status)).Append(',')
+                .Append(CsvEscape(registration.CheckInCode)).Append(',')
+                .Append(CsvEscape(registration.CreatedAtUtc.ToString("O"))).Append(',')
+                .Append(CsvEscape(registration.CheckedInAtUtc?.ToString("O") ?? string.Empty))
+                .AppendLine();
+        }
+
+        return File(
+            new UTF8Encoding(encoderShouldEmitUTF8Identifier: true).GetBytes(builder.ToString()),
+            "text/csv; charset=utf-8",
+            $"event-{eventId:N}-registrations.csv");
     }
 
     [HttpPost]
@@ -116,5 +160,15 @@ public sealed class RegistrationsController : ControllerBase
         }
 
         return null;
+    }
+
+    private static string CsvEscape(string value)
+    {
+        if (!value.Contains(',') && !value.Contains('"') && !value.Contains('\n') && !value.Contains('\r'))
+        {
+            return value;
+        }
+
+        return $"\"{value.Replace("\"", "\"\"")}\"";
     }
 }

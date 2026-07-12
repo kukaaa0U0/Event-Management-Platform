@@ -18,6 +18,7 @@ type OrganizerRegistrationsPanelProps = {
   onCheckInCodeChange: (value: string) => void;
   onCheckInSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onRegistrationCheckIn: (checkInCode: string) => void;
+  onRegistrationsExport: () => void;
 };
 
 export function OrganizerRegistrationsPanel({
@@ -33,7 +34,8 @@ export function OrganizerRegistrationsPanel({
   checkInResult,
   onCheckInCodeChange,
   onCheckInSubmit,
-  onRegistrationCheckIn
+  onRegistrationCheckIn,
+  onRegistrationsExport
 }: OrganizerRegistrationsPanelProps) {
   const checkedInCount = registrations.filter((registration) => registration.status === "CheckedIn").length;
   const waitingCount = Math.max(registrations.length - checkedInCount, 0);
@@ -57,7 +59,18 @@ export function OrganizerRegistrationsPanel({
     <section className="registrations-panel">
       <div className="section-heading">
         <h3>Участники</h3>
-        <span>{registrations.length}</span>
+        <div className="section-heading-actions">
+          <span>{registrations.length}</span>
+          <button
+            className="small-button"
+            type="button"
+            disabled={registrationsState === "loading"}
+            title="Download participants CSV"
+            onClick={onRegistrationsExport}
+          >
+            CSV
+          </button>
+        </div>
       </div>
 
       <div className="registrations-summary">

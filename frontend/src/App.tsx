@@ -11,6 +11,7 @@ import {
   checkInParticipant,
   createEvent,
   createTicket,
+  downloadEventRegistrationsCsv,
   getCategories,
   getEventDetails,
   getEventRegistrations,
@@ -1161,6 +1162,32 @@ export default function App() {
     await submitCheckIn(checkInCode);
   }
 
+  async function handleRegistrationsExport() {
+    if (!selectedEvent || !auth || !isSelectedEventManaged) {
+      return;
+    }
+
+    try {
+      const csvBlob = await downloadEventRegistrationsCsv(selectedEvent.id, auth.accessToken);
+      const objectUrl = URL.createObjectURL(csvBlob);
+      const downloadLink = document.createElement("a");
+      const safeTitle = selectedEvent.title
+        .trim()
+        .replace(/[^a-zA-Z0-9а-яА-ЯёЁ_-]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 60);
+
+      downloadLink.href = objectUrl;
+      downloadLink.download = `${safeTitle || "event"}-registrations.csv`;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      downloadLink.remove();
+      URL.revokeObjectURL(objectUrl);
+    } catch (error: unknown) {
+      setRegistrationsError(error instanceof Error ? error.message : "Cannot export registrations.");
+    }
+  }
+
   return (
     <main className="app-shell">
       <EventsSidebar
@@ -1307,6 +1334,7 @@ export default function App() {
             onCheckInCodeChange={updateCheckInCode}
             onCheckInSubmit={handleCheckInSubmit}
             onRegistrationCheckIn={submitCheckIn}
+            onRegistrationsExport={handleRegistrationsExport}
           />
         )}
       </section>

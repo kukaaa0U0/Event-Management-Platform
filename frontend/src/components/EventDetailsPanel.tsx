@@ -63,6 +63,7 @@ type EventDetailsPanelProps = {
   onCheckInCodeChange: (value: string) => void;
   onCheckInSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onRegistrationCheckIn: (checkInCode: string) => void | Promise<void>;
+  onRegistrationsExport: () => void | Promise<void>;
 };
 
 export function EventDetailsPanel({
@@ -117,7 +118,8 @@ export function EventDetailsPanel({
   onRegistrationSubmit,
   onCheckInCodeChange,
   onCheckInSubmit,
-  onRegistrationCheckIn
+  onRegistrationCheckIn,
+  onRegistrationsExport
 }: EventDetailsPanelProps) {
   return (
     <article className="event-details">
@@ -254,6 +256,7 @@ export function EventDetailsPanel({
         onCheckInCodeChange={onCheckInCodeChange}
         onCheckInSubmit={onCheckInSubmit}
         onRegistrationCheckIn={onRegistrationCheckIn}
+        onRegistrationsExport={onRegistrationsExport}
       />
     </article>
   );

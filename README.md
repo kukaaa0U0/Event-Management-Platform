@@ -18,6 +18,7 @@ and managing events.
 - Organizer check-in by generated check-in code.
 - Event categories and sidebar filters.
 - `.ics` calendar file download for events.
+- CSV export for organizer event participants.
 - Backend service tests for registration, check-in, and role guards.
 
 ## Quick Start
@@ -117,6 +118,7 @@ POST /api/events/{id}/publish
 POST /api/events/{id}/cancel
 POST /api/events/{eventId}/registrations
 GET  /api/events/{eventId}/registrations
+GET  /api/events/{eventId}/registrations/export.csv
 GET  /api/registrations/my
 POST /api/check-in
 ```

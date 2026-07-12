@@ -202,6 +202,37 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   return responseBody as T;
 }
 
+async function requestBlob(path: string, accessToken: string): Promise<Blob> {
+  const response = await fetch(`${apiBaseUrl}${path}`, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  });
+
+  if (!response.ok) {
+    const responseText = await response.text();
+    let message = response.status === 403
+      ? "Not enough permissions for this action."
+      : `API request failed with status ${response.status}`;
+
+    if (responseText) {
+      try {
+        const responseBody = JSON.parse(responseText);
+
+        if (responseBody && typeof responseBody === "object" && "message" in responseBody) {
+          message = String(responseBody.message);
+        }
+      } catch {
+        message = responseText;
+      }
+    }
+
+    throw new Error(localizeApiErrorMessage(message));
+  }
+
+  return response.blob();
+}
+
 export function getEvents(): Promise<EventSummary[]> {
   return request<EventSummary[]>("/events");
 }
@@ -310,6 +341,10 @@ export function getEventRegistrations(eventId: string, accessToken: string): Pro
       Authorization: `Bearer ${accessToken}`
     }
   });
+}
+
+export function downloadEventRegistrationsCsv(eventId: string, accessToken: string): Promise<Blob> {
+  return requestBlob(`/events/${eventId}/registrations/export.csv`, accessToken);
 }
 
 export function getMyRegistrations(accessToken: string): Promise<MyRegistration[]> {

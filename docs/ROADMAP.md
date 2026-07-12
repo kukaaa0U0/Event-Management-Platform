@@ -27,6 +27,7 @@ Completed:
 - `POST /api/events/{id}/cancel`.
 - `POST /api/events/{eventId}/registrations` creates participant registrations.
 - `GET /api/events/{eventId}/registrations` lists participants for an event.
+- `GET /api/events/{eventId}/registrations/export.csv` exports organizer event participants.
 - `GET /api/registrations/my` lists registrations for the current authenticated user.
 - `POST /api/check-in` marks participants as checked in by check-in code.
 - `POST /api/auth/register` creates an account and returns a JWT access token.
@@ -99,6 +100,7 @@ Completed:
 - Frontend edit event form is grouped into main, location, and time sections.
 - Frontend account panel shows profile, role, active session, and token expiration summary.
 - Frontend visual polish improves panel depth, sidebar states, dashboard accents, form focus, and button feedback.
+- Frontend organizer participants panel can download event registrations as CSV.
 - Frontend events sidebar shows visible and total event counts for the current filters.
 - Frontend event statuses use Russian labels and distinct visual states.
 - Frontend registration statuses use Russian labels and distinct visual states.
@@ -175,7 +177,8 @@ Important product rule:
 - prevent duplicate registration by event/user;
 - create check-in code;
 - `GET /api/registrations/my`;
-- `GET /api/events/{eventId}/registrations`.
+- `GET /api/events/{eventId}/registrations`;
+- `GET /api/events/{eventId}/registrations/export.csv`; completed.
 
 ### Check-In
 
@@ -236,7 +239,7 @@ Frontend stack:
 - email notification abstraction;
 - fake payment service before real Stripe;
 - organizer dashboard statistics;
-- attendee export;
+- attendee export; completed for organizer-owned events as CSV.
 - better validation and global error responses;
 - integration tests.
 
