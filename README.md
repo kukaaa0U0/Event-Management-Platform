@@ -1,83 +1,28 @@
 # Event Management Platform
 
-Educational web platform for creating and managing events.
+Educational full-stack web platform for creating, publishing, registering for,
+and managing events.
 
-## Project Structure
+## Current MVP
 
-Open this file in Visual Studio:
+- ASP.NET Core Web API with controllers and Swagger.
+- Clean Architecture projects: Domain, Application, Infrastructure, API.
+- PostgreSQL persistence through EF Core.
+- Docker Compose runtime for PostgreSQL, API, and React frontend.
+- React + TypeScript + Vite frontend.
+- Email/password auth with JWT access tokens.
+- Roles: `Participant`, `Organizer`, `Admin`.
+- Organizers and admins can create and manage events.
+- Participants can register for published events and see their registrations.
+- Tickets with capacity checks.
+- Organizer check-in by generated check-in code.
+- Event categories and sidebar filters.
+- `.ics` calendar file download for events.
+- Backend service tests for registration, check-in, and role guards.
 
-```text
-EventManagement.sln
-```
+## Quick Start
 
-Backend projects:
-
-- `EventManagement.Domain` - entities, value objects, enums, repository contracts.
-- `EventManagement.Application` - future commands, queries, DTOs, validators, service contracts.
-- `EventManagement.Infrastructure` - EF Core, PostgreSQL, repositories, external service implementations.
-- `EventManagement.API` - ASP.NET Core Web API with controllers and Swagger.
-
-Frontend:
-
-- `frontend` - React, TypeScript, Vite, and nginx Docker runtime.
-
-Backend source code is stored in `src/`.
-
-## Documentation
-
-- [Architecture](docs/ARCHITECTURE.md)
-- [Roadmap](docs/ROADMAP.md)
-- [Setup](docs/SETUP.md)
-- [Authorization And Access Rules](docs/AUTHORIZATION.md)
-
-## Local API Check
-
-Run `EventManagement.API` from Visual Studio or use:
-
-```bash
-dotnet build EventManagement.sln
-dotnet run --project src/EventManagement.API/EventManagement.API.csproj --no-build --urls http://localhost:5000
-```
-
-Open:
-
-```text
-http://localhost:5000
-```
-
-Useful endpoints:
-
-```text
-GET http://localhost:5000/api/health
-POST http://localhost:5000/api/auth/register
-POST http://localhost:5000/api/auth/login
-GET http://localhost:5000/api/events
-```
-
-Protected organizer endpoints require:
-
-```text
-Authorization: Bearer <accessToken>
-```
-
-`GET /api/events` reads data from PostgreSQL. Without a running database, Swagger and
-`GET /api/health` still work, but event queries require PostgreSQL.
-
-## Build
-
-```bash
-dotnet build EventManagement.sln
-```
-
-## Database
-
-Local PostgreSQL connection string:
-
-```text
-Host=localhost;Port=5433;Database=event_management;Username=postgres;Password=postgres
-```
-
-Docker Compose starts PostgreSQL and the API:
+Start the full stack:
 
 ```bash
 docker compose up --build
@@ -89,25 +34,109 @@ Open the web app:
 http://localhost:5173
 ```
 
-Swagger remains available at:
+API:
+
+```text
+http://localhost:5000
+```
+
+Swagger:
 
 ```text
 http://localhost:5000/swagger
 ```
 
+## Seed Accounts
+
+```text
+admin@example.com / Admin123! / Admin
+organizer@example.com / no password by default / Organizer
+```
+
+New users can self-register as `Participant` or `Organizer`. The `Admin` role
+cannot be self-assigned through public registration.
+
+## Project Structure
+
+```text
+src/
+  EventManagement.Domain/          Domain entities, value objects, enums
+  EventManagement.Application/     Commands, DTOs, interfaces
+  EventManagement.Infrastructure/  EF Core, PostgreSQL, services
+  EventManagement.API/             Controllers, auth, Swagger, DI
+frontend/                          React/Vite frontend
+tests/                             xUnit backend tests
+docs/                              Architecture, setup, roadmap, auth rules
+```
+
+Open in Visual Studio:
+
+```text
+EventManagement.sln
+```
+
+## Build And Test
+
+Build:
+
+```bash
+dotnet build EventManagement.sln --no-restore -m:1 /nodeReuse:false
+```
+
+Safe solution-level test command:
+
+```bash
+dotnet test EventManagement.sln --no-build --no-restore -m:1 /nodeReuse:false
+```
+
+Frontend build:
+
+```bash
+cd frontend
+npm install
+npm run build
+```
+
+## Useful Endpoints
+
+```text
+GET  /api/health
+POST /api/auth/register
+POST /api/auth/login
+GET  /api/categories
+GET  /api/events
+GET  /api/events/my
+GET  /api/events/dashboard
+GET  /api/events/{id}
+GET  /api/events/{id}/calendar.ics
+POST /api/events
+PUT  /api/events/{id}
+PUT  /api/events/{id}/settings
+POST /api/events/{id}/tickets
+POST /api/events/{id}/publish
+POST /api/events/{id}/cancel
+POST /api/events/{eventId}/registrations
+GET  /api/events/{eventId}/registrations
+GET  /api/registrations/my
+POST /api/check-in
+```
+
+Protected endpoints require:
+
+```text
+Authorization: Bearer <accessToken>
+```
+
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Setup](docs/SETUP.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Authorization And Access Rules](docs/AUTHORIZATION.md)
+- [MVP Manual Test Pass](docs/MVP_MANUAL_TEST.md)
+
+## Notes
+
 Docker Desktop on Windows requires hardware virtualization enabled in BIOS/UEFI.
-In Docker Compose, migrations and seed data are applied automatically on API startup.
-
-## EF Core Migrations
-
-Create a migration:
-
-```bash
-dotnet ef migrations add MigrationName --no-build --project src/EventManagement.Infrastructure/EventManagement.Infrastructure.csproj --startup-project src/EventManagement.API/EventManagement.API.csproj --output-dir Persistence/Migrations
-```
-
-Apply migrations:
-
-```bash
-dotnet ef database update --project src/EventManagement.Infrastructure/EventManagement.Infrastructure.csproj --startup-project src/EventManagement.API/EventManagement.API.csproj
-```
+Docker Compose exposes PostgreSQL on host port `5433`, API on `5000`, and the
+frontend on `5173`.
