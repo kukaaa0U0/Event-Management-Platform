@@ -47,6 +47,31 @@ http://localhost:5173
 dotnet build EventManagement.sln
 ```
 
+## Test
+
+Backend service tests:
+
+```bash
+dotnet test tests/EventManagement.Tests/EventManagement.Tests.csproj --no-build --no-restore
+```
+
+If the test project was not built yet:
+
+```bash
+dotnet build tests/EventManagement.Tests/EventManagement.Tests.csproj
+dotnet test tests/EventManagement.Tests/EventManagement.Tests.csproj --no-build --no-restore
+```
+
+Safe solution-level test command:
+
+```bash
+dotnet test EventManagement.sln --no-build --no-restore -m:1 /nodeReuse:false
+```
+
+Current note: on this Windows setup, plain `dotnet test EventManagement.sln`
+can leave hanging MSBuild/VSTest worker processes. Use the command above or run
+the test project directly.
+
 ## Run API Without Database
 
 This starts the API and allows checking Swagger and health endpoint:

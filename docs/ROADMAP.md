@@ -106,6 +106,7 @@ Completed:
 - Frontend maps common backend API errors to Russian user-facing messages.
 - Backend blocks registration when the selected ticket capacity is full.
 - Registration guard scenarios for draft events, invalid tickets, duplicates, and full tickets were manually verified through API.
+- Backend service tests cover registration success, draft blocking, duplicate blocking, ticket capacity, invalid ticket, check-in success, disabled check-in, and duplicate check-in.
 - Seed data now includes broader event categories: Technology, Education, Career, Business, Culture, Sports, Science, and Community.
 - Docker Compose runtime verified with PostgreSQL, API, frontend, migrations, seed data, Swagger, and API endpoints.
 
