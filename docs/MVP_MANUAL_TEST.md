@@ -8,6 +8,7 @@ Date: 2026-07-12
 - `GET /api/health` returns `Healthy`.
 - Frontend responds at `http://localhost:5173`.
 - `GET /api/events` returns seed events from PostgreSQL.
+- Docker Compose rebuilds and starts PostgreSQL, API, and frontend from the current source.
 
 ## Scenarios Checked
 
@@ -36,6 +37,7 @@ Date: 2026-07-12
 - Published the event.
 - Verified event details show the published state and ticket.
 - Verified organizer dashboard returns the created event.
+- Verified organizer/admin CSV export returns `200` and `text/csv`.
 
 ### Check-In
 
@@ -50,7 +52,8 @@ Date: 2026-07-12
 - Common backend API messages are mapped to Russian frontend messages.
 - This avoids showing raw English errors such as duplicate registration or draft registration errors.
 - Full ticket capacity now maps to a clear Russian frontend message.
+- Organizer participant export is available from the participants panel as CSV.
 
 ## Remaining Test Gap
 
-- Registration guard scenarios are manually checked through API, but they still need automated integration tests.
+- Full browser click-through was not repeated after the CSV export, but API, frontend build, Docker runtime, and backend tests pass.
